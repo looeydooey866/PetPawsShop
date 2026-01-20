@@ -35,13 +35,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             PetPawsDemoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val scrollState = rememberScrollState()
                     val image = "https://media.istockphoto.com/id/539071535/photo/bowl-of-dog-food.jpg?s=612x612&w=0&k=20&c=48jSoNa5Vod-1inwbhpSQWKv5eEIhnWr8YAfhKI823M="
                     val prod = Product(
-                        "Dog Food",
+                        "Nutritious Pet Paws Dog Food",
+                        "dog",
+                        "food",
                         listOf("dog", "food"),
                         1,
-                        1,
+                        1520,
+                        5,
+                        100,
+                        listOf(),
                         listOf(image),
                         "me",
                         "Dog Food to appease your dogs"
@@ -49,14 +53,22 @@ class MainActivity : ComponentActivity() {
                     val image2 = "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSpWZMc_-DeArs8vPjvs_rkdHUs0VFAF-4Vgpif5BC9qYbW2fs8F6EwagFA_NvjMwJHcGN0Yza8REfPdAXW4rnepOLgyYefzm3g6498lK9YuHY5AEcqzSpc7w"
                     val prod2 = Product(
                         "Dog Cage",
+                        "dog",
+                        "food",
                         listOf("dog", "cage"),
                         1,
                         1,
+                        10,
+                        1,
+                        listOf(),
                         listOf(image2),
                         "me",
                         "Dog Cage to appease your dogs"
                     )
-                    Column(modifier = Modifier.padding(innerPadding).fillMaxWidth(1.0f).fillMaxHeight(1.0f).verticalScroll(scrollState)) {
+                    ProductContainer(listOf(
+                        prod, prod, prod2, prod
+                    ), innerPadding)
+                        /*
                         Column(
                             modifier = Modifier.fillMaxWidth(1.0f).padding(20.dp),
                             verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically)
@@ -69,10 +81,10 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.fillMaxWidth(1.0f).height(3.dp).background(Color.Black),
                             ){}
                         }
+                         */
+                    /*
+                    Column(modifier = Modifier.padding(innerPadding).fillMaxWidth(1.0f).fillMaxHeight(1.0f).verticalScroll(scrollState)) {
                         val mod = Modifier
-                            .aspectRatio(6f / 7)
-                            .background(Color.White)
-                            .padding(5.dp)
                             .weight(1.0f)
                         Row(
                             modifier = Modifier.fillMaxWidth(1.0f)
@@ -86,100 +98,8 @@ class MainActivity : ComponentActivity() {
                                 modifier = mod
                             ){}
                         }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(1.0f)
-                        ) {
-                            ProductCard(
-                                product = prod,
-                                modifier = mod
-                            ){}
-                            ProductCard(
-                                product = prod2,
-                                modifier = mod
-                            ){}
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(1.0f)
-                        ) {
-                            ProductCard(
-                                product = prod,
-                                modifier = mod
-                            ){}
-                            ProductCard(
-                                product = prod2,
-                                modifier = mod
-                            ){}
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(1.0f)
-                        ) {
-                            ProductCard(
-                                product = prod,
-                                modifier = mod
-                            ){}
-                            ProductCard(
-                                product = prod2,
-                                modifier = mod
-                            ){}
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(1.0f)
-                        ) {
-                            ProductCard(
-                                product = prod,
-                                modifier = mod
-                            ){}
-                            ProductCard(
-                                product = prod2,
-                                modifier = mod
-                            ){}
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(1.0f)
-                        ) {
-                            ProductCard(
-                                product = prod,
-                                modifier = mod
-                            ){}
-                            ProductCard(
-                                product = prod2,
-                                modifier = mod
-                            ){}
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(1.0f)
-                        ) {
-                            ProductCard(
-                                product = prod,
-                                modifier = mod
-                            ){}
-                            ProductCard(
-                                product = prod2,
-                                modifier = mod
-                            ){}
-                        }
-                        /*
-                        Column(
-                            modifier = Modifier.fillMaxWidth(0.5f).fillMaxHeight(1.0f).verticalScroll(scrollState)
-                        ) {
-                            ProductCard(
-                                product = prod2
-                            ){}
-                            ProductCard(
-                                product = prod2
-                            ){}
-                            ProductCard(
-                                product = prod2
-                            ){}
-                            ProductCard(
-                                product = prod2
-                            ){}
-                            ProductCard(
-                                product = prod2
-                            ){}
-                        }
-                         */
                     }
+                     */
                 }
             }
         }

@@ -14,11 +14,11 @@ data class Product(
     val tags: List<String>,
     val stock: Int,
     val price: Int,
-    val rating: Int,
+    val rating: Double,
     val rates: Int,
     val reviews: List<Review>,
     val images: List<String>,
     val producer: String,
     val description: String,
-    val discount: Double = 0.0,
+    val discount: Double = 0.0
 )

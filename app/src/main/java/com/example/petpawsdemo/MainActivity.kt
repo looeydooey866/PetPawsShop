@@ -17,22 +17,66 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.petpawsdemo.ui.theme.PetPawsDemoTheme
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        //BEGIN definitions and stuff
+        val items = listOf(
+            NavigationItems(
+                title = "Home",
+                selectedIcon = Icons.Filled.Home,
+                unselectedIcon = Icons.Filled.Home
+            ),
+            NavigationItems(
+                title = "Products",
+                selectedIcon = Icons.Filled.KeyboardArrowDown,
+                unselectedIcon = Icons.Filled.KeyboardArrowUp
+            ),
+            NavigationItems(
+                title = "Profile",
+                selectedIcon = Icons.Filled.Person,
+                unselectedIcon = Icons.Filled.Person
+            ),
+            NavigationItems(
+                title = "About Us",
+                selectedIcon = Icons.Filled.Favorite,
+                unselectedIcon = Icons.Filled.Favorite
+            ),
+            NavigationItems(
+                title = "Settings",
+                selectedIcon = Icons.Filled.Settings,
+                unselectedIcon = Icons.Filled.Settings
+            )
+        )
+        //END definitions and stuff
+
         setContent {
+
             PetPawsDemoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val image = "https://media.istockphoto.com/id/539071535/photo/bowl-of-dog-food.jpg?s=612x612&w=0&k=20&c=48jSoNa5Vod-1inwbhpSQWKv5eEIhnWr8YAfhKI823M="
@@ -43,7 +87,7 @@ class MainActivity : ComponentActivity() {
                         listOf("dog", "food"),
                         1,
                         1520,
-                        5,
+                        3.4,
                         100,
                         listOf(),
                         listOf(image),
@@ -58,7 +102,7 @@ class MainActivity : ComponentActivity() {
                         listOf("dog", "cage"),
                         1,
                         1,
-                        10,
+                        4.5,
                         1,
                         listOf(),
                         listOf(image2),

@@ -27,9 +27,17 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.petpawsdemo.ui.theme.PetPawsDemoTheme
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -45,73 +54,61 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        //BEGIN definitions and stuff
-        val items = listOf(
-            NavigationItems(
-                title = "Home",
-                selectedIcon = Icons.Filled.Home,
-                unselectedIcon = Icons.Filled.Home
-            ),
-            NavigationItems(
-                title = "Products",
-                selectedIcon = Icons.Filled.KeyboardArrowDown,
-                unselectedIcon = Icons.Filled.KeyboardArrowUp
-            ),
-            NavigationItems(
-                title = "Profile",
-                selectedIcon = Icons.Filled.Person,
-                unselectedIcon = Icons.Filled.Person
-            ),
-            NavigationItems(
-                title = "About Us",
-                selectedIcon = Icons.Filled.Favorite,
-                unselectedIcon = Icons.Filled.Favorite
-            ),
-            NavigationItems(
-                title = "Settings",
-                selectedIcon = Icons.Filled.Settings,
-                unselectedIcon = Icons.Filled.Settings
-            )
-        )
-        //END definitions and stuff
-
         setContent {
-
             PetPawsDemoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val image = "https://media.istockphoto.com/id/539071535/photo/bowl-of-dog-food.jpg?s=612x612&w=0&k=20&c=48jSoNa5Vod-1inwbhpSQWKv5eEIhnWr8YAfhKI823M="
-                    val prod = Product(
-                        "Nutritious Pet Paws Dog Food",
-                        "dog",
-                        "food",
-                        listOf("dog", "food"),
-                        1,
-                        1520,
-                        3.4,
-                        100,
-                        listOf(),
-                        listOf(image),
-                        "me",
-                        "Dog Food to appease your dogs"
-                    )
-                    val image2 = "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSpWZMc_-DeArs8vPjvs_rkdHUs0VFAF-4Vgpif5BC9qYbW2fs8F6EwagFA_NvjMwJHcGN0Yza8REfPdAXW4rnepOLgyYefzm3g6498lK9YuHY5AEcqzSpc7w"
-                    val prod2 = Product(
-                        "Dog Cage",
-                        "dog",
-                        "food",
-                        listOf("dog", "cage"),
-                        1,
-                        1,
-                        4.5,
-                        1,
-                        listOf(),
-                        listOf(image2),
-                        "me",
-                        "Dog Cage to appease your dogs"
-                    )
-                    ProductContainer(listOf(
-                        prod, prod, prod2, prod
-                    ), innerPadding)
+                val drawerState = rememberDrawerState(DrawerValue.Closed);
+                val scope = rememberCoroutineScope()
+                ModalNavigationDrawer(
+                    drawerState = drawerState,
+                    drawerContent = {
+                        NavigationDrawer()
+                    }
+                ) {
+                    Scaffold(
+                        topBar = {
+                            AppBar(
+                                onNavigationItemClick = {
+                                    scope.launch {
+                                        drawerState.open()
+                                    }
+                                }
+                            )
+                        },
+                        modifier = Modifier.fillMaxSize()
+                    ) { innerPadding ->
+                        val image = "https://media.istockphoto.com/id/539071535/photo/bowl-of-dog-food.jpg?s=612x612&w=0&k=20&c=48jSoNa5Vod-1inwbhpSQWKv5eEIhnWr8YAfhKI823M="
+                        val prod = Product(
+                            "Nutritious Pet Paws Dog Food",
+                            "dog",
+                            "food",
+                            listOf("dog", "food"),
+                            1,
+                            1520,
+                            3.4,
+                            100,
+                            listOf(),
+                            listOf(image),
+                            "me",
+                            "Dog Food to appease your dogs"
+                        )
+                        val image2 = "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSpWZMc_-DeArs8vPjvs_rkdHUs0VFAF-4Vgpif5BC9qYbW2fs8F6EwagFA_NvjMwJHcGN0Yza8REfPdAXW4rnepOLgyYefzm3g6498lK9YuHY5AEcqzSpc7w"
+                        val prod2 = Product(
+                            "Dog Cage",
+                            "dog",
+                            "food",
+                            listOf("dog", "cage"),
+                            1,
+                            1,
+                            4.5,
+                            1,
+                            listOf(),
+                            listOf(image2),
+                            "me",
+                            "Dog Cage to appease your dogs"
+                        )
+                        ProductContainer(listOf(
+                            prod, prod, prod2, prod
+                        ), innerPadding)
                         /*
                         Column(
                             modifier = Modifier.fillMaxWidth(1.0f).padding(20.dp),
@@ -126,24 +123,25 @@ class MainActivity : ComponentActivity() {
                             ){}
                         }
                          */
-                    /*
-                    Column(modifier = Modifier.padding(innerPadding).fillMaxWidth(1.0f).fillMaxHeight(1.0f).verticalScroll(scrollState)) {
-                        val mod = Modifier
-                            .weight(1.0f)
-                        Row(
-                            modifier = Modifier.fillMaxWidth(1.0f)
-                        ) {
-                            ProductCard(
-                                product = prod,
-                                modifier = mod
-                            ){}
-                            ProductCard(
-                                product = prod2,
-                                modifier = mod
-                            ){}
+                        /*
+                        Column(modifier = Modifier.padding(innerPadding).fillMaxWidth(1.0f).fillMaxHeight(1.0f).verticalScroll(scrollState)) {
+                            val mod = Modifier
+                                .weight(1.0f)
+                            Row(
+                                modifier = Modifier.fillMaxWidth(1.0f)
+                            ) {
+                                ProductCard(
+                                    product = prod,
+                                    modifier = mod
+                                ){}
+                                ProductCard(
+                                    product = prod2,
+                                    modifier = mod
+                                ){}
+                            }
                         }
+                         */
                     }
-                     */
                 }
             }
         }

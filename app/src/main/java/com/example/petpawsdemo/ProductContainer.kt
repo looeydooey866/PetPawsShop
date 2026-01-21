@@ -25,8 +25,7 @@ fun ProductContainer(products: List<Product>, innerPadding: PaddingValues){
     LazyVerticalGrid (
         columns = GridCells.Fixed(2),
         modifier = Modifier.padding(innerPadding)
-            .fillMaxWidth(1.0f)
-            .fillMaxHeight(1.0f),
+            .fillMaxWidth(1.0f),
         contentPadding = PaddingValues(10.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp),
         horizontalArrangement = Arrangement.spacedBy(15.dp)

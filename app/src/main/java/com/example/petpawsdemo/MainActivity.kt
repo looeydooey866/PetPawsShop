@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
                             "dog",
                             "food",
                             listOf("dog", "food"),
-                            1,
+                            67,
                             1520,
                             3.4,
                             100,
@@ -95,9 +95,9 @@ class MainActivity : ComponentActivity() {
                         val prod2 = Product(
                             "Dog Cage",
                             "dog",
-                            "food",
+                            "cage",
                             listOf("dog", "cage"),
-                            1,
+                            3,
                             1,
                             4.5,
                             1,
@@ -106,9 +106,11 @@ class MainActivity : ComponentActivity() {
                             "me",
                             "Dog Cage to appease your dogs"
                         )
-                        ProductContainer(listOf(
-                            prod, prod, prod2, prod
-                        ), innerPadding)
+                        ProductContainer(
+                            listOf(
+                                prod, prod
+                            ), innerPadding
+                        )
                         /*
                         Column(
                             modifier = Modifier.fillMaxWidth(1.0f).padding(20.dp),

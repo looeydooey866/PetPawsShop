@@ -27,8 +27,9 @@ fun ProductContainer(products: List<Product>, innerPadding: PaddingValues){
         modifier = Modifier.padding(innerPadding)
             .fillMaxWidth(1.0f)
             .fillMaxHeight(1.0f),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
+        contentPadding = PaddingValues(10.dp),
+        verticalArrangement = Arrangement.spacedBy(15.dp),
+        horizontalArrangement = Arrangement.spacedBy(15.dp)
     ){
         val mod = Modifier
         items(products){ product ->

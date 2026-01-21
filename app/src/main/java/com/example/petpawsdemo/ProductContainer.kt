@@ -1,6 +1,7 @@
 package com.example.petpawsdemo
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowColumn
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun ProductContainer(products: List<Product>, innerPadding: PaddingValues){
@@ -24,8 +26,9 @@ fun ProductContainer(products: List<Product>, innerPadding: PaddingValues){
         columns = GridCells.Fixed(2),
         modifier = Modifier.padding(innerPadding)
             .fillMaxWidth(1.0f)
-            .fillMaxHeight(1.0f)
-
+            .fillMaxHeight(1.0f),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
     ){
         val mod = Modifier
         items(products){ product ->

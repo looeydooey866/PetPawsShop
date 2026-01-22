@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.StarHalf
 import androidx.compose.material.icons.filled.Star
@@ -20,17 +20,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import kotlin.math.floor
-
-import com.example.petpawsdemo.ui.theme.LightRed_Stock
 
 @Composable
 fun ProductCard(product: Product, modifier: Modifier, onClick: () -> Unit){
@@ -96,7 +92,9 @@ fun ProductInfo(product: Product){
 
 @Composable
 fun ProductRating(product: Product){
-    val Golden: Color = Color(0xFFDAA520)
+    val golden: Color = Color(0xFFDAA520)
+    val iconModifier: Modifier = Modifier
+            .size(20.dp);
 
     Row(
         modifier = Modifier.fillMaxWidth(1.0f),
@@ -112,7 +110,8 @@ fun ProductRating(product: Product){
             Icon(
                 imageVector = Icons.Filled.Star,
                 contentDescription = "Filled star",
-                tint = Golden
+                tint = golden,
+                modifier = iconModifier
             )
         }
 
@@ -121,7 +120,8 @@ fun ProductRating(product: Product){
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.StarHalf,
                     contentDescription = "Half Filled star",
-                    tint = Golden
+                    tint = golden,
+                    modifier = iconModifier
                 )
             }
         }
@@ -130,12 +130,13 @@ fun ProductRating(product: Product){
             Icon(
                 imageVector = Icons.Outlined.StarOutline,
                 contentDescription = "Empty star",
-                tint = Golden
+                tint = golden,
+                modifier = iconModifier
             )
         }
         Text(
             text = "" + product.rating,
-            fontSize = 15.sp
+            fontSize = 14.sp
         )
     }
 }

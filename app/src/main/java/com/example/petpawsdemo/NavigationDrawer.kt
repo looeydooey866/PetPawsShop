@@ -1,7 +1,11 @@
 package com.example.petpawsdemo
 
+import android.app.Application
+import android.content.Context
+import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -9,7 +13,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,7 +28,11 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PowerSettingsNew
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemColors
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
@@ -32,12 +42,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -46,60 +57,113 @@ val xkcdFontFamily = FontFamily(Font(R.font.xkcdscript))
 @Composable
 fun DrawerHeader() {
     Box (
-        modifier = Modifier.fillMaxWidth().padding(vertical = 64.dp),
-        contentAlignment = Alignment.Center
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(220.dp),
     ) {
-        /*
-        ImageView(
-            context = this,
-
+        Image(
+            painter = painterResource(R.drawable.bunny),
+            contentDescription = "Bunny",
+            modifier = Modifier
+                .fillMaxSize(),
+            contentScale = ContentScale.Crop
         )
-         */
+
+        Box( //js for contrast against white text
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.275f))
+        )
+
         Text(
-            text = "Everything Your Pets Need, One Tap Away.",
-            fontSize = 30.sp,
+            text = "Everything Your Pets Need, \nOne Tap Away.",
+            fontSize = 26.sp,
             fontFamily = xkcdFontFamily,
-            color = Color.Black,
+            color = Color.White,
             textAlign = TextAlign.Center,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            lineHeight = 64.sp
+            lineHeight = 34.sp,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(horizontal = 16.dp)
         )
     }
 }
 
 @Composable
 fun DrawerBody(
-    items: List<NavigationItem>,
+    highItems: List<NavigationItem>,
+    lowItems: List<NavigationItem>,
     modifier: Modifier = Modifier,
     itemTextStyle: TextStyle = TextStyle(
         fontSize = 40.sp,
         fontFamily = xkcdFontFamily
     ),
-    onItemClick: (NavigationItem) -> Unit
+    onItemClick: (NavigationItem) -> Unit //TODO
 ) {
     val selectedStates = remember{ mutableStateMapOf<Int, Boolean>() }
 
     LazyColumn(modifier) {
-        items(items) {item ->
+        items(highItems) {item ->
             val isSelected = selectedStates[item.id] ?: false
             val icon = if (isSelected) item.selectedIcon else item.unselectedIcon
 
-            Row(
-                Modifier
+            NavigationDrawerItem(
+                label = {
+                    Text(
+                        text = item.title,
+                        style = itemTextStyle,
+                        modifier = Modifier.width(220.dp)
+                    )},
+                icon = {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null
+                    )},
+                selected = true,
+                onClick = {},
+                modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
-                    .padding(16.dp)
-                    .clickable() { onItemClick(item) }
-            ) {
-                Icon(imageVector = icon, contentDescription = null) //before click event, unselected
-                Spacer(Modifier.width(16.dp))
-                Text(
-                    text = item.title,
-                    style = itemTextStyle,
-                    modifier = Modifier.weight(1f)
+                    .padding(8.dp)
+                    .clickable() { onItemClick(item) },
+                colors = NavigationDrawerItemDefaults.colors(
+                    selectedContainerColor = Color.LightGray
                 )
-            }
+            )
+        }
+    }
+
+    Spacer(modifier = Modifier.fillMaxHeight(0.2f))
+    HorizontalDivider()
+
+    LazyColumn(modifier) {
+        items(lowItems) {item ->
+            val isSelected = selectedStates[item.id] ?: false
+            val icon = if (isSelected) item.selectedIcon else item.unselectedIcon
+
+            NavigationDrawerItem(
+                label = {
+                    Text(
+                        text = item.title,
+                        style = itemTextStyle,
+                        modifier = Modifier.width(220.dp)
+                    )},
+                icon = {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null
+                    )},
+                selected = true,
+                onClick = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(16.dp))
+                    .padding(8.dp)
+                    .clickable() { onItemClick(item) },
+                colors = NavigationDrawerItemDefaults.colors(
+                    selectedContainerColor = Color.LightGray
+                )
+            )
         }
     }
 }
@@ -116,7 +180,7 @@ fun NavigationDrawer() {
     ) {
         DrawerHeader()
         DrawerBody(
-            items = listOf(
+            highItems = listOf(
                 NavigationItem(
                     id = 0, title = "Home",
                     selectedIcon = Icons.Filled.Home,
@@ -136,7 +200,9 @@ fun NavigationDrawer() {
                     id = 3, title = "About Us",
                     selectedIcon = Icons.Filled.Favorite,
                     unselectedIcon = Icons.Filled.Favorite
-                ),
+                )
+            ),
+            lowItems = listOf(
                 NavigationItem(
                     id = 4, title = "Settings",
                     selectedIcon = Icons.Filled.Settings,

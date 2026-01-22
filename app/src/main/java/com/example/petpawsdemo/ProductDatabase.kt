@@ -9,8 +9,7 @@ class ExampleProducts {
             "https://media.istockphoto.com/id/539071535/photo/bowl-of-dog-food.jpg?s=612x612&w=0&k=20&c=48jSoNa5Vod-1inwbhpSQWKv5eEIhnWr8YAfhKI823M="
         val PetPawsDogFood = Product(
             "Nutritious Pet Paws Dog Food",
-            "Dog",
-            "Food",
+            ProductCategory("Dog", "Food"),
             listOf("dog", "food"),
             67,
             1520,
@@ -25,8 +24,7 @@ class ExampleProducts {
             "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSpWZMc_-DeArs8vPjvs_rkdHUs0VFAF-4Vgpif5BC9qYbW2fs8F6EwagFA_NvjMwJHcGN0Yza8REfPdAXW4rnepOLgyYefzm3g6498lK9YuHY5AEcqzSpc7w"
         val PetPawsDogCage = Product(
             "Dog Cage",
-            "Dog",
-            "Cage",
+            ProductCategory("Dog","Cage"),
             listOf("dog", "cage"),
             3,
             1,
@@ -73,61 +71,58 @@ object ProductDatabase{
     fun getIDset() = productIDMap.values
 
     fun getAll(): Map<String, Map<String, List<Product>>>{
-        return getProductSet().sortedBy{it.type}.groupBy{it.type}.mapValues{it.value.sortedBy{it.subtype}.groupBy{it.subtype}}
+        return getProductSet().sortedBy{it.productCategory.type}.groupBy{it.productCategory.type}.mapValues{it.value.sortedBy{it.productCategory.subtype}.groupBy{it.productCategory.subtype}}
     }
 
     fun getCategory(type: String): Map<String, List<Product>> {
-        return getProductSet().filter{it.type == type}.sortedBy{it.subtype}.groupBy{it.subtype}
+        return getProductSet().filter{it.productCategory.type == type}.sortedBy{it.productCategory.subtype}.groupBy{it.productCategory.subtype}
     }
 }
 
 fun main(){
-    val products = listOf(Product(
-        "Nutritious Pet Paws Dog Food",
-        "dog",
-        "food",
-        listOf("dog", "food"),
-        67,
-        1520,
-        3.4,
-        100,
-        listOf(),
-        listOf(),
-        "me",
-        "Dog Food to appease your dogs"
-    ),
-    Product(
-        "Nutritious Pet Paws Dog Food",
-        "dog",
-        "food",
-        listOf("dog", "food"),
-        67,
-        1520,
-        3.4,
-        100,
-        listOf(),
-        listOf(),
-        "me",
-        "Dog Food to appease your dogs"
-    ),
-    Product(
-        "Nutritious Pet Paws Dog Food",
-        "dog",
-        "cage",
-        listOf("dog", "food"),
-        67,
-        1520,
-        3.4,
-        100,
-        listOf(),
-        listOf(),
-        "me",
-        "Dog Food to appease your dogs"
-    ),
+    val products = listOf(
         Product(
             "Nutritious Pet Paws Dog Food",
-            "dog",
-            "food",
+            ProductCategory("dog","food"),
+            listOf("dog", "food"),
+            67,
+            1520,
+            3.4,
+            100,
+            listOf(),
+            listOf(),
+            "me",
+            "Dog Food to appease your dogs"
+        ),
+        Product(
+            "Nutritious Pet Paws Dog Food",
+            ProductCategory("dog","food"),
+            listOf("dog", "food"),
+            67,
+            1520,
+            3.4,
+            100,
+            listOf(),
+            listOf(),
+            "me",
+            "Dog Food to appease your dogs"
+        ),
+        Product(
+            "Nutritious Pet Paws Dog Food",
+            ProductCategory("dog","food"),
+            listOf("dog", "food"),
+            67,
+            1520,
+            3.4,
+            100,
+            listOf(),
+            listOf(),
+            "me",
+            "Dog Food to appease your dogs"
+        ),
+        Product(
+            "Nutritious Pet Paws Dog Food",
+            ProductCategory("dog","food"),
             listOf("dog", "food"),
             67,
             1520,
@@ -138,7 +133,7 @@ fun main(){
             "me",
             "Dog Food to appease your dogs"
         )
-        )
+    )
     products.forEach{
         ProductDatabase.addProduct(it)
     }

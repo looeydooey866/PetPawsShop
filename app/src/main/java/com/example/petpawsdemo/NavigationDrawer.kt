@@ -37,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -101,44 +102,23 @@ fun DrawerBody(
     onItemClick: (NavigationItem) -> Unit //TODO
 ) {
     val selectedStates = remember{ mutableStateMapOf<Int, Boolean>() }
-
-    LazyColumn(modifier) {
-        items(highItems) {item ->
-            val isSelected = selectedStates[item.id] ?: false
-            val icon = if (isSelected) item.selectedIcon else item.unselectedIcon
-
-            NavigationDrawerItem(
-                label = {
-                    Text(
-                        text = item.title,
-                        style = itemTextStyle,
-                        modifier = Modifier.width(220.dp)
-                    )},
-                icon = {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null
-                    )},
-                selected = true,
-                onClick = {},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(16.dp))
-                    .padding(8.dp)
-                    .clickable() { onItemClick(item) },
-                colors = NavigationDrawerItemDefaults.colors(
-                    selectedContainerColor = Color.LightGray
-                )
-            )
-        }
-    }
-
+    NavigationItemGroup(highItems, selectedStates, modifier, itemTextStyle, onItemClick)
     Spacer(modifier = Modifier.fillMaxHeight(0.2f))
     HorizontalDivider()
+    NavigationItemGroup(lowItems, selectedStates, modifier, itemTextStyle, onItemClick)
+}
 
+@Composable
+fun NavigationItemGroup(
+    items: List<NavigationItem>,
+    selectedStates:  SnapshotStateMap<Int, Boolean>,
+    modifier: Modifier,
+    itemTextStyle: TextStyle,
+    onItemClick: (NavigationItem) -> Unit //TODO
+) {
     LazyColumn(modifier) {
-        items(lowItems) {item ->
-            val isSelected = selectedStates[item.id] ?: false
+        items(items) {item ->
+            val isSelected = selectedStates[item.id]?: false
             val icon = if (isSelected) item.selectedIcon else item.unselectedIcon
 
             NavigationDrawerItem(
@@ -169,7 +149,9 @@ fun DrawerBody(
 }
 
 @Composable
-fun NavigationDrawer() {
+fun NavigationDrawer(
+    productCategories: List<Product>
+) {
     val context = LocalContext.current
 
     Column (
@@ -186,10 +168,17 @@ fun NavigationDrawer() {
                     selectedIcon = Icons.Filled.Home,
                     unselectedIcon = Icons.Filled.Home
                 ),
-                NavigationItem(
-                    id = 1, title = "Pet Products",
-                    selectedIcon = Icons.Filled.ShoppingCart,
-                    unselectedIcon = Icons.Filled.ShoppingCart
+                NavigationItemDropdown(
+                    itemId = 1, itemTitle = "Pet Products",
+                    itemSelectedIcon = Icons.Filled.ShoppingCart,
+                    itemUnselectedIcon = Icons.Filled.ShoppingCart,
+                    children = listOf(
+                        NavigationItem(
+                            id = 3, title = "About Us",
+                            selectedIcon = Icons.Filled.Favorite,
+                            unselectedIcon = Icons.Filled.Favorite
+                        )
+                    )
                 ),
                 NavigationItem(
                     id = 2, title = "Profile",
@@ -224,10 +213,25 @@ fun NavigationDrawer() {
     }
 }
 
-data class NavigationItem (
+open class NavigationItem (
     val id: Int,
     val title: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
     val badgeCount: Int? = null,
+)
+
+data class NavigationItemDropdown(
+    val children: List<NavigationItem>, //TODO
+    val itemId: Int,
+    val itemTitle: String,
+    val itemSelectedIcon: ImageVector,
+    val itemUnselectedIcon: ImageVector,
+    val itemBadgeCount: Int? = null
+) : NavigationItem(
+    itemId,
+    itemTitle,
+    itemSelectedIcon,
+    itemUnselectedIcon,
+    itemBadgeCount
 )

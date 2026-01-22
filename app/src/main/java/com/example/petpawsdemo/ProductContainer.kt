@@ -57,21 +57,19 @@ fun ProductContainer(products: List<Product>, innerPadding: PaddingValues){
 fun CategorySeparator(type: String, subtype: String){
     Column(
         modifier = Modifier.fillMaxWidth(1.0f).padding(top = 30.dp, bottom = 10.dp),
-        //verticalArrangement = Arrangement.spacedBy(5.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
             modifier = Modifier,
             fontSize = 25.sp,
             text = "$type $subtype"
         )
-        /*
         Row(
             modifier = Modifier.fillMaxWidth(1.0f).height(5.dp).clip(RoundedCornerShape(2.dp)).background(Grey_Separator)
         ){
 
         }
 
-         */
     }
 }
 

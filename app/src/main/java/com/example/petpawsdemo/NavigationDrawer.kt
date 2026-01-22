@@ -187,7 +187,7 @@ fun NavigationDrawer() {
                     unselectedIcon = Icons.Filled.Home
                 ),
                 NavigationItem(
-                    id = 1, title = "Product Categories",
+                    id = 1, title = "Pet Products",
                     selectedIcon = Icons.Filled.ShoppingCart,
                     unselectedIcon = Icons.Filled.ShoppingCart
                 ),

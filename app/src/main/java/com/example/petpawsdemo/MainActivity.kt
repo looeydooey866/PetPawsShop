@@ -106,11 +106,25 @@ class MainActivity : ComponentActivity() {
                             "me",
                             "Dog Cage to appease your dogs"
                         )
-                        ProductContainer(
-                            listOf(
-                                prod, prod
-                            ), innerPadding
-                        )
+                        listOf(
+                            ExampleProducts.PetPawsDogCage,
+                            ExampleProducts.PetPawsDogCage,
+                            ExampleProducts.PetPawsDogFood,
+                            ExampleProducts.PetPawsDogCage,
+                            ExampleProducts.PetPawsDogCage,
+                        ).forEach{prod ->
+                            ProductDatabase.addProduct(prod)
+                        }
+                        Column(
+                            modifier = Modifier.fillMaxWidth(1.0f).fillMaxHeight(1.0f).padding(start = 10.dp, end = 10.dp)
+                        ) {
+                            ProductContainer(
+                                "Dog",
+                                ProductDatabase.getCategory("Dog"),
+                                innerPadding
+                            )
+                        }
+
                         /*
                         Column(
                             modifier = Modifier.fillMaxWidth(1.0f).padding(20.dp),

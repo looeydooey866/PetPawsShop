@@ -11,3 +11,5 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val LightRed_Stock = Color(0xffff6b6b)
+
+val Grey_Separator = Color(0xff828282)

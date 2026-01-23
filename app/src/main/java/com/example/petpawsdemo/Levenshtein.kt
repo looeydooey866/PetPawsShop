@@ -5,6 +5,7 @@ import kotlin.math.min
 // the minimum amount of character changes, additions or deletions to change s to t.
 // this function provides an approximate metric for the similarity of 2 words
 // if the user makes a spelling mistake, or forgot the exact spelling, etc
+// this will provide a close enough keyword match to the erroneous input
 fun levenshteinDistance(s: String, t: String): Int{
     val n = s.length
     val m = t.length

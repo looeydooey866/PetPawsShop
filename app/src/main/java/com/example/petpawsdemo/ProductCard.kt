@@ -34,7 +34,7 @@ fun ProductCard(product: Product, modifier: Modifier, onClick: () -> Unit){
         modifier = modifier.clickable{onClick()}
         //.aspectRatio(6f / 7)
             .clip(RoundedCornerShape(6))
-        .background(Color.White)
+        .background(Color.Transparent)
         .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically),

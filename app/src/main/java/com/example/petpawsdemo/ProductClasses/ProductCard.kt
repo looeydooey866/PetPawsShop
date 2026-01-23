@@ -1,4 +1,4 @@
-package com.example.petpawsdemo
+package com.example.petpawsdemo.ProductClasses
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

@@ -1,6 +1,4 @@
-package com.example.petpawsdemo
-
-import androidx.compose.runtime.Composable
+package com.example.petpawsdemo.ProductClasses
 
 data class Review(
     val rating: Int,

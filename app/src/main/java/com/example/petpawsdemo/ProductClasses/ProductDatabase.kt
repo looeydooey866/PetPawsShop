@@ -1,6 +1,5 @@
-package com.example.petpawsdemo
+package com.example.petpawsdemo.ProductClasses
 
-import com.example.petpawsdemo.ExampleProducts.Companion.Image_PetPawsDogFood_Thumbnail
 import java.util.TreeSet
 
 class ExampleProducts {

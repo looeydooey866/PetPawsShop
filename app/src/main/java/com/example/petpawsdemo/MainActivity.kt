@@ -4,53 +4,87 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.petpawsdemo.ProductClasses.ExampleProducts
+import com.example.petpawsdemo.ProductClasses.Product
+import com.example.petpawsdemo.ProductClasses.ProductCategory
+import com.example.petpawsdemo.ProductClasses.ProductContainer
+import com.example.petpawsdemo.ProductClasses.ProductDatabase
+import com.example.petpawsdemo.UIComponents.AppBar
+import com.example.petpawsdemo.UIComponents.NavigationDrawer
 import com.example.petpawsdemo.ui.theme.PetPawsDemoTheme
 import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        //BEGIN test product set
+
+        val testProductSet: Set<Product> = setOf(Product(
+            "Nutritious Pet Paws Dog Food",
+            ProductCategory("dog","food"),
+            listOf("dog", "food"),
+            67,
+            1520,
+            3.4,
+            100,
+            listOf(),
+            listOf(),
+            "me",
+            "Dog Food to appease your dogs"
+            ),
+            Product(
+                "Nutritious Pet Paws Dog Food",
+                ProductCategory("dog","food"),
+                listOf("dog", "food"),
+                67,
+                1520,
+                3.4,
+                100,
+                listOf(),
+                listOf(),
+                "me",
+                "Dog Food to appease your dogs"
+            ),
+            Product(
+                "Nutritious Pet Paws Dog Food",
+                ProductCategory("dog","food"),
+                listOf("dog", "food"),
+                67,
+                1520,
+                3.4,
+                100,
+                listOf(),
+                listOf(),
+                "me",
+                "Dog Food to appease your dogs"
+            ),
+            Product(
+                "Nutritious Pet Paws Dog Food",
+                ProductCategory("dog","food"),
+                listOf("dog", "food"),
+                67,
+                1520,
+                3.4,
+                100,
+                listOf(),
+                listOf(),
+                "me",
+                "Dog Food to appease your dogs"
+            ))
+        //END test product set
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
@@ -61,7 +95,16 @@ class MainActivity : ComponentActivity() {
                 ModalNavigationDrawer(
                     drawerState = drawerState,
                     drawerContent = {
-                        NavigationDrawer()
+                        NavigationDrawer(
+                            testProductSet
+                                .map { it.productCategory }
+                                .toSet()
+                            /*
+                            ProductDatabase.getProductSet() //TODO
+                            .map { it.productCategory }
+                            .toSet()
+                             */
+                        )
                     }
                 ) {
                     Scaffold(
@@ -79,8 +122,7 @@ class MainActivity : ComponentActivity() {
                         val image = "https://media.istockphoto.com/id/539071535/photo/bowl-of-dog-food.jpg?s=612x612&w=0&k=20&c=48jSoNa5Vod-1inwbhpSQWKv5eEIhnWr8YAfhKI823M="
                         val prod = Product(
                             "Nutritious Pet Paws Dog Food",
-                            "dog",
-                            "food",
+                            ProductCategory("dog", "food"),
                             listOf("dog", "food"),
                             67,
                             1520,
@@ -94,8 +136,7 @@ class MainActivity : ComponentActivity() {
                         val image2 = "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSpWZMc_-DeArs8vPjvs_rkdHUs0VFAF-4Vgpif5BC9qYbW2fs8F6EwagFA_NvjMwJHcGN0Yza8REfPdAXW4rnepOLgyYefzm3g6498lK9YuHY5AEcqzSpc7w"
                         val prod2 = Product(
                             "Dog Cage",
-                            "dog",
-                            "cage",
+                            ProductCategory("dog", "cage"),
                             listOf("dog", "cage"),
                             3,
                             1,

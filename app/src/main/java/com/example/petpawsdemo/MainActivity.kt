@@ -88,51 +88,6 @@ class MainActivity : ComponentActivity() {
                                     innerPadding
                                 )
                             }
-                            /*
-                        Column(
-                            modifier = Modifier.fillMaxWidth(1.0f).fillMaxHeight(1.0f).padding(start = 10.dp, end = 10.dp)
-                        ) {
-                            ProductContainer(
-                                "Dog",
-                                ProductDatabase.getCategory("Dog"),
-                                innerPadding
-                            )
-                        }
-
-                         */
-
-                            /*
-                        Column(
-                            modifier = Modifier.fillMaxWidth(1.0f).padding(20.dp),
-                            verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically)
-                        ) {
-                            Text(
-                                text = "Dog Items",
-                                fontSize = 35.sp,
-                            )
-                            Row(
-                                modifier = Modifier.fillMaxWidth(1.0f).height(3.dp).background(Color.Black),
-                            ){}
-                        }
-                         */
-                            /*
-                        Column(modifier = Modifier.padding(innerPadding).fillMaxWidth(1.0f).fillMaxHeight(1.0f).verticalScroll(scrollState)) {
-                            val mod = Modifier
-                                .weight(1.0f)
-                            Row(
-                                modifier = Modifier.fillMaxWidth(1.0f)
-                            ) {
-                                ProductCard(
-                                    product = prod,
-                                    modifier = mod
-                                ){}
-                                ProductCard(
-                                    product = prod2,
-                                    modifier = mod
-                                ){}
-                            }
-                        }
-                         */
                         }
                         else{
                             Column(

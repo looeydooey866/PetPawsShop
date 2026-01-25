@@ -12,9 +12,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.example.petpawsdemo.ProductClasses.ProductContainer
 import com.example.petpawsdemo.UIComponents.AppBar
@@ -30,8 +36,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             PetPawsDemoTheme {
-                val drawerState = rememberDrawerState(DrawerValue.Closed);
+                val drawerState = rememberDrawerState(DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
+                var currentQuery by remember{mutableStateOf("")}
+                var query by remember{mutableStateOf("")}
+                var searching by remember{mutableStateOf(false)}
+                val focusManager = LocalFocusManager.current
                 ModalNavigationDrawer(
                     drawerState = drawerState,
                     drawerContent = {
@@ -42,14 +52,23 @@ class MainActivity : ComponentActivity() {
                                 .toSet()
                                 */
                             ProductDatabase.getProductSet()
-                            .map { it.productCategory }
-                            .toSet()
+                                .map { it.productCategory }
+                                .toSet()
                         )
                     }
                 ) {
                     Scaffold(
                         topBar = {
                             AppBar(
+                                query = query,
+                                onQueryChange = {query = it},
+                                onFocus = {searching = it},
+                                onSearch = {
+                                    searching = false
+                                    currentQuery = query
+                                    query = ""
+                                    focusManager.clearFocus()
+                                           },
                                 onNavigationItemClick = {
                                     scope.launch {
                                         drawerState.open()
@@ -59,15 +78,17 @@ class MainActivity : ComponentActivity() {
                         },
                         modifier = Modifier.fillMaxSize()
                     ) { innerPadding ->
-                        Column(
-                            modifier = Modifier.fillMaxWidth(1.0f).fillMaxHeight(1.0f).padding(start = 10.dp, end = 10.dp)
-                        ) {
-                            ProductContainer(
-                                ProductDatabase.search("wet food chicken"),
-                                innerPadding
-                            )
-                        }
-                        /*
+                        if (!searching) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(1.0f).fillMaxHeight(1.0f)
+                                    .padding(start = 10.dp, end = 10.dp)
+                            ) {
+                                ProductContainer(
+                                    ProductDatabase.search(currentQuery),
+                                    innerPadding
+                                )
+                            }
+                            /*
                         Column(
                             modifier = Modifier.fillMaxWidth(1.0f).fillMaxHeight(1.0f).padding(start = 10.dp, end = 10.dp)
                         ) {
@@ -80,7 +101,7 @@ class MainActivity : ComponentActivity() {
 
                          */
 
-                        /*
+                            /*
                         Column(
                             modifier = Modifier.fillMaxWidth(1.0f).padding(20.dp),
                             verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically)
@@ -94,7 +115,7 @@ class MainActivity : ComponentActivity() {
                             ){}
                         }
                          */
-                        /*
+                            /*
                         Column(modifier = Modifier.padding(innerPadding).fillMaxWidth(1.0f).fillMaxHeight(1.0f).verticalScroll(scrollState)) {
                             val mod = Modifier
                                 .weight(1.0f)
@@ -112,6 +133,17 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                          */
+                        }
+                        else{
+                            Column(
+                                modifier = Modifier.padding(innerPadding).fillMaxSize(1.0f)
+                            ){
+                                Text(text = "yo")
+                                Text(text = "yo2")
+                                Text(text = "yo3")
+                                Text(text = "yo4")
+                            }
+                        }
                     }
                 }
             }

@@ -7,6 +7,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -16,10 +17,16 @@ import com.example.petpawsdemo.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar (
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onSearch: () -> Unit,
+    onFocus: (Boolean) -> Unit,
     onNavigationItemClick: () -> Unit
 ) {
     TopAppBar (
-        title = { Text(text = stringResource(id = R.string.app_name)) },
+        title = {
+            SearchBar(query, onQueryChange, onSearch, onFocus)
+        },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
             titleContentColor = MaterialTheme.colorScheme.onPrimary,

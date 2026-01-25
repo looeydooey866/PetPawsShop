@@ -63,11 +63,15 @@ class MainActivity : ComponentActivity() {
                             AppBar(
                                 query = query,
                                 onQueryChange = {query = it},
-                                onFocus = {searching = it},
+                                onFocus = {
+                                    if (it){
+                                        query = ""
+                                    }
+                                    searching = it
+                                          },
                                 onSearch = {
                                     searching = false
                                     currentQuery = query
-                                    query = ""
                                     everSearched = true
                                     focusManager.clearFocus()
                                            },

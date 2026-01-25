@@ -56,7 +56,7 @@ class ExampleProducts {
         )
 
         private val Image_PetPawsWetDogFood_Thumbnail =
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE3oPs1JSOVLjLJMKzghyo8rYh0KtmkiZczw&s"
+            "https://www.tilda.com/en-in/wp-content/uploads/sites/21/2021/05/chicken-fried-rice-low-res-2.png"
         val PetPawsWetDogFood = Product(
             "Pet Paws Wet Dog Food – Chicken & Rice",
             ProductCategory("dog", "food"),

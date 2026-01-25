@@ -26,6 +26,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.petpawsdemo.ui.theme.Grey_Separator
 
+
+@Composable
+fun CategorySeparator(type: String, subtype: String){
+    Column(
+        modifier = Modifier.fillMaxWidth(1.0f).padding(top = 25.dp, bottom = 10.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            modifier = Modifier,
+            fontSize = 25.sp,
+            text = "${type.replaceFirstChar{it.uppercase()}} ${subtype.replaceFirstChar{it.uppercase()}}"
+        )
+        val separate = false
+        if (separate) {
+            Row(
+                modifier = Modifier.fillMaxWidth(1.0f).height(5.dp).clip(RoundedCornerShape(2.dp))
+                    .background(Grey_Separator)
+            ) {
+
+            }
+        }
+    }
+}
+
 @Composable
 fun ProductContainer(products: List<Product>, innerPadding: PaddingValues){
     val context = LocalContext.current
@@ -45,25 +69,6 @@ fun ProductContainer(products: List<Product>, innerPadding: PaddingValues){
             ){
                 Toast.makeText(context, "Clicked product $product", Toast.LENGTH_SHORT).show()
             }
-        }
-    }
-}
-
-@Composable
-fun CategorySeparator(type: String, subtype: String){
-    Column(
-        modifier = Modifier.fillMaxWidth(1.0f).padding(top = 25.dp, bottom = 10.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Text(
-            modifier = Modifier,
-            fontSize = 25.sp,
-            text = "${type.replaceFirstChar{it.uppercase()}} ${subtype.replaceFirstChar{it.uppercase()}}"
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(1.0f).height(5.dp).clip(RoundedCornerShape(2.dp)).background(Grey_Separator)
-        ){
-
         }
     }
 }
@@ -97,6 +102,46 @@ fun ProductContainer(type: String, products: Map<String, List<Product>>, innerPa
                     ) {
                         ProductCard(chunk[0], Modifier) {
                             Toast.makeText(context, "Clicked product ${chunk[0]}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ProductContainer(products: Map<String, Map<String,List<Product>>>, innerPadding: PaddingValues){
+    val context = LocalContext.current
+    val scroll = rememberScrollState()
+    Column(
+        modifier = Modifier.fillMaxWidth(1.0f).fillMaxHeight(1.0f).verticalScroll(scroll).padding(innerPadding),
+        horizontalAlignment = Alignment.Start,
+    ){
+        products.forEach{(type, entry) ->
+            CategorySeparator(type, "items")
+            entry.forEach{(subtype, products) ->
+                CategorySeparator(type, subtype)
+                products.chunked(2).forEach{chunk ->
+                    if (chunk.size == 2) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(1.0f)
+                        ){
+                            ProductCard(chunk[0], Modifier.weight(1.0f)){
+                                Toast.makeText(context, "Clicked product ${chunk[0]}", Toast.LENGTH_SHORT).show()
+                            }
+                            ProductCard(chunk[1], Modifier.weight(1.0f)){
+                                Toast.makeText(context, "Clicked product ${chunk[1]}", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                    else {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(0.5f)
+                        ) {
+                            ProductCard(chunk[0], Modifier) {
+                                Toast.makeText(context, "Clicked product ${chunk[0]}", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }

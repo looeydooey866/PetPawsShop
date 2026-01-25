@@ -56,7 +56,7 @@ class ExampleProducts {
         )
 
         private val Image_PetPawsWetDogFood_Thumbnail =
-            "https://static01.nyt.com/images/2025/01/28/multimedia/KP-Hainan-Chicken-Rice-hcgv/KP-Hainan-Chicken-Rice-hcgv-mediumSquareAt3X.jpg"
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE3oPs1JSOVLjLJMKzghyo8rYh0KtmkiZczw&s"
         val PetPawsWetDogFood = Product(
             "Pet Paws Wet Dog Food – Chicken & Rice",
             ProductCategory("dog", "food"),
@@ -98,6 +98,21 @@ class ExampleProducts {
             listOf(Image_PetPawsDogToys_Thumbnail),
             "me",
             "Dog Toys to appease your dogs"
+        )
+
+        private val Image_DogMansion_Thumbnail = "https://media.istockphoto.com/id/506903162/photo/luxurious-villa-with-pool.jpg?s=612x612&w=0&k=20&c=Ek2P0DQ9nHQero4m9mdDyCVMVq3TLnXigxNPcZbgX2E="
+        val PetPawsDogMansion = Product(
+            "Super Duper Premium Dog Mansion",
+            ProductCategory("dog", "cage"),
+            listOf("dog", "cage", "mansion", "premium"),
+            1,
+            210000,
+            0.5,
+            67,
+            listOf(),
+            listOf(Image_DogMansion_Thumbnail),
+            "me",
+            "Dog Mansion To Appease Your Dogs"
         )
     }
 }
@@ -156,7 +171,8 @@ object ProductDatabase{
             ExampleProducts.PetPawsDogToys,
             ExampleProducts.PetPawsWetDogFood,
             ExampleProducts.PetPawsDogFoodPremium,
-            ExampleProducts.PetPawsDogFoodBudget
+            ExampleProducts.PetPawsDogFoodBudget,
+            ExampleProducts.PetPawsDogMansion
         ).forEach{prod ->
             addProduct(prod)
         }

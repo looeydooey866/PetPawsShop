@@ -41,6 +41,7 @@ class MainActivity : ComponentActivity() {
                 var currentQuery by remember{mutableStateOf("")}
                 var query by remember{mutableStateOf("")}
                 var searching by remember{mutableStateOf(false)}
+                var everSearched by remember{mutableStateOf(false)}
                 val focusManager = LocalFocusManager.current
                 ModalNavigationDrawer(
                     drawerState = drawerState,
@@ -67,6 +68,7 @@ class MainActivity : ComponentActivity() {
                                     searching = false
                                     currentQuery = query
                                     query = ""
+                                    everSearched = true
                                     focusManager.clearFocus()
                                            },
                                 onNavigationItemClick = {
@@ -83,10 +85,18 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.fillMaxWidth(1.0f).fillMaxHeight(1.0f)
                                     .padding(start = 10.dp, end = 10.dp)
                             ) {
-                                ProductContainer(
-                                    ProductDatabase.search(currentQuery),
-                                    innerPadding
-                                )
+                                if (!everSearched) {
+                                    ProductContainer(
+                                        ProductDatabase.getAll(),
+                                        innerPadding
+                                    )
+                                }
+                                else{
+                                    ProductContainer(
+                                        ProductDatabase.search(currentQuery),
+                                        innerPadding
+                                    )
+                                }
                             }
                         }
                         else{

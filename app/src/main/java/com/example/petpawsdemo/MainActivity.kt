@@ -14,6 +14,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,6 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.petpawsdemo.ProductClasses.ProductContainer
 import com.example.petpawsdemo.UIComponents.AppBar
@@ -124,4 +126,94 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun PetPawsPreview(){
+        val drawerState = rememberDrawerState(DrawerValue.Closed)
+        val scope = rememberCoroutineScope()
+        var currentQuery by remember{mutableStateOf("")}
+        var query by remember{mutableStateOf("")}
+        var searching by remember{mutableStateOf(false)}
+        var everSearched by remember{mutableStateOf(false)}
+        val focusManager = LocalFocusManager.current
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                NavigationDrawer(
+                    /*
+                    testProductSet
+                        .map { it.productCategory }
+                        .toSet()
+                        */
+                    ProductDatabase.getProductSet()
+                        .map { it.productCategory }
+                        .toSet()
+                )
+            }
+        ) {
+            Scaffold(
+                topBar = {
+                    AppBar(
+                        query = query,
+                        focus = searching,
+                        onQueryChange = {query = it},
+                        onFocus = {
+                            if (it){
+                                query = ""
+                            }
+                            searching = it
+                        },
+                        onSearch = {
+                            searching = false
+                            currentQuery = query
+                            everSearched = true
+                            focusManager.clearFocus()
+                        },
+                        onNavigationItemClick = {
+                            scope.launch {
+                                drawerState.open()
+                            }
+                        },
+                        onBack = {
+                            searching = false
+                            focusManager.clearFocus()
+                            query = currentQuery
+                        }
+                    )
+                },
+                modifier = Modifier.fillMaxSize()
+            ) { innerPadding ->
+                if (!searching) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(1.0f).fillMaxHeight(1.0f)
+                            .padding(start = 10.dp, end = 10.dp)
+                    ) {
+                        if (!everSearched) {
+                            ProductContainer(
+                                ProductDatabase.getAll(),
+                                innerPadding
+                            )
+                        }
+                        else{
+                            ProductContainer(
+                                ProductDatabase.search(currentQuery),
+                                innerPadding
+                            )
+                        }
+                    }
+                }
+                else{
+                    Column(
+                        modifier = Modifier.padding(innerPadding).fillMaxSize(1.0f)
+                    ){
+                        Text(text = "yo")
+                        Text(text = "yo2")
+                        Text(text = "yo3")
+                        Text(text = "yo4")
+                    }
+                }
+            }
+        }
 }

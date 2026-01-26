@@ -43,7 +43,7 @@ fun AppBar (
             Row(
                 modifier = Modifier
                     .fillMaxSize(1.0f)
-                    .padding(10.dp)
+                    //.padding(10.dp)
             ) {
                 SearchArea(
                     query = query,
@@ -53,7 +53,7 @@ fun AppBar (
                     modifier = Modifier
                         .fillMaxSize(1.0f)
                         .clip(RoundedCornerShape(20)),
-                    textStyle = TextStyle(fontSize = 15.sp)
+                    textStyle = TextStyle(fontSize = 15.sp, lineHeight = 20.sp)
                 )
             }
         },

@@ -1,5 +1,6 @@
 package com.example.petpawsdemo.UIComponents
 
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
@@ -9,7 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 
 @Composable
 fun SearchArea(
@@ -28,6 +31,7 @@ fun SearchArea(
             Text(
                 text = "Search on Pet Paws Online Market...",
                 fontSize = 15.sp,
+                modifier = Modifier.zIndex(9999999999f)
             )
           },
         modifier = modifier.onFocusChanged{

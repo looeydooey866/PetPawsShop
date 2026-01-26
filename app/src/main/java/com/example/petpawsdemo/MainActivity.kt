@@ -1,5 +1,6 @@
 package com.example.petpawsdemo
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
@@ -21,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,6 +31,7 @@ import com.example.petpawsdemo.ProductClasses.ProductContainer
 import com.example.petpawsdemo.UIComponents.AppBar
 import com.example.petpawsdemo.UIComponents.NavigationDrawer
 import com.example.petpawsdemo.ui.theme.PetPawsDemoTheme
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
@@ -45,175 +49,120 @@ class MainActivity : ComponentActivity() {
                 var searching by remember{mutableStateOf(false)}
                 var everSearched by remember{mutableStateOf(false)}
                 val focusManager = LocalFocusManager.current
-                ModalNavigationDrawer(
-                    drawerState = drawerState,
-                    drawerContent = {
-                        NavigationDrawer(
-                            /*
-                            testProductSet
-                                .map { it.productCategory }
-                                .toSet()
-                                */
-                            ProductDatabase.getProductSet()
-                                .map { it.productCategory }
-                                .toSet()
-                        )
-                    }
-                ) {
-                    Scaffold(
-                        topBar = {
-                            AppBar(
-                                query = query,
-                                focus = searching,
-                                onQueryChange = {query = it},
-                                onFocus = {
-                                    if (it){
-                                        query = ""
-                                    }
-                                    searching = it
-                                          },
-                                onSearch = {
-                                    searching = false
-                                    currentQuery = query
-                                    everSearched = true
-                                    focusManager.clearFocus()
-                                },
-                                onNavigationItemClick = {
-                                    scope.launch {
-                                        drawerState.open()
-                                    }
-                                },
-                                onBack = {
-                                    searching = false
-                                    focusManager.clearFocus()
-                                    query = currentQuery
-                                }
-                            )
-                        },
-                        modifier = Modifier.fillMaxSize()
-                    ) { innerPadding ->
-                        if (!searching) {
-                            Column(
-                                modifier = Modifier.fillMaxWidth(1.0f).fillMaxHeight(1.0f)
-                                    .padding(start = 10.dp, end = 10.dp)
-                            ) {
-                                if (!everSearched) {
-                                    ProductContainer(
-                                        ProductDatabase.getAll(),
-                                        innerPadding
-                                    )
-                                }
-                                else{
-                                    ProductContainer(
-                                        ProductDatabase.search(currentQuery),
-                                        innerPadding
-                                    )
-                                }
-                            }
-                        }
-                        else{
-                            Column(
-                                modifier = Modifier.padding(innerPadding).fillMaxSize(1.0f)
-                            ){
-                                Text(text = "yo")
-                                Text(text = "yo2")
-                                Text(text = "yo3")
-                                Text(text = "yo4")
-                            }
-                        }
-                    }
+                val onQueryChange = {s: String ->
+                    query = s
                 }
+                val onFocus = {f: Boolean ->
+                    if (f){
+                        query = ""
+                    }
+                    searching = f
+                }
+                val onSearch = {
+                    searching = false
+                    currentQuery = query
+                    everSearched = true
+                    focusManager.clearFocus()
+                }
+                val onBack = {
+                    searching = false
+                    focusManager.clearFocus()
+                    query = currentQuery
+                }
+                HomeScreen(
+                    drawerState,
+                    query,
+                    searching,
+                    onQueryChange,
+                    onFocus,
+                    onSearch,
+                    scope,
+                    onBack,
+                    everSearched,
+                    currentQuery
+                )
             }
         }
     }
 }
 
-@Preview
 @Composable
-fun PetPawsPreview(){
-        val drawerState = rememberDrawerState(DrawerValue.Closed)
-        val scope = rememberCoroutineScope()
-        var currentQuery by remember{mutableStateOf("")}
-        var query by remember{mutableStateOf("")}
-        var searching by remember{mutableStateOf(false)}
-        var everSearched by remember{mutableStateOf(false)}
-        val focusManager = LocalFocusManager.current
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                NavigationDrawer(
-                    /*
-                    testProductSet
-                        .map { it.productCategory }
-                        .toSet()
-                        */
-                    ProductDatabase.getProductSet()
-                        .map { it.productCategory }
-                        .toSet()
+private fun HomeScreen(
+    drawerState: DrawerState,
+    query: String,
+    searching: Boolean,
+    onQueryChange: (String) -> Unit,
+    onFocus: (Boolean) -> Unit,
+    onSearch: () -> Unit,
+    scope: CoroutineScope,
+    onBack: () -> Unit,
+    everSearched: Boolean,
+    currentQuery: String
+) {
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            NavigationDrawer(
+                /*
+                            testProductSet
+                                .map { it.productCategory }
+                                .toSet()
+                                */
+                ProductDatabase.getProductSet()
+                    .map { it.productCategory }
+                    .toSet()
+            )
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                AppBar(
+                    query = query,
+                    focus = searching,
+                    onQueryChange = onQueryChange,
+                    onFocus = onFocus,
+                    onSearch = onSearch,
+                    onNavigationItemClick = {
+                        scope.launch {
+                            drawerState.open()
+                        }
+                    },
+                    onBack = onBack
                 )
-            }
-        ) {
-            Scaffold(
-                topBar = {
-                    AppBar(
-                        query = query,
-                        focus = searching,
-                        onQueryChange = {query = it},
-                        onFocus = {
-                            if (it){
-                                query = ""
-                            }
-                            searching = it
-                        },
-                        onSearch = {
-                            searching = false
-                            currentQuery = query
-                            everSearched = true
-                            focusManager.clearFocus()
-                        },
-                        onNavigationItemClick = {
-                            scope.launch {
-                                drawerState.open()
-                            }
-                        },
-                        onBack = {
-                            searching = false
-                            focusManager.clearFocus()
-                            query = currentQuery
-                        }
-                    )
-                },
-                modifier = Modifier.fillMaxSize()
-            ) { innerPadding ->
-                if (!searching) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(1.0f).fillMaxHeight(1.0f)
-                            .padding(start = 10.dp, end = 10.dp)
-                    ) {
-                        if (!everSearched) {
-                            ProductContainer(
-                                ProductDatabase.getAll(),
-                                innerPadding
-                            )
-                        }
-                        else{
-                            ProductContainer(
-                                ProductDatabase.search(currentQuery),
-                                innerPadding
-                            )
-                        }
+            },
+            modifier = Modifier.fillMaxSize()
+        ) { innerPadding ->
+            if (!searching) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(1.0f)
+                        .fillMaxHeight(1.0f)
+                        .padding(start = 10.dp, end = 10.dp)
+                ) {
+                    if (!everSearched) {
+                        ProductContainer(
+                            ProductDatabase.getAll(),
+                            innerPadding
+                        )
+                    } else {
+                        ProductContainer(
+                            ProductDatabase.search(currentQuery),
+                            innerPadding
+                        )
                     }
                 }
-                else{
-                    Column(
-                        modifier = Modifier.padding(innerPadding).fillMaxSize(1.0f)
-                    ){
-                        Text(text = "yo")
-                        Text(text = "yo2")
-                        Text(text = "yo3")
-                        Text(text = "yo4")
-                    }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize(1.0f)
+                ) {
+                    Text(text = "yo")
+                    Text(text = "yo2")
+                    Text(text = "yo3")
+                    Text(text = "yo4")
                 }
             }
         }
+    }
 }

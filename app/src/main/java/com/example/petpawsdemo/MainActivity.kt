@@ -62,6 +62,7 @@ class MainActivity : ComponentActivity() {
                         topBar = {
                             AppBar(
                                 query = query,
+                                focus = searching,
                                 onQueryChange = {query = it},
                                 onFocus = {
                                     if (it){
@@ -74,11 +75,16 @@ class MainActivity : ComponentActivity() {
                                     currentQuery = query
                                     everSearched = true
                                     focusManager.clearFocus()
-                                           },
+                                },
                                 onNavigationItemClick = {
                                     scope.launch {
                                         drawerState.open()
                                     }
+                                },
+                                onBack = {
+                                    searching = false
+                                    focusManager.clearFocus()
+                                    query = currentQuery
                                 }
                             )
                         },

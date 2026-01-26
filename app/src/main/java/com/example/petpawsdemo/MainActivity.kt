@@ -42,6 +42,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             PetPawsDemoTheme {
+
+
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
                 var currentQuery by remember{mutableStateOf("")}

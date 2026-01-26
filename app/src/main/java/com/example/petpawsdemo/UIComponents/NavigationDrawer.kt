@@ -139,7 +139,6 @@ fun NavigationItemGroup(
                         expandedChildStates[item.id] = !isExpanded
                     }
                     else {
-                        //selectedStates[item.id] = true;
                         onItemClick(item);
                     }
                 },

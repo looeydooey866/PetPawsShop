@@ -2,6 +2,7 @@ package com.example.petpawsdemo
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -35,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.petpawsdemo.ProductClasses.ProductContainer
 import com.example.petpawsdemo.ProductClasses.ProductScreen
+import com.example.petpawsdemo.ProductClasses.UserCart
 import com.example.petpawsdemo.UIComponents.AppBar
 import com.example.petpawsdemo.UIComponents.NavigationDrawer
 import com.example.petpawsdemo.ui.theme.PetPawsDemoTheme
@@ -51,6 +53,7 @@ class MainActivity : ComponentActivity() {
             PetPawsDemoTheme {
 
 
+                val context = LocalContext.current
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
                 var currentQuery by remember{mutableStateOf("")}
@@ -59,6 +62,7 @@ class MainActivity : ComponentActivity() {
                 var everSearched by remember{mutableStateOf(false)}
                 var viewing by remember{mutableStateOf(false)}
                 var currentlyViewing by remember{mutableIntStateOf(-1)}
+                var purchaseQuantity by remember{mutableIntStateOf(-1)}
                 val focusManager = LocalFocusManager.current
                 val onQueryChange = {s: String ->
                     query = s
@@ -83,6 +87,18 @@ class MainActivity : ComponentActivity() {
                 val onViewProduct = {id: Int ->
                     viewing = true
                     currentlyViewing = id
+                    purchaseQuantity = 1
+                }
+                val onChangeQuantity = {quantity: Int ->
+                    purchaseQuantity = quantity
+                }
+                val onViewBack = {
+                    viewing = false
+                }
+                val onBuy = {
+                    onViewBack()
+                    UserCart.addProduct(currentlyViewing, purchaseQuantity)
+                    Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show()
                 }
                 if (!viewing) {
                     HomeScreen(
@@ -100,10 +116,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }
                 else{
-                    ProductScreen(currentlyViewing){
-                        viewing = false
-                        currentlyViewing = -1
-                    }
+                    ProductScreen(currentlyViewing, purchaseQuantity, onChangeQuantity, onViewBack, onBuy)
                 }
             }
         }

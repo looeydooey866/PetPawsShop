@@ -54,12 +54,16 @@ import coil.compose.AsyncImage
 import com.example.petpawsdemo.ProductDatabase
 import com.example.petpawsdemo.UIComponents.SearchArea
 import kotlin.math.floor
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductScreen(
     id: Int,
+    quantity: Int,
+    onChangeQuantity: (Int) -> Unit,
     onBack: () -> Unit,
+    onBuy: () -> Unit,
 ){
     BackHandler {
         onBack()
@@ -97,16 +101,30 @@ fun ProductScreen(
                     modifier = Modifier.fillMaxSize()
                 ){
                     Row(
-                        modifier = Modifier.fillMaxHeight().fillMaxWidth(0.5f).background(MaterialTheme.colorScheme.secondaryContainer)
-                    ){
-
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxHeight().fillMaxWidth().background(MaterialTheme.colorScheme.primary),
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth(0.5f)
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .clickable{
+                            onChangeQuantity(Random.nextInt(100))
+                        },
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ){
-                        Text("Add To Cart", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
+                        Text("Change Quantity", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.primary)
+                            .clickable{
+                            onBuy()
+                        },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ){
+                        Text("Add $quantity To Cart", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
                     }
                 }
             }

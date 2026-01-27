@@ -111,20 +111,22 @@ fun AppBar (
                             contentDescription = "Hello!"
                         )
                     }
-                    Box(
-                        modifier = Modifier.align(Alignment.TopEnd)
-                    ) {
-                        Row(
-                            modifier = Modifier.size(20.dp).clip(RoundedCornerShape(50))
-                                .background(Color.Red),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
+                    if (UserCart.getProducts().isNotEmpty()){
+                        Box(
+                            modifier = Modifier.align(Alignment.TopEnd)
                         ) {
-                            Text(
-                                "${UserCart.getProducts().size}",
-                                color = Color.White,
-                                fontSize = 15.sp
-                            )
+                            Row(
+                                modifier = Modifier.size(20.dp).clip(RoundedCornerShape(50))
+                                    .background(Color.Red),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    "${UserCart.getProducts().size}",
+                                    color = Color.White,
+                                    fontSize = 15.sp
+                                )
+                            }
                         }
                     }
                 }

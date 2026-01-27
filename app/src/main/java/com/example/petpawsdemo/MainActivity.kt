@@ -5,11 +5,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
@@ -18,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -28,6 +34,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.petpawsdemo.ProductClasses.ProductContainer
+import com.example.petpawsdemo.ProductClasses.ProductScreen
 import com.example.petpawsdemo.UIComponents.AppBar
 import com.example.petpawsdemo.UIComponents.NavigationDrawer
 import com.example.petpawsdemo.ui.theme.PetPawsDemoTheme
@@ -50,6 +57,8 @@ class MainActivity : ComponentActivity() {
                 var query by remember{mutableStateOf("")}
                 var searching by remember{mutableStateOf(false)}
                 var everSearched by remember{mutableStateOf(false)}
+                var viewing by remember{mutableStateOf(false)}
+                var currentlyViewing by remember{mutableIntStateOf(-1)}
                 val focusManager = LocalFocusManager.current
                 val onQueryChange = {s: String ->
                     query = s
@@ -71,18 +80,31 @@ class MainActivity : ComponentActivity() {
                     focusManager.clearFocus()
                     query = currentQuery
                 }
-                HomeScreen(
-                    drawerState,
-                    query,
-                    searching,
-                    onQueryChange,
-                    onFocus,
-                    onSearch,
-                    scope,
-                    onBack,
-                    everSearched,
-                    currentQuery
-                )
+                val onViewProduct = {id: Int ->
+                    viewing = true
+                    currentlyViewing = id
+                }
+                if (!viewing) {
+                    HomeScreen(
+                        drawerState,
+                        query,
+                        searching,
+                        onQueryChange,
+                        onFocus,
+                        onSearch,
+                        scope,
+                        onBack,
+                        everSearched,
+                        currentQuery,
+                        onViewProduct
+                    )
+                }
+                else{
+                    ProductScreen(currentlyViewing){
+                        viewing = false
+                        currentlyViewing = -1
+                    }
+                }
             }
         }
     }
@@ -99,7 +121,8 @@ private fun HomeScreen(
     scope: CoroutineScope,
     onBack: () -> Unit,
     everSearched: Boolean,
-    currentQuery: String
+    currentQuery: String,
+    onViewProduct: (Int) -> Unit
 ) {
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -145,12 +168,16 @@ private fun HomeScreen(
                         ProductContainer(
                             ProductDatabase.getAll(),
                             innerPadding
-                        )
+                        ){ id ->
+                            onViewProduct(id)
+                        }
                     } else {
                         ProductContainer(
                             ProductDatabase.search(currentQuery),
                             innerPadding
-                        )
+                        ){ id ->
+                            onViewProduct(id)
+                        }
                     }
                 }
             } else {

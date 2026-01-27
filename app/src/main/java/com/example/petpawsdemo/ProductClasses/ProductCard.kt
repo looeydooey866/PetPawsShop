@@ -47,7 +47,7 @@ fun ProductCard(product: Product, modifier: Modifier, onClick: () -> Unit){
 }
 
 @Composable
-fun ProductImage(product: Product){
+private fun ProductImage(product: Product){
     Row(
         modifier = Modifier.fillMaxWidth(1f)
             .aspectRatio(1f)
@@ -63,7 +63,7 @@ fun ProductImage(product: Product){
 }
 
 @Composable
-fun ProductName(product: Product){
+private fun ProductName(product: Product){
     Text(
         text = product.name,
         fontSize = 16.sp,
@@ -74,7 +74,7 @@ fun ProductName(product: Product){
 }
 
 @Composable
-fun ProductInfo(product: Product){
+private fun ProductInfo(product: Product){
     Row(
         modifier = Modifier.fillMaxWidth(1.0f),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -91,7 +91,7 @@ fun ProductInfo(product: Product){
 }
 
 @Composable
-fun ProductRating(product: Product){
+private fun ProductRating(product: Product){
     val golden: Color = Color(0xFFDAA520)
     val iconModifier: Modifier = Modifier
             .size(20.dp);

@@ -39,7 +39,6 @@ fun AppBar (
             Row(
                 modifier = Modifier
                     .fillMaxWidth(1.0f)
-                    .padding(10.dp) //TODO;see if this shit works with the searcharea
             ) {
                 SearchArea(
                     query = query,

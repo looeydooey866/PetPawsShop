@@ -81,7 +81,7 @@ class ExampleProducts {
             4.5,
             1,
             listOf(),
-            listOf(Image_PetPawsDogCage_Thumbnail),
+            listOf(Image_PetPawsDogCage_Thumbnail,Image_PetPawsDogTreats_Thumbnail,Image_PetPawsWetDogFood_Thumbnail),
             "me",
             "Dog Cage to appease your dogs"
         )

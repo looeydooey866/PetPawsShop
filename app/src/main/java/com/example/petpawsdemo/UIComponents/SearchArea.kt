@@ -31,7 +31,6 @@ fun SearchArea(
             Text(
                 text = "Search on Pet Paws Online Market...",
                 fontSize = 15.sp,
-                modifier = Modifier.zIndex(9999999999f)
             )
           },
         modifier = modifier.onFocusChanged{

@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.petpawsdemo.ProductDatabase
 import com.example.petpawsdemo.ui.theme.Grey_Separator
 
 
@@ -51,7 +52,7 @@ fun CategorySeparator(type: String, subtype: String){
 }
 
 @Composable
-fun ProductContainer(products: List<Product>, innerPadding: PaddingValues){
+fun ProductContainer(products: List<Product>, innerPadding: PaddingValues, onClick: (Int) -> Unit){
     val context = LocalContext.current
     LazyVerticalGrid (
         columns = GridCells.Fixed(2),
@@ -67,14 +68,14 @@ fun ProductContainer(products: List<Product>, innerPadding: PaddingValues){
                 product = product,
                 modifier = mod
             ){
-                Toast.makeText(context, "Clicked product $product", Toast.LENGTH_SHORT).show()
+                onClick(ProductDatabase.getID(product)!!)
             }
         }
     }
 }
 
 @Composable
-fun ProductContainer(type: String, products: Map<String, List<Product>>, innerPadding: PaddingValues){
+fun ProductContainer(type: String, products: Map<String, List<Product>>, innerPadding: PaddingValues, onClick: (Int) -> Unit){
     val context = LocalContext.current
     val scroll = rememberScrollState()
     Column(
@@ -89,10 +90,10 @@ fun ProductContainer(type: String, products: Map<String, List<Product>>, innerPa
                         modifier = Modifier.fillMaxWidth(1.0f)
                     ){
                         ProductCard(chunk[0], Modifier.weight(1.0f)){
-                            Toast.makeText(context, "Clicked product ${chunk[0]}", Toast.LENGTH_SHORT).show()
+                            onClick(ProductDatabase.getID(chunk[0])!!)
                         }
                         ProductCard(chunk[1], Modifier.weight(1.0f)){
-                            Toast.makeText(context, "Clicked product ${chunk[1]}", Toast.LENGTH_SHORT).show()
+                            onClick(ProductDatabase.getID(chunk[1])!!)
                         }
                     }
                 }
@@ -101,7 +102,7 @@ fun ProductContainer(type: String, products: Map<String, List<Product>>, innerPa
                         modifier = Modifier.fillMaxWidth(0.5f)
                     ) {
                         ProductCard(chunk[0], Modifier) {
-                            Toast.makeText(context, "Clicked product ${chunk[0]}", Toast.LENGTH_SHORT).show()
+                            onClick(ProductDatabase.getID(chunk[0])!!)
                         }
                     }
                 }
@@ -111,7 +112,7 @@ fun ProductContainer(type: String, products: Map<String, List<Product>>, innerPa
 }
 
 @Composable
-fun ProductContainer(products: Map<String, Map<String,List<Product>>>, innerPadding: PaddingValues){
+fun ProductContainer(products: Map<String, Map<String,List<Product>>>, innerPadding: PaddingValues, onClick: (Int) -> Unit){
     val context = LocalContext.current
     val scroll = rememberScrollState()
     Column(
@@ -128,10 +129,10 @@ fun ProductContainer(products: Map<String, Map<String,List<Product>>>, innerPadd
                             modifier = Modifier.fillMaxWidth(1.0f)
                         ){
                             ProductCard(chunk[0], Modifier.weight(1.0f)){
-                                Toast.makeText(context, "Clicked product ${chunk[0]}", Toast.LENGTH_SHORT).show()
+                                onClick(ProductDatabase.getID(chunk[0])!!)
                             }
                             ProductCard(chunk[1], Modifier.weight(1.0f)){
-                                Toast.makeText(context, "Clicked product ${chunk[1]}", Toast.LENGTH_SHORT).show()
+                                onClick(ProductDatabase.getID(chunk[1])!!)
                             }
                         }
                     }
@@ -140,7 +141,7 @@ fun ProductContainer(products: Map<String, Map<String,List<Product>>>, innerPadd
                             modifier = Modifier.fillMaxWidth(0.5f)
                         ) {
                             ProductCard(chunk[0], Modifier) {
-                                Toast.makeText(context, "Clicked product ${chunk[0]}", Toast.LENGTH_SHORT).show()
+                                onClick(ProductDatabase.getID(chunk[0])!!)
                             }
                         }
                     }

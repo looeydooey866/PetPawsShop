@@ -4,6 +4,7 @@ import com.example.petpawsdemo.ProductClasses.Product
 import com.example.petpawsdemo.ProductClasses.ProductCategory
 import com.example.petpawsdemo.ProductClasses.searchCost
 import java.util.TreeSet
+import kotlin.math.min
 
 class ExampleProducts {
     companion object {
@@ -12,7 +13,7 @@ class ExampleProducts {
         val PetPawsDogFood = Product(
             "Nutritious Pet Paws Dog Food",
             ProductCategory("dog", "food"),
-            listOf("dog", "food"),
+            listOf("nutritious", "dog", "food"),
             67,
             1520,
             3.4,
@@ -28,7 +29,7 @@ class ExampleProducts {
         val PetPawsDogFoodPremium = Product(
             "Pet Paws Premium Dry Dog Food",
             ProductCategory("dog", "food"),
-            listOf("dog", "food", "premium"),
+            listOf("dog", "food", "premium", "dry"),
             43,
             2899,
             4.8,
@@ -44,7 +45,7 @@ class ExampleProducts {
         val PetPawsDogFoodBudget = Product(
             "Delicious Vegetarian Dog Treats",
             ProductCategory("dog", "food"),
-            listOf("dog", "treats", "vegetarian", "non-meat"),
+            listOf("dog", "treats", "vegetarian", "non-meat", "delicious", "food"),
             10,
             999,
             3.9,
@@ -60,7 +61,7 @@ class ExampleProducts {
         val PetPawsWetDogFood = Product(
             "Pet Paws Wet Dog Food – Chicken & Rice",
             ProductCategory("dog", "food"),
-            listOf("dog", "food", "wet"),
+            listOf("dog", "food", "wet", "chicken", "rice", "sus"),
             98,
             249,
             4.4,
@@ -89,7 +90,7 @@ class ExampleProducts {
         val PetPawsDogToys = Product(
             "Assorted Colorful Dog Toys",
             ProductCategory("dog", "toys"),
-            listOf("dog", "toys", "fun"),
+            listOf("dog", "toys", "fun", "assorted", "colorful"),
             21364,
             2100,
             5.0,
@@ -104,7 +105,7 @@ class ExampleProducts {
         val PetPawsDogMansion = Product(
             "Super Duper Premium Dog Mansion",
             ProductCategory("dog", "cage"),
-            listOf("dog", "cage", "mansion", "premium"),
+            listOf("dog", "cage", "mansion", "premium", "super", "duper"),
             1,
             210000,
             0.5,
@@ -161,7 +162,8 @@ object ProductDatabase{
         val queryWords = query.split(" ").map{it.lowercase()}
         val products = getProductSet().map{it.searchCost(queryWords) to it}
         val res = products.sortedBy{it.first}
-        return res.map{it.second}
+        val threshold = res.first().first + 50
+        return res.filter{it.first <= min(threshold, 1000)}.map{it.second}
     }
 
     init{

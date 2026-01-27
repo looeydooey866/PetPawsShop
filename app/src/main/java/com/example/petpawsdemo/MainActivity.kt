@@ -1,21 +1,15 @@
 package com.example.petpawsdemo
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
@@ -32,9 +26,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.petpawsdemo.ProductClasses.ProductContainer
+import com.example.petpawsdemo.ProductClasses.CategorialProductContainer
+import com.example.petpawsdemo.ProductClasses.SearchedProductContainer
 import com.example.petpawsdemo.ProductClasses.ProductScreen
 import com.example.petpawsdemo.ProductClasses.UserCart
 import com.example.petpawsdemo.UIComponents.AppBar
@@ -70,8 +64,9 @@ class MainActivity : ComponentActivity() {
                 val onFocus = {f: Boolean ->
                     if (f){
                         query = ""
+                        searching = true
+                        Toast.makeText(context, "Focus", Toast.LENGTH_SHORT).show()
                     }
-                    searching = f
                 }
                 val onSearch = {
                     searching = false
@@ -178,14 +173,14 @@ private fun HomeScreen(
                         .padding(start = 10.dp, end = 10.dp)
                 ) {
                     if (!everSearched) {
-                        ProductContainer(
+                        CategorialProductContainer(
                             ProductDatabase.getAll(),
                             innerPadding
                         ){ id ->
                             onViewProduct(id)
                         }
                     } else {
-                        ProductContainer(
+                        SearchedProductContainer(
                             ProductDatabase.search(currentQuery),
                             innerPadding
                         ){ id ->

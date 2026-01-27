@@ -58,7 +58,7 @@ fun AppBar (
                     modifier = Modifier
                         .fillMaxHeight(0.8f)
                         .clip(RoundedCornerShape(20)),
-                    textStyle = TextStyle(fontSize = 15.sp, lineHeight = 20.sp)
+                    textStyle = TextStyle(fontSize = 15.sp, lineHeight = 20.sp),
                 )
             }
         },

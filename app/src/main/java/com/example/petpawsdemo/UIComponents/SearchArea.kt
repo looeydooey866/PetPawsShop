@@ -7,7 +7,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -23,6 +25,7 @@ fun SearchArea(
     onFocus: (Boolean) -> Unit,
     textStyle: TextStyle,
 ){
+    val focusManager = LocalFocusManager.current
     TextField(
         value = query,
         onValueChange = onQueryChange,
@@ -35,10 +38,11 @@ fun SearchArea(
           },
         modifier = modifier.onFocusChanged{
             onFocus(it.isFocused)
-        },
+        } ,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = {
             onSearch()
+            focusManager.clearFocus()
         }),
         textStyle = textStyle,
     )

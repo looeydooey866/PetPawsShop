@@ -1,12 +1,13 @@
 package com.example.petpawsdemo.ProductClasses
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -52,24 +53,35 @@ fun CategorySeparator(type: String, subtype: String){
 }
 
 @Composable
-fun ProductContainer(products: List<Product>, innerPadding: PaddingValues, onClick: (Int) -> Unit){
-    val context = LocalContext.current
-    LazyVerticalGrid (
-        columns = GridCells.Fixed(2),
-        modifier = Modifier.padding(innerPadding)
-            .fillMaxWidth(1.0f),
-        contentPadding = PaddingValues(10.dp),
-        verticalArrangement = Arrangement.spacedBy(15.dp),
-        horizontalArrangement = Arrangement.spacedBy(15.dp)
-    ){
-        val mod = Modifier
-        items(products){ product ->
-            ProductCard(
-                product = product,
-                modifier = mod
-            ){
-                onClick(ProductDatabase.getID(product)!!)
+fun SearchedProductContainer(products: List<Product>, innerPadding: PaddingValues, onClick: (Int) -> Unit){
+    if (products.isNotEmpty()) {
+        val context = LocalContext.current
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.padding(innerPadding)
+                .fillMaxWidth(1.0f),
+            contentPadding = PaddingValues(10.dp),
+            verticalArrangement = Arrangement.spacedBy(15.dp),
+            horizontalArrangement = Arrangement.spacedBy(15.dp)
+        ) {
+            val mod = Modifier
+            items(products) { product ->
+                ProductCard(
+                    product = product,
+                    modifier = mod
+                ) {
+                    onClick(ProductDatabase.getID(product)!!)
+                }
             }
+        }
+    }
+    else{
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Text("Sorry, no products match your search!", fontSize = 24.sp)
         }
     }
 }
@@ -112,7 +124,7 @@ fun ProductContainer(type: String, products: Map<String, List<Product>>, innerPa
 }
 
 @Composable
-fun ProductContainer(products: Map<String, Map<String,List<Product>>>, innerPadding: PaddingValues, onClick: (Int) -> Unit){
+fun CategorialProductContainer(products: Map<String, Map<String,List<Product>>>, innerPadding: PaddingValues, onClick: (Int) -> Unit){
     val context = LocalContext.current
     val scroll = rememberScrollState()
     Column(

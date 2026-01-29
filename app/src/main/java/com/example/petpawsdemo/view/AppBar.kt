@@ -1,15 +1,17 @@
-package com.example.petpawsdemo.UIComponents
+package com.example.petpawsdemo.view
 
+import android.content.Intent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -28,10 +30,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.petpawsdemo.ProductClasses.UserCart
+import com.example.petpawsdemo.model.UserCart
+import com.example.petpawsdemo.activities.ProfileActivity
+import com.example.petpawsdemo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -130,6 +136,19 @@ fun AppBar (
                         }
                     }
                 }
+            }
+
+            val context = LocalContext.current;
+            IconButton(
+                onClick = {
+                    val intent = Intent(context, ProfileActivity::class.java)
+                    context.startActivity(intent)
+                }
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.pfp),
+                    contentDescription = "Profile picture"
+                ) //switch to pfp activity
             }
         }
     )

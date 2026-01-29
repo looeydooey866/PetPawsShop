@@ -1,4 +1,4 @@
-package com.example.petpawsdemo.UIComponents
+package com.example.petpawsdemo.view
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -36,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -46,7 +45,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.petpawsdemo.ProductClasses.ProductCategory
+import com.example.petpawsdemo.model.ProductCategory
 import com.example.petpawsdemo.R
 
 val xkcdTextStyle = TextStyle(

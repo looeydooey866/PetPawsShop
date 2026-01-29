@@ -1,6 +1,5 @@
-package com.example.petpawsdemo.ProductClasses
+package com.example.petpawsdemo.view
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,8 +23,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.petpawsdemo.model.Product
 import com.example.petpawsdemo.ProductDatabase
-import com.example.petpawsdemo.ui.theme.Grey_Separator
+import com.example.petpawsdemo.view.ui.theme.Grey_Separator
 
 
 @Composable
@@ -67,7 +67,7 @@ fun ProductContainer(products: List<Product>, innerPadding: PaddingValues, onCli
             ProductCard(
                 product = product,
                 modifier = mod
-            ){
+            ) {
                 onClick(ProductDatabase.getID(product)!!)
             }
         }
@@ -89,10 +89,10 @@ fun ProductContainer(type: String, products: Map<String, List<Product>>, innerPa
                     Row(
                         modifier = Modifier.fillMaxWidth(1.0f)
                     ){
-                        ProductCard(chunk[0], Modifier.weight(1.0f)){
+                        ProductCard(chunk[0], Modifier.weight(1.0f)) {
                             onClick(ProductDatabase.getID(chunk[0])!!)
                         }
-                        ProductCard(chunk[1], Modifier.weight(1.0f)){
+                        ProductCard(chunk[1], Modifier.weight(1.0f)) {
                             onClick(ProductDatabase.getID(chunk[1])!!)
                         }
                     }
@@ -128,10 +128,10 @@ fun ProductContainer(products: Map<String, Map<String,List<Product>>>, innerPadd
                         Row(
                             modifier = Modifier.fillMaxWidth(1.0f)
                         ){
-                            ProductCard(chunk[0], Modifier.weight(1.0f)){
+                            ProductCard(chunk[0], Modifier.weight(1.0f)) {
                                 onClick(ProductDatabase.getID(chunk[0])!!)
                             }
-                            ProductCard(chunk[1], Modifier.weight(1.0f)){
+                            ProductCard(chunk[1], Modifier.weight(1.0f)) {
                                 onClick(ProductDatabase.getID(chunk[1])!!)
                             }
                         }

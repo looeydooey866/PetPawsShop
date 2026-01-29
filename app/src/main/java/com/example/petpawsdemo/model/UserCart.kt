@@ -1,10 +1,6 @@
-package com.example.petpawsdemo.ProductClasses
+package com.example.petpawsdemo.model
 
-import com.example.petpawsdemo.ProductDatabase
-
-data class CartObject(val id: Int, var quantity: Int)
-
-object UserCart{
+object UserCart{ //object for 1 hardcoded profile
     private val products: MutableSet<CartObject> = mutableSetOf()
 
     fun getProducts() = products.toList()

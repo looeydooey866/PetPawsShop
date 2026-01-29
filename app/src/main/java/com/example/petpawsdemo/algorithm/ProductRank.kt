@@ -1,6 +1,6 @@
-package com.example.petpawsdemo.ProductClasses
+package com.example.petpawsdemo.algorithm
 
-import com.example.petpawsdemo.distanceTo
+import com.example.petpawsdemo.model.Product
 import kotlin.math.min
 
 class RankCoefficients{

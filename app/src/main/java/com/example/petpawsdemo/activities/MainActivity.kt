@@ -1,21 +1,14 @@
-package com.example.petpawsdemo
+package com.example.petpawsdemo.activities
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
@@ -24,25 +17,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.petpawsdemo.ProductClasses.ProductContainer
-import com.example.petpawsdemo.ProductClasses.ProductScreen
-import com.example.petpawsdemo.ProductClasses.UserCart
-import com.example.petpawsdemo.UIComponents.AppBar
-import com.example.petpawsdemo.UIComponents.NavigationDrawer
-import com.example.petpawsdemo.ui.theme.PetPawsDemoTheme
+import com.example.petpawsdemo.ProductDatabase
+import com.example.petpawsdemo.view.ProductContainer
+import com.example.petpawsdemo.view.AppBar
+import com.example.petpawsdemo.view.NavigationDrawer
+import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,18 +39,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             PetPawsDemoTheme {
-
-
-                val context = LocalContext.current
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
                 var currentQuery by remember{mutableStateOf("")}
                 var query by remember{mutableStateOf("")}
                 var searching by remember{mutableStateOf(false)}
                 var everSearched by remember{mutableStateOf(false)}
-                var viewing by remember{mutableStateOf(false)}
-                var currentlyViewing by remember{mutableIntStateOf(-1)}
-                var purchaseQuantity by remember{mutableIntStateOf(-1)}
                 val focusManager = LocalFocusManager.current
                 val onQueryChange = {s: String ->
                     query = s
@@ -84,40 +66,18 @@ class MainActivity : ComponentActivity() {
                     focusManager.clearFocus()
                     query = currentQuery
                 }
-                val onViewProduct = {id: Int ->
-                    viewing = true
-                    currentlyViewing = id
-                    purchaseQuantity = 1
-                }
-                val onChangeQuantity = {quantity: Int ->
-                    purchaseQuantity = quantity
-                }
-                val onViewBack = {
-                    viewing = false
-                }
-                val onBuy = {
-                    onViewBack()
-                    UserCart.addProduct(currentlyViewing, purchaseQuantity)
-                    Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show()
-                }
-                if (!viewing) {
-                    HomeScreen(
-                        drawerState,
-                        query,
-                        searching,
-                        onQueryChange,
-                        onFocus,
-                        onSearch,
-                        scope,
-                        onBack,
-                        everSearched,
-                        currentQuery,
-                        onViewProduct
-                    )
-                }
-                else{
-                    ProductScreen(currentlyViewing, purchaseQuantity, onChangeQuantity, onViewBack, onBuy)
-                }
+                HomeScreen(
+                    drawerState,
+                    query,
+                    searching,
+                    onQueryChange,
+                    onFocus,
+                    onSearch,
+                    scope,
+                    onBack,
+                    everSearched,
+                    currentQuery
+                )
             }
         }
     }
@@ -134,18 +94,12 @@ private fun HomeScreen(
     scope: CoroutineScope,
     onBack: () -> Unit,
     everSearched: Boolean,
-    currentQuery: String,
-    onViewProduct: (Int) -> Unit
+    currentQuery: String
 ) {
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             NavigationDrawer(
-                /*
-                            testProductSet
-                                .map { it.productCategory }
-                                .toSet()
-                                */
                 ProductDatabase.getProductSet()
                     .map { it.productCategory }
                     .toSet()
@@ -180,17 +134,15 @@ private fun HomeScreen(
                     if (!everSearched) {
                         ProductContainer(
                             ProductDatabase.getAll(),
-                            innerPadding
-                        ){ id ->
-                            onViewProduct(id)
-                        }
+                            innerPadding,
+                            onClick = {}
+                        )
                     } else {
                         ProductContainer(
                             ProductDatabase.search(currentQuery),
-                            innerPadding
-                        ){ id ->
-                            onViewProduct(id)
-                        }
+                            innerPadding,
+                            onClick = {}
+                        )
                     }
                 }
             } else {

@@ -1,4 +1,4 @@
-package com.example.petpawsdemo.UIComponents
+package com.example.petpawsdemo.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

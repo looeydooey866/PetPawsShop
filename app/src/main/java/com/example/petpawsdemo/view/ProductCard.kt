@@ -36,7 +36,7 @@ fun ProductCard(product: Product, modifier: Modifier, onClick: () -> Unit){
         //.aspectRatio(6f / 7)
             .clip(RoundedCornerShape(6))
         .background(Color.Transparent)
-        .padding(20.dp),
+        .padding(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
     ){

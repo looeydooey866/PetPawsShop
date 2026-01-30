@@ -1,4 +1,4 @@
-package com.example.petpawsdemo.ProductClasses
+package com.example.petpawsdemo.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.petpawsdemo.model.Product
 import kotlin.math.floor
 
 @Composable
@@ -90,15 +91,16 @@ private fun ProductInfo(product: Product){
     }
 }
 
+
 @Composable
-private fun ProductRating(product: Product){
+fun ProductRating(product: Product){
     val golden: Color = Color(0xFFDAA520)
     val iconModifier: Modifier = Modifier
-            .size(20.dp);
+        .size(25.dp);
 
     Row(
-        modifier = Modifier.fillMaxWidth(1.0f),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         val rating = product.rating;
         var fullStars: Int = floor(rating).toInt()
@@ -136,7 +138,7 @@ private fun ProductRating(product: Product){
         }
         Text(
             text = "" + product.rating,
-            fontSize = 14.sp
+            fontSize = 20.sp
         )
     }
 }

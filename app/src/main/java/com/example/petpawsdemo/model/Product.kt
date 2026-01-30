@@ -1,4 +1,4 @@
-package com.example.petpawsdemo.ProductClasses
+package com.example.petpawsdemo.model
 
 data class Review(
     val rating: Int,

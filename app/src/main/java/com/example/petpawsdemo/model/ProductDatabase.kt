@@ -1,8 +1,8 @@
 package com.example.petpawsdemo
 
-import com.example.petpawsdemo.ProductClasses.Product
-import com.example.petpawsdemo.ProductClasses.ProductCategory
-import com.example.petpawsdemo.ProductClasses.searchCost
+import com.example.petpawsdemo.model.Product
+import com.example.petpawsdemo.model.ProductCategory
+import com.example.petpawsdemo.algorithm.searchCost
 import java.util.TreeSet
 import kotlin.math.min
 

@@ -1,4 +1,4 @@
-package com.example.petpawsdemo
+package com.example.petpawsdemo.algorithm
 
 import kotlin.math.min
 

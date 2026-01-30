@@ -1,9 +1,9 @@
-package com.example.petpawsdemo.UIComponents
+package com.example.petpawsdemo.view
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.example.petpawsdemo.ProductClasses.ProductCategory
+import com.example.petpawsdemo.model.ProductCategory
 
 open class NavigationItem (
     val id: Int,

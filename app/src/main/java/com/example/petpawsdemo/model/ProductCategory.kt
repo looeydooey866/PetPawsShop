@@ -1,4 +1,4 @@
-package com.example.petpawsdemo.ProductClasses
+package com.example.petpawsdemo.model
 
 data class ProductCategory (
     val type: String,

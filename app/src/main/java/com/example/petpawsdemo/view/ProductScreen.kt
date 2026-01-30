@@ -1,4 +1,4 @@
-package com.example.petpawsdemo.ProductClasses
+package com.example.petpawsdemo.view
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -24,8 +24,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowLeft
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.automirrored.filled.StarHalf
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.BottomAppBar
@@ -46,13 +44,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.petpawsdemo.model.Product
 import com.example.petpawsdemo.ProductDatabase
-import com.example.petpawsdemo.UIComponents.SearchArea
 import kotlin.math.floor
 import kotlin.random.Random
 
@@ -215,7 +211,7 @@ fun ProductScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    ProductRating(product)
+                    ProductRatingScreen(product)
                     Text(
                         text = "${product.stock} in stock",
                         fontSize = 16.sp,
@@ -234,7 +230,7 @@ fun ProductScreen(
 }
 
 @Composable
-private fun ProductRating(product: Product){
+fun ProductRatingScreen(product: Product){
     val golden: Color = Color(0xFFDAA520)
     val iconModifier: Modifier = Modifier
         .size(30.dp);

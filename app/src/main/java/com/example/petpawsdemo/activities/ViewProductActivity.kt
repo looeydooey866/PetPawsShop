@@ -48,14 +48,12 @@ import com.example.petpawsdemo.model.ViewData
 import com.example.petpawsdemo.view.AppBar
 import com.example.petpawsdemo.view.ProductRatingScreen
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
-import com.example.petpawsdemo.viewmodel.CartViewModel
-import com.example.petpawsdemo.viewmodel.CartViewModelFactory
+import com.example.petpawsdemo.viewmodel.UserCart
 import kotlinx.coroutines.launch
 import kotlin.getValue
 import kotlin.random.Random
 
 class ViewProductActivity : ComponentActivity() {
-    private val cartViewModel: CartViewModel by viewModels { CartViewModelFactory(application) }
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,7 +113,7 @@ class ViewProductActivity : ComponentActivity() {
                                         .fillMaxWidth()
                                         .background(MaterialTheme.colorScheme.primary)
                                         .clickable{
-                                            cartViewModel.addProduct(ViewData.viewingId, quantity)
+                                            UserCart.addProduct(ViewData.viewingId, quantity)
                                             finish()
                                         },
                                     verticalAlignment = Alignment.CenterVertically,

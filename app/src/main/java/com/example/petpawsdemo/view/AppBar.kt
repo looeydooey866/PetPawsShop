@@ -38,12 +38,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.petpawsdemo.activities.ProfileActivity
 import com.example.petpawsdemo.R
-import com.example.petpawsdemo.viewmodel.CartViewModel
+import com.example.petpawsdemo.viewmodel.UserCart
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar (
-    cartViewModel: CartViewModel,
     query: String,
     focus: Boolean,
     onQueryChange: (String) -> Unit,
@@ -108,10 +107,12 @@ fun AppBar (
                 }
             }
             else{
+                val context = LocalContext.current
                 Box(
                     modifier = Modifier.padding(5.dp)
                 ) {
                     IconButton(onClick = {
+                        //Toast.makeText(context, "${UserCart.products.size}", Toast.LENGTH_SHORT).show()
                     }) {
                         Icon(
                             imageVector = Icons.Default.ShoppingCart,
@@ -119,8 +120,7 @@ fun AppBar (
                             contentDescription = "Hello!"
                         )
                     }
-                    val products = cartViewModel.products
-                    if (cartViewModel.cartSize > 0){
+                    if (UserCart.products.size > 0){
                         Box(
                             modifier = Modifier.align(Alignment.TopEnd)
                         ) {
@@ -131,7 +131,7 @@ fun AppBar (
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    "${cartViewModel.cartSize}",
+                                    "${UserCart.products.size}",
                                     color = Color.White,
                                     fontSize = 15.sp
                                 )

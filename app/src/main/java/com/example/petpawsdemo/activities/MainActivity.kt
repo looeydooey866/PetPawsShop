@@ -35,13 +35,10 @@ import com.example.petpawsdemo.view.ProductContainer
 import com.example.petpawsdemo.view.AppBar
 import com.example.petpawsdemo.view.NavigationDrawer
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
-import com.example.petpawsdemo.viewmodel.CartViewModel
-import com.example.petpawsdemo.viewmodel.CartViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    private val cartViewModel: CartViewModel by viewModels { CartViewModelFactory(application) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -83,7 +80,6 @@ class MainActivity : ComponentActivity() {
                     context.startActivity(intent)
                 }
                 HomeScreen(
-                    cartViewModel,
                     drawerState,
                     query,
                     searching,
@@ -103,7 +99,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun HomeScreen(
-    cartViewModel: CartViewModel,
     drawerState: DrawerState,
     query: String,
     searching: Boolean,
@@ -129,7 +124,6 @@ private fun HomeScreen(
         Scaffold(
             topBar = {
                 AppBar(
-                    cartViewModel = cartViewModel,
                     query = query,
                     focus = searching,
                     onQueryChange = onQueryChange,

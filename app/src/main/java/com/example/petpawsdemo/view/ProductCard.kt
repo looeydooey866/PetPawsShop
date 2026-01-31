@@ -96,16 +96,17 @@ private fun ProductInfo(product: Product){
 fun ProductRating(product: Product){
     val golden: Color = Color(0xFFDAA520)
     val iconModifier: Modifier = Modifier
-        .size(25.dp);
+        .size(24.dp);
 
     Row(
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
     ) {
         val rating = product.rating;
         var fullStars: Int = floor(rating).toInt()
-        if (rating - fullStars.toDouble() > 0.8) fullStars++;
-        val hasHalfStar: Boolean = ((rating - fullStars.toDouble()) > 0.3) && ((rating - fullStars.toDouble()) < 0.7)
+        if (rating - fullStars.toDouble() >= 0.75) fullStars++;
+        val hasHalfStar: Boolean = ((rating - fullStars.toDouble()) >= 0.25) && ((rating - fullStars.toDouble()) < 0.75)
         val emptyStars: Int = 5 - fullStars - (if (hasHalfStar) 1 else 0);
 
         repeat(fullStars) {
@@ -138,7 +139,7 @@ fun ProductRating(product: Product){
         }
         Text(
             text = "" + product.rating,
-            fontSize = 20.sp
+            fontSize = 17.sp
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.example.petpawsdemo.activities
 
+import android.R
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -7,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,27 +18,35 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowLeft
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.automirrored.filled.StarHalf
+import androidx.compose.material.icons.filled.AddCircleOutline
+import androidx.compose.material.icons.filled.RemoveCircleOutline
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,8 +73,16 @@ class ViewProductActivity : ComponentActivity() {
                     var index by remember { mutableIntStateOf(0) }
                     var quantity by remember{ mutableIntStateOf(1)}
                     val context = LocalContext.current
+                    val focusManager = LocalFocusManager.current
+                    val keyboardController = LocalSoftwareKeyboardController.current
+                    var editingQuantity by remember{mutableStateOf(false)}
                     Scaffold(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize().pointerInput(Unit){
+                            detectTapGestures{offset ->
+                                focusManager.clearFocus(true)
+                                keyboardController?.hide()
+                            }
+                        },
                         topBar = {
                             TopAppBar (
                                 title = {
@@ -99,7 +117,8 @@ class ViewProductActivity : ComponentActivity() {
                                             .fillMaxWidth(0.5f)
                                             .background(MaterialTheme.colorScheme.secondaryContainer)
                                             .clickable{
-                                                quantity = Random.nextInt(100)
+                                                editingQuantity = true
+                                                //quantity = Random.nextInt(100)
                                             },
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.Center
@@ -139,8 +158,93 @@ class ViewProductActivity : ComponentActivity() {
                             }
                         }
                     ) { innerPadding ->
-                        ProductContent(innerPadding, product, quantity, index){
-                            index = it
+                        if (!editingQuantity) {
+                            ProductContent(innerPadding, product, quantity, index) {
+                                index = it
+                            }
+                        }
+                        else{
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                ProductContent(innerPadding, product, quantity, index) {
+                                    index = it
+                                }
+                                Box(
+                                    modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = .3f))
+                                )
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(.5f).clip(RoundedCornerShape(10)).background(MaterialTheme.colorScheme.secondaryContainer).padding(10.dp)
+                                ){
+                                    var newQuantity by remember{mutableIntStateOf(quantity)}
+                                    var stringQuantity by remember{mutableStateOf(quantity.toString())}
+                                    Text(
+                                        text = "Edit quantity",
+                                        fontSize = 24.sp
+                                    )
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth()
+                                    ){
+                                        IconButton(onClick = {
+                                            if (stringQuantity.isNotEmpty() && stringQuantity.all{it.isDigit()}){
+                                                newQuantity = stringQuantity.toInt()
+                                            }
+                                            newQuantity--
+                                            stringQuantity = newQuantity.toString()
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Default.RemoveCircleOutline,
+                                                contentDescription = "Hello!"
+                                            )
+                                        }
+                                        TextField(
+                                            value = "" + stringQuantity,
+                                            onValueChange = {
+                                                stringQuantity = it
+                                            },
+                                            modifier = Modifier.weight(1.0f)
+                                        )
+                                        IconButton(onClick = {
+                                            if (stringQuantity.isNotEmpty() && stringQuantity.all{it.isDigit()}){
+                                                newQuantity = stringQuantity.toInt()
+                                            }
+                                            newQuantity++
+                                            stringQuantity = newQuantity.toString()
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Default.AddCircleOutline,
+                                                contentDescription = "Hello!"
+                                            )
+                                        }
+                                    }
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ){
+                                        Button(onClick = {
+                                            editingQuantity = false
+                                        },
+                                            content = {
+                                                Text("Back")
+                                            }
+                                        )
+                                        Button(onClick = {
+                                            editingQuantity = false
+                                            if (stringQuantity.isNotEmpty() && stringQuantity.all{it.isDigit()}){
+                                                quantity = stringQuantity.toInt()
+                                            }
+                                            else{
+                                                quantity = newQuantity
+                                            }
+                                        },
+                                            content = {
+                                                Text("Ok")
+                                            }
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }

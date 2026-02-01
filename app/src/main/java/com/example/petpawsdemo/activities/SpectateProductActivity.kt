@@ -60,7 +60,6 @@ class SpectateProductActivity : ComponentActivity() {
             PetPawsDemoTheme {
                 val product = ProductDatabase.getProduct(ViewData.viewingId)!!
                 var index by remember { mutableIntStateOf(0) }
-                var quantity by remember{ mutableIntStateOf(1)}
                 val context = LocalContext.current
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -84,53 +83,88 @@ class SpectateProductActivity : ComponentActivity() {
                                 }
                             },
                         )
+                    },
+
+                    bottomBar = {
+                        if (UserCart.contains(ViewData.viewingId)){
+                            BottomAppBar(
+                                modifier = Modifier.height(100.dp)
+                            ){
+                                Row(
+                                    modifier = Modifier.fillMaxSize()
+                                ){
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .fillMaxWidth(0.5f)
+                                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                                            .clickable{
+                                                UserCart.changeCount(ViewData.viewingId, Random.nextInt(100))
+                                            },
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.Center
+                                    ){
+                                        Text("Change Quantity", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
+                                    }
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .fillMaxWidth()
+                                            .background(Color.Red)
+                                            .clickable{
+                                                finish()
+                                                UserCart.removeProduct(ViewData.viewingId)
+                                                Toast.makeText(context, "Removed from cart", Toast.LENGTH_SHORT).show()
+                                            },
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.Center
+                                    ){
+                                        Text("Remove from cart", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
+                                    }
+                                }
+                            }
+                        }
                     }
                 ) { innerPadding ->
-                    Column(
-                        modifier = Modifier
-                            .padding(innerPadding).fillMaxSize().verticalScroll(rememberScrollState()),
-                    ){
-                        ProductGallery(product, index){
-                            index = it
-                        }
-                        Spacer(
-                            modifier = Modifier.height(5.dp)
-                        )
+                    if (UserCart.contains(ViewData.viewingId)) {
                         Column(
-                            modifier = Modifier.fillMaxSize().padding(10.dp),
-                            verticalArrangement = Arrangement.spacedBy(5.dp)
+                            modifier = Modifier
+                                .padding(innerPadding).fillMaxSize()
+                                .verticalScroll(rememberScrollState()),
                         ) {
-                            Text(
-                                text = product.name, fontSize = 26.sp
-                            )
-                            ProductPrice(product, quantity)
-                            with(product.producer){
-                                Text(
-                                    text = "Brand: $this",
-                                    fontSize = 20.sp,
-                                    //color = Color.Gray
-                                )
+                            ProductGallery(product, index) {
+                                index = it
                             }
-                            Row(
-                                modifier = Modifier.fillMaxWidth(1.0f),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                            Spacer(
+                                modifier = Modifier.height(5.dp)
+                            )
+                            Column(
+                                modifier = Modifier.fillMaxSize().padding(10.dp),
+                                verticalArrangement = Arrangement.spacedBy(5.dp)
                             ) {
-                                ProductRatingStars(product.rating, 30.dp)
-                                if (product.stock > 0) {
+                                Text(
+                                    text = product.name, fontSize = 26.sp
+                                )
+                                ProductPrice(product, UserCart.getCount(ViewData.viewingId))
+                                with(product.producer) {
+                                    Text(
+                                        text = "Brand: $this",
+                                        fontSize = 20.sp,
+                                        //color = Color.Gray
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(1.0f),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    ProductRatingStars(product.rating, 30.dp)
                                     Text(
                                         text = "${product.stock} in stock",
                                         fontSize = 16.sp,
                                     )
                                 }
-                                else{
-                                    Text(
-                                        text = "Out of stock",
-                                        fontSize = 16.sp,
-                                    )
-                                }
-                            }
-                            /*
+                                /*
                             Spacer(
                                 modifier = Modifier.height(10.dp)
                             )
@@ -139,14 +173,15 @@ class SpectateProductActivity : ComponentActivity() {
                             )
 
                              */
-                            Spacer(
-                                modifier = Modifier.height(20.dp)
-                            )
-                            ProductDescription(product)
-                            Spacer(
-                                modifier = Modifier.height(20.dp)
-                            )
-                            ProductReviews(product)
+                                Spacer(
+                                    modifier = Modifier.height(20.dp)
+                                )
+                                ProductDescription(product)
+                                Spacer(
+                                    modifier = Modifier.height(20.dp)
+                                )
+                                ProductReviews(product)
+                            }
                         }
                     }
                 }

@@ -114,7 +114,7 @@ class ViewProductActivity : ComponentActivity() {
                                             .clickable{
                                                 UserCart.addProduct(ViewData.viewingId, quantity)
                                                 finish()
-                                                Toast.makeText(context, "Added to cart.", Toast.LENGTH_SHORT)
+                                                Toast.makeText(context, "Added to cart.", Toast.LENGTH_SHORT).show()
                                             },
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.Center

@@ -50,7 +50,7 @@ import com.example.petpawsdemo.viewmodel.UserCart
 import kotlin.math.floor
 import kotlin.random.Random
 
-class ViewProductActivity : ComponentActivity() {
+class SpectateProductActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,58 +84,6 @@ class ViewProductActivity : ComponentActivity() {
                                 }
                             },
                         )
-                    },
-                    bottomBar = {
-                        BottomAppBar(
-                            modifier = Modifier.height(100.dp)
-                        ){
-                            Row(
-                                modifier = Modifier.fillMaxSize()
-                            ){
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .fillMaxWidth(0.5f)
-                                        .background(MaterialTheme.colorScheme.secondaryContainer)
-                                        .clickable{
-                                            quantity = Random.nextInt(100)
-                                        },
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Center
-                                ){
-                                    Text("Change Quantity", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
-                                }
-                                if (product.stock > 0){
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxHeight()
-                                            .fillMaxWidth()
-                                            .background(MaterialTheme.colorScheme.primary)
-                                            .clickable{
-                                                UserCart.addProduct(ViewData.viewingId, quantity)
-                                                finish()
-                                                Toast.makeText(context, "Added to cart.", Toast.LENGTH_SHORT)
-                                            },
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.Center
-                                    ){
-                                        Text("Add $quantity To Cart", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
-                                    }
-                                }
-                                else{
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxHeight()
-                                            .fillMaxWidth()
-                                            .background(Color.Red),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.Center
-                                    ){
-                                        Text("Out of stock", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
-                                    }
-                                }
-                            }
-                        }
                     }
                 ) { innerPadding ->
                     Column(

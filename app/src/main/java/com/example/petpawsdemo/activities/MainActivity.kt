@@ -73,7 +73,6 @@ class MainActivity : ComponentActivity() {
                     if (f){
                         query = ""
                         searching = true
-                        Toast.makeText(context, "Focus", Toast.LENGTH_SHORT).show()
                     }
                 }
                 val onSearch = {
@@ -96,6 +95,16 @@ class MainActivity : ComponentActivity() {
                     val intent = Intent(context, ViewProductActivity::class.java)
                     context.startActivity(intent)
                 }
+                val onViewCart = {
+                    val intent = Intent(context, CartActivity::class.java)
+                    context.startActivity(intent)
+                }
+                val onResetSearch = {
+                    searching = false
+                    everSearched = false
+                    query = ""
+                    currentQuery = ""
+                }
                 HomeScreen(
                     drawerState,
                     query,
@@ -107,7 +116,9 @@ class MainActivity : ComponentActivity() {
                     onBack,
                     everSearched,
                     currentQuery,
-                    onViewProduct
+                    onViewProduct,
+                    onResetSearch,
+                    onViewCart
                 )
             }
         }
@@ -126,7 +137,9 @@ private fun HomeScreen(
     onBack: () -> Unit,
     everSearched: Boolean,
     currentQuery: String,
-    onViewProduct: (Int) -> Unit
+    onViewProduct: (Int) -> Unit,
+    onResetSearch: () -> Unit,
+    onViewCart: () -> Unit,
 ) {
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -151,7 +164,9 @@ private fun HomeScreen(
                             drawerState.open()
                         }
                     },
-                    onBack = onBack
+                    onBack = onBack,
+                    onResetSearch = onResetSearch,
+                    onViewCart = onViewCart
                 )
             },
             modifier = Modifier.fillMaxSize()

@@ -49,7 +49,9 @@ fun AppBar (
     onSearch: () -> Unit,
     onBack: () -> Unit,
     onFocus: (Boolean) -> Unit,
-    onNavigationItemClick: () -> Unit
+    onNavigationItemClick: () -> Unit,
+    onResetSearch: () -> Unit,
+    onViewCart: () -> Unit
 ) {
     TopAppBar (
         title = {
@@ -66,6 +68,7 @@ fun AppBar (
                         .fillMaxHeight(0.8f)
                         .clip(RoundedCornerShape(20)),
                     textStyle = TextStyle(fontSize = 15.sp, lineHeight = 20.sp),
+                    onResetSearch = onResetSearch
                 )
             }
         },
@@ -112,7 +115,7 @@ fun AppBar (
                     modifier = Modifier.padding(5.dp)
                 ) {
                     IconButton(onClick = {
-                        //Toast.makeText(context, "${UserCart.products.size}", Toast.LENGTH_SHORT).show()
+                        onViewCart()
                     }) {
                         Icon(
                             imageVector = Icons.Default.ShoppingCart,

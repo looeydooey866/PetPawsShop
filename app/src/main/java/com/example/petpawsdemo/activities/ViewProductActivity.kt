@@ -129,7 +129,9 @@ class ViewProductActivity : ComponentActivity() {
                         modifier = Modifier
                             .padding(innerPadding).fillMaxSize().verticalScroll(rememberScrollState()),
                     ){
-                        ProductGallery(product, index)
+                        ProductGallery(product, index){
+                            index = it
+                        }
                         Spacer(
                             modifier = Modifier.height(5.dp)
                         )
@@ -179,14 +181,13 @@ class ViewProductActivity : ComponentActivity() {
 }
 
 @Composable
-private fun ProductGallery(product: Product, index: Int) {
-    var index1 = index
+private fun ProductGallery(product: Product, index: Int, onChangeIndex: (Int) -> Unit) {
     Box(modifier = Modifier
         .aspectRatio(1f)
         .fillMaxWidth()) {
         AsyncImage(
-            model = product.images[index1],
-            contentDescription = "Image with url ${product.images[index1]}",
+            model = product.images[index],
+            contentDescription = "Image with url ${product.images[index]}",
             modifier = Modifier
                 .aspectRatio(1f)
                 .fillMaxWidth(1f)
@@ -196,7 +197,7 @@ private fun ProductGallery(product: Product, index: Int) {
                 .fillMaxSize()
                 .padding(20.dp)
         ) {
-            if (index1 != 0) {
+            if (index != 0) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.CenterStart,
@@ -205,7 +206,7 @@ private fun ProductGallery(product: Product, index: Int) {
                         modifier = Modifier
                             .size(30.dp)
                             .clip(RoundedCornerShape(50))
-                            .background(Color.Gray)
+                            .background(Color.White)
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowLeft,
@@ -213,13 +214,13 @@ private fun ProductGallery(product: Product, index: Int) {
                             modifier = Modifier
                                 .requiredSize(40.dp)
                                 .clickable {
-                                    index1--
+                                    onChangeIndex(index - 1)
                                 }
                         )
                     }
                 }
             }
-            if (index1 != product.images.size - 1) {
+            if (index != product.images.size - 1) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.CenterEnd,
@@ -236,7 +237,7 @@ private fun ProductGallery(product: Product, index: Int) {
                             modifier = Modifier
                                 .requiredSize(40.dp)
                                 .clickable {
-                                    index1++
+                                    onChangeIndex(index + 1)
                                 }
                         )
                     }

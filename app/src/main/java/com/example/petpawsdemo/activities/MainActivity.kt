@@ -7,13 +7,21 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,12 +32,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEachReversed
 import com.example.petpawsdemo.ProductDatabase
 import com.example.petpawsdemo.model.Product
+import com.example.petpawsdemo.model.SearchHistory
 import com.example.petpawsdemo.model.ViewData
 import com.example.petpawsdemo.view.ProductContainer
 import com.example.petpawsdemo.view.AppBar
@@ -68,6 +81,10 @@ class MainActivity : ComponentActivity() {
                     currentQuery = query
                     everSearched = true
                     focusManager.clearFocus()
+                    if (!SearchHistory.history.contains(query)) {
+                        SearchHistory.history.add(query)
+                    }
+                    Unit
                 }
                 val onBack = {
                     searching = false
@@ -167,13 +184,34 @@ private fun HomeScreen(
             } else {
                 Column(
                     modifier = Modifier
-                        .padding(innerPadding)
+                        .padding(innerPadding).padding(6.7.dp)
                         .fillMaxSize(1.0f)
                 ) {
-                    Text(text = "yo")
-                    Text(text = "yo2")
-                    Text(text = "yo3")
-                    Text(text = "yo4")
+                    SearchHistory.history.fastForEachReversed{
+                        Row(
+                            modifier = Modifier.clickable{
+                                onQueryChange(it)
+                                onSearch()
+                            }.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            IconButton(onClick = {
+                                onQueryChange(it)
+                                onSearch()
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    tint = Color.White,
+                                    contentDescription = "Hello!"
+                                )
+                            }
+                            Text(
+                                text = it,
+                                fontSize = 18.sp
+                            )
+                        }
+                    }
                 }
             }
         }

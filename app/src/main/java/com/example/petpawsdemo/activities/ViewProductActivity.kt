@@ -127,84 +127,27 @@ class ViewProductActivity : ComponentActivity() {
                 ) { innerPadding ->
                     Column(
                         modifier = Modifier
-                            .padding(innerPadding).fillMaxSize(),
+                            .padding(innerPadding).fillMaxSize().verticalScroll(rememberScrollState()),
                     ){
-                        Box(modifier = Modifier.aspectRatio(1f).fillMaxWidth()){
-                            AsyncImage(
-                                model = product.images[index],
-                                contentDescription = "Image with url ${product.images[index]}",
-                                modifier = Modifier
-                                    .aspectRatio(1f)
-                                    .fillMaxWidth(1f)
-                            )
-                            Box(
-                                modifier = Modifier.fillMaxSize().padding(20.dp)
-                            ) {
-                                if (index != 0) {
-                                    Box(
-                                        modifier = Modifier.fillMaxSize(),
-                                        contentAlignment = Alignment.CenterStart,
-                                    ) {
-                                        Box(
-                                            modifier = Modifier.size(30.dp).clip(RoundedCornerShape(50))
-                                                .background(Color.White)
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.AutoMirrored.Default.ArrowLeft,
-                                                contentDescription = null,
-                                                modifier = Modifier.requiredSize(40.dp).clickable {
-                                                    index--
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-                                if (index != product.images.size - 1) {
-                                    Box(
-                                        modifier = Modifier.fillMaxSize(),
-                                        contentAlignment = Alignment.CenterEnd,
-                                    ) {
-                                        Box(
-                                            modifier = Modifier.size(30.dp).clip(RoundedCornerShape(50))
-                                                .background(Color.White)
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.AutoMirrored.Default.ArrowRight,
-                                                contentDescription = null,
-                                                modifier = Modifier.requiredSize(40.dp).clickable {
-                                                    index++
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-                                Box(
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentAlignment = Alignment.BottomCenter
-                                ) {
-                                    Text("...")
-                                }
-                            }
-                        }
+                        ProductGallery(product, index)
                         Spacer(
                             modifier = Modifier.height(5.dp)
                         )
                         Column(
-                            modifier = Modifier.fillMaxSize().padding(10.dp).verticalScroll(rememberScrollState()),
+                            modifier = Modifier.fillMaxSize().padding(10.dp),
                             verticalArrangement = Arrangement.spacedBy(5.dp)
                         ) {
                             Text(
                                 text = product.name, fontSize = 26.sp
                             )
-                            Text(
-                                text = "$${product.price / 100}.${
-                                    String.format(
-                                        "%02d",
-                                        product.price % 100
-                                    )
-                                }",
-                                fontSize = 28.sp
-                            )
+                            ProductPrice(product, quantity)
+                            with(product.producer){
+                                Text(
+                                    text = "Brand: $this",
+                                    fontSize = 20.sp,
+                                    //color = Color.Gray
+                                )
+                            }
                             Row(
                                 modifier = Modifier.fillMaxWidth(1.0f),
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -223,10 +166,141 @@ class ViewProductActivity : ComponentActivity() {
                             Box(
                                 modifier = Modifier.fillMaxWidth().height(3.dp).background(Color(0xffd3d3d3))
                             )
+                            Spacer(
+                                modifier = Modifier.height(10.dp)
+                            )
+                            ProductDescription(product)
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ProductGallery(product: Product, index: Int) {
+    var index1 = index
+    Box(modifier = Modifier
+        .aspectRatio(1f)
+        .fillMaxWidth()) {
+        AsyncImage(
+            model = product.images[index1],
+            contentDescription = "Image with url ${product.images[index1]}",
+            modifier = Modifier
+                .aspectRatio(1f)
+                .fillMaxWidth(1f)
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp)
+        ) {
+            if (index1 != 0) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.CenterStart,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(Color.White)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Default.ArrowLeft,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .requiredSize(40.dp)
+                                .clickable {
+                                    index1--
+                                }
+                        )
+                    }
+                }
+            }
+            if (index1 != product.images.size - 1) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.CenterEnd,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(Color.White)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Default.ArrowRight,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .requiredSize(40.dp)
+                                .clickable {
+                                    index1++
+                                }
+                        )
+                    }
+                }
+            }
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                Text("...")
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProductPrice(product: Product, quantity: Int) {
+    Row {
+        Text(
+            text = "$${product.price / 100}.${
+                String.format(
+                    "%02d",
+                    product.price % 100
+                )
+            }",
+            fontSize = 28.sp
+        )
+        if (quantity > 1) {
+            Text(
+                text = " ($quantity items = $${product.price * quantity / 100}.${
+                    String.format(
+                        "%02d",
+                        product.price * quantity % 100
+                    )
+                })",
+                fontSize = 28.sp,
+                color = Color.Gray
+            )
+        }
+    }
+}
+
+@Composable
+private fun ProductDescription(product: Product) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        Text(
+            text = "About this product",
+            fontSize = 25.sp,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = product.description,
+            fontSize = 18.sp,
+            color = MaterialTheme.colorScheme.onSurface,
+            lineHeight = 25.sp
+        )
     }
 }

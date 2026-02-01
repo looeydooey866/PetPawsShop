@@ -84,7 +84,7 @@ class ExampleProducts {
             listOf(),
             listOf(Image_PetPawsDogCage_Thumbnail,Image_PetPawsDogTreats_Thumbnail,Image_PetPawsWetDogFood_Thumbnail),
             "me",
-            "Dog Cage to appease your dogs"
+            "Give your furry companion a safe and comfortable home with our premium dog cage, designed for both function and style. Crafted with a high-quality, heavily glazed exterior, this cage offers a sleek, polished look that will complement any room while ensuring durability and long-lasting protection. The glossy finish is easy to clean and resistant to scratches, keeping your pet's space looking fresh and modern. With sturdy construction and ample ventilation, this cage provides a secure and cozy environment for your dog, whether you're at home or on the go. It's the perfect blend of safety, convenience, and aesthetic appeal—because your pet deserves a home that’s as stylish as it is functional."
         )
         private val Image_PetPawsDogToys_Thumbnail = "https://www.nocciolatoys.com/cdn/shop/files/1_284bbc55-05bb-44b0-b898-d17f05b86aa2.jpg?v=1745916563"
         val PetPawsDogToys = Product(

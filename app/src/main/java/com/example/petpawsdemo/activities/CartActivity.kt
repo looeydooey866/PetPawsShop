@@ -133,12 +133,17 @@ fun CartItem(cartObject: CartObject){
         }
         CartImage(product)
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.weight(1f)
         ){
             Text(text = product.name, fontSize = 17.sp)
             CartPrice(product, cartObject.quantity)
             RatingStars(product.rating, 15.dp)
         }
+        Text(
+            text = "${cartObject.quantity}x",
+            fontSize = 18.sp,
+            maxLines = 1
+        )
     }
 }
 
@@ -162,14 +167,26 @@ private fun CartImage(product: Product){
 private fun CartPrice(product: Product, quantity: Int) {
     Row {
         Text(
-            text = "$${product.price / 100}.${
+            text = "$${product.price * quantity / 100}.${
                 String.format(
                     "%02d",
-                    product.price % 100
+                    product.price * quantity % 100
                 )
             }",
             fontSize = 16.sp,
         )
+        if (quantity > 1) {
+            Text(
+                text = " ($${product.price / 100}.${
+                    String.format(
+                        "%02d",
+                        product.price % 100
+                    )
+                } each)",
+                fontSize = 16.sp,
+                color = Color.Gray
+            )
+        }
     }
 }
 

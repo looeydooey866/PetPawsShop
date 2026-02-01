@@ -205,7 +205,7 @@ private fun ProductGallery(product: Product, index: Int) {
                         modifier = Modifier
                             .size(30.dp)
                             .clip(RoundedCornerShape(50))
-                            .background(Color.White)
+                            .background(Color.Gray)
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowLeft,

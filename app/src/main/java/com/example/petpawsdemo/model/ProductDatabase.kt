@@ -3,6 +3,7 @@ package com.example.petpawsdemo
 import com.example.petpawsdemo.model.Product
 import com.example.petpawsdemo.model.ProductCategory
 import com.example.petpawsdemo.algorithm.searchCost
+import com.example.petpawsdemo.model.Review
 import java.util.TreeSet
 import kotlin.math.min
 
@@ -81,7 +82,20 @@ class ExampleProducts {
             1,
             4.5,
             1,
-            listOf(),
+            listOf(
+                Review(
+                    "Maxied",
+                    "https://cdn.discordapp.com/avatars/1086855106764476416/287fe77c49ed23c0146c46266ce98555.webp?size=100",
+                    5.0,
+                    "I think that this dog cage is splendid! It perfectly suits my dog, and he is very happy living in it for 25 hours a day. He especially enjoys the spaciousness of it, as described under the imaginary 'product size' description. Overall, a fantastic product."
+                ),
+                Review(
+                    "Mr. Burg",
+                    "https://images.themodernproper.com/production/posts/2016/ClassicCheeseBurger_9.jpg?w=1200&h=1200&q=60&fm=jpg&fit=crop&dm=1749310239&s=463b18fc3bb51dc5d96e866c848527c4",
+                    2.3,
+                    "My dog doesn't fit inside. Why would you sell a 1x1x2cm dog cage???"
+                )
+            ),
             listOf(Image_PetPawsDogCage_Thumbnail,Image_PetPawsDogTreats_Thumbnail,Image_PetPawsWetDogFood_Thumbnail),
             "me",
             "Give your furry companion a safe and comfortable home with our premium dog cage, designed for both function and style. Crafted with a high-quality, heavily glazed exterior, this cage offers a sleek, polished look that will complement any room while ensuring durability and long-lasting protection. The glossy finish is easy to clean and resistant to scratches, keeping your pet's space looking fresh and modern. With sturdy construction and ample ventilation, this cage provides a secure and cozy environment for your dog, whether you're at home or on the go. It's the perfect blend of safety, convenience, and aesthetic appeal—because your pet deserves a home that’s as stylish as it is functional."

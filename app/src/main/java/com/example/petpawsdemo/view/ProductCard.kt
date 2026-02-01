@@ -84,10 +84,18 @@ private fun ProductInfo(product: Product){
             text = "$${product.price / 100}.${String.format("%02d", product.price % 100)}",
             fontSize = 20.sp
         )
-        Text(
-            text = "${product.stock} in stock",
-            fontSize = 13.sp,
-        )
+        if (product.stock > 0) {
+            Text(
+                text = "${product.stock} in stock",
+                fontSize = 13.sp,
+            )
+        }
+        else{
+            Text(
+                text = "Out of stock",
+                fontSize = 13.sp,
+            )
+        }
     }
 }
 

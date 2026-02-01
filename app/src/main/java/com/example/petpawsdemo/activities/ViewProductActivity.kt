@@ -4,13 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -18,6 +14,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowLeft
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
+import androidx.compose.material.icons.automirrored.filled.StarHalf
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,21 +35,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import coil.compose.AsyncImage
 import com.example.petpawsdemo.ProductDatabase
 import com.example.petpawsdemo.model.Product
-import com.example.petpawsdemo.model.UserProfile
+import com.example.petpawsdemo.model.Review
 import com.example.petpawsdemo.model.ViewData
-import com.example.petpawsdemo.view.AppBar
-import com.example.petpawsdemo.view.ProductRatingScreen
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
 import com.example.petpawsdemo.viewmodel.UserCart
-import kotlinx.coroutines.launch
-import kotlin.getValue
+import kotlin.math.floor
 import kotlin.random.Random
 
 class ViewProductActivity : ComponentActivity() {
@@ -107,19 +102,37 @@ class ViewProductActivity : ComponentActivity() {
                                 ){
                                     Text("Change Quantity", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
                                 }
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxHeight()
-                                        .fillMaxWidth()
-                                        .background(MaterialTheme.colorScheme.primary)
-                                        .clickable{
-                                            UserCart.addProduct(ViewData.viewingId, quantity)
-                                            finish()
-                                        },
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Center
-                                ){
-                                    Text("Add $quantity To Cart", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
+                                if (product.stock > 0){
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .fillMaxWidth()
+                                            .background(MaterialTheme.colorScheme.primary)
+                                            .clickable{
+                                                UserCart.addProduct(ViewData.viewingId, quantity)
+                                                finish()
+                                            },
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.Center
+                                    ){
+                                        Text("Add $quantity To Cart", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
+                                    }
+                                }
+                                else{
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .fillMaxWidth()
+                                            .background(Color.Red)
+                                            .clickable{
+                                                UserCart.addProduct(ViewData.viewingId, quantity)
+                                                finish()
+                                            },
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.Center
+                                    ){
+                                        Text("Out of stock", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
+                                    }
                                 }
                             }
                         }
@@ -155,23 +168,37 @@ class ViewProductActivity : ComponentActivity() {
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                ProductRatingScreen(product)
-                                Text(
-                                    text = "${product.stock} in stock",
-                                    fontSize = 16.sp,
-
+                                ProductRatingStars(product.rating, 30.dp)
+                                if (product.stock > 0) {
+                                    Text(
+                                        text = "${product.stock} in stock",
+                                        fontSize = 16.sp,
                                     )
+                                }
+                                else{
+                                    Text(
+                                        text = "Out of stock",
+                                        fontSize = 16.sp,
+                                    )
+                                }
                             }
+                            /*
                             Spacer(
                                 modifier = Modifier.height(10.dp)
                             )
                             Box(
                                 modifier = Modifier.fillMaxWidth().height(3.dp).background(Color(0xffd3d3d3))
                             )
+
+                             */
                             Spacer(
-                                modifier = Modifier.height(10.dp)
+                                modifier = Modifier.height(20.dp)
                             )
                             ProductDescription(product)
+                            Spacer(
+                                modifier = Modifier.height(20.dp)
+                            )
+                            ProductReviews(product)
                         }
                     }
                 }
@@ -180,6 +207,56 @@ class ViewProductActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun ProductRatingStars(rating: Double, size: Dp){
+    val golden: Color = Color(0xFFDAA520)
+    val iconModifier: Modifier = Modifier
+        .size(size)
+
+    Row(
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        val rating = rating
+        var fullStars: Int = floor(rating).toInt()
+        if (rating - fullStars.toDouble() > 0.75) fullStars++;
+        val hasHalfStar: Boolean = ((rating - fullStars.toDouble()) > 0.25) && ((rating - fullStars.toDouble()) < 0.75)
+        val emptyStars: Int = 5 - fullStars - (if (hasHalfStar) 1 else 0);
+
+        repeat(fullStars) {
+            Icon(
+                imageVector = Icons.Filled.Star,
+                contentDescription = "Filled star",
+                tint = golden,
+                modifier = iconModifier
+            )
+        }
+
+        if (hasHalfStar) {
+            Box (contentAlignment = Alignment.Center) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.StarHalf,
+                    contentDescription = "Half Filled star",
+                    tint = golden,
+                    modifier = iconModifier
+                )
+            }
+        }
+
+        repeat(emptyStars) {
+            Icon(
+                imageVector = Icons.Outlined.StarOutline,
+                contentDescription = "Empty star",
+                tint = golden,
+                modifier = iconModifier
+            )
+        }
+        Text(
+            text = "" + rating,
+            fontSize = 20.sp
+        )
+    }
+}
 @Composable
 private fun ProductGallery(product: Product, index: Int, onChangeIndex: (Int) -> Unit) {
     Box(modifier = Modifier
@@ -285,9 +362,9 @@ private fun ProductDescription(product: Product) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 8.dp)
+            //.padding(horizontal = 12.dp, vertical = 8.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surface)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Text(
             text = "About this product",
@@ -295,13 +372,114 @@ private fun ProductDescription(product: Product) {
             color = MaterialTheme.colorScheme.primary
         )
 
+        Spacer(modifier = Modifier.height(6.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(2.dp)
+                .background(
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                )
+        )
+
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
             text = product.description,
-            fontSize = 18.sp,
+            fontSize = 17.sp,
             color = MaterialTheme.colorScheme.onSurface,
             lineHeight = 25.sp
         )
+    }
+}
+
+@Composable
+private fun ProductReviews(product: Product){
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            //.padding(horizontal = 12.dp, vertical = 8.dp)
+    ) {
+        Row {
+            Text(
+                text = "Reviews ",
+                fontSize = 25.sp,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = "(${product.reviews.size})",
+                fontSize = 23.sp,
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(2.dp)
+                .background(
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                )
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+        product.reviews.forEach{
+            ReviewCard(it)
+        }
+    }
+}
+
+@Composable
+fun ReviewCard(review: Review) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AsyncImage(
+                        model = review.profilePicture,
+                        contentDescription = "Profile picture",
+                        modifier = Modifier
+                            .size(42.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
+                    )
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Text(
+                        text = review.username,
+                        fontSize = 17.sp,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+                ProductRatingStars(review.rating, 20.dp)
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = review.review,
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }

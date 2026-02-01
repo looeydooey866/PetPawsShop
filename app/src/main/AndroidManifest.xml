@@ -43,16 +43,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SpectateProductActivity"
-            android:exported="true"
-            android:theme="@style/Theme.PetPawsDemo">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".activities.CartActivity"
             android:exported="true"
             android:theme="@style/Theme.PetPawsDemo">

@@ -114,7 +114,7 @@ fun CartItem(cartObject: CartObject){
     Row(
         modifier = Modifier.fillMaxWidth(1.0f).height(100.dp).clickable{
             ViewData.viewingId = cartObject.id
-            val intent = Intent(context, SpectateProductActivity::class.java)
+            val intent = Intent(context, ViewProductActivity::class.java)
             context.startActivity(intent)
         },
         verticalAlignment = Alignment.CenterVertically,
@@ -138,6 +138,7 @@ fun CartItem(cartObject: CartObject){
             Text(text = product.name, fontSize = 17.sp)
             CartPrice(product, cartObject.quantity)
             RatingStars(product.rating, 15.dp)
+            Text(text = "Edit", fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
         }
         Text(
             text = "${cartObject.quantity}x",

@@ -256,8 +256,16 @@ class ViewProductActivity : ComponentActivity() {
                     val product = ProductDatabase.getProduct(ViewData.viewingId)!!
                     var index by remember { mutableIntStateOf(0) }
                     val context = LocalContext.current
+                    var editingQuantity by remember{mutableStateOf(false)}
+                    val focusManager = LocalFocusManager.current
+                    val keyboardController = LocalSoftwareKeyboardController.current
                     Scaffold(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize().pointerInput(Unit){
+                            detectTapGestures{offset ->
+                                focusManager.clearFocus(true)
+                                keyboardController?.hide()
+                            }
+                        },
                         topBar = {
                             TopAppBar (
                                 title = {
@@ -294,7 +302,7 @@ class ViewProductActivity : ComponentActivity() {
                                                 .fillMaxWidth(0.5f)
                                                 .background(MaterialTheme.colorScheme.secondaryContainer)
                                                 .clickable{
-                                                    UserCart.changeCount(ViewData.viewingId, Random.nextInt(100))
+                                                    editingQuantity = true
                                                 },
                                             verticalAlignment = Alignment.CenterVertically,
                                             horizontalArrangement = Arrangement.Center
@@ -322,8 +330,93 @@ class ViewProductActivity : ComponentActivity() {
                         }
                     ) { innerPadding ->
                         if (UserCart.contains(ViewData.viewingId)) {
-                            ProductContent(innerPadding, product, UserCart.getCount(ViewData.viewingId), index){
-                                index = it
+                            if (!editingQuantity) {
+                                ProductContent(innerPadding, product, UserCart.getCount(ViewData.viewingId), index) {
+                                    index = it
+                                }
+                            }
+                            else{
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    ProductContent(innerPadding, product, UserCart.getCount(ViewData.viewingId), index) {
+                                        index = it
+                                    }
+                                    Box(
+                                        modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = .3f))
+                                    )
+                                    Column(
+                                        modifier = Modifier.fillMaxWidth(.5f).clip(RoundedCornerShape(10)).background(MaterialTheme.colorScheme.secondaryContainer).padding(10.dp)
+                                    ){
+                                        var newQuantity by remember{mutableIntStateOf(UserCart.getCount(ViewData.viewingId))}
+                                        var stringQuantity by remember{mutableStateOf(UserCart.getCount(ViewData.viewingId).toString())}
+                                        Text(
+                                            text = "Edit quantity",
+                                            fontSize = 24.sp
+                                        )
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth()
+                                        ){
+                                            IconButton(onClick = {
+                                                if (stringQuantity.isNotEmpty() && stringQuantity.all{it.isDigit()}){
+                                                    newQuantity = stringQuantity.toInt()
+                                                }
+                                                newQuantity--
+                                                stringQuantity = newQuantity.toString()
+                                            }) {
+                                                Icon(
+                                                    imageVector = Icons.Default.RemoveCircleOutline,
+                                                    contentDescription = "Hello!"
+                                                )
+                                            }
+                                            TextField(
+                                                value = "" + stringQuantity,
+                                                onValueChange = {
+                                                    stringQuantity = it
+                                                },
+                                                modifier = Modifier.weight(1.0f)
+                                            )
+                                            IconButton(onClick = {
+                                                if (stringQuantity.isNotEmpty() && stringQuantity.all{it.isDigit()}){
+                                                    newQuantity = stringQuantity.toInt()
+                                                }
+                                                newQuantity++
+                                                stringQuantity = newQuantity.toString()
+                                            }) {
+                                                Icon(
+                                                    imageVector = Icons.Default.AddCircleOutline,
+                                                    contentDescription = "Hello!"
+                                                )
+                                            }
+                                        }
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ){
+                                            Button(onClick = {
+                                                editingQuantity = false
+                                            },
+                                                content = {
+                                                    Text("Back")
+                                                }
+                                            )
+                                            Button(onClick = {
+                                                editingQuantity = false
+                                                if (stringQuantity.isNotEmpty() && stringQuantity.all{it.isDigit()}){
+                                                    UserCart.changeCount(ViewData.viewingId, stringQuantity.toInt())
+                                                }
+                                                else{
+                                                    UserCart.changeCount(ViewData.viewingId, newQuantity)
+                                                }
+                                            },
+                                                content = {
+                                                    Text("Ok")
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

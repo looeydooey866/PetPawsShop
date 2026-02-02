@@ -1,5 +1,6 @@
 package com.example.petpawsdemo.view
 
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -47,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.petpawsdemo.model.ProductCategory
 import com.example.petpawsdemo.R
+import com.example.petpawsdemo.activities.AboutUsActivity
 
 val xkcdTextStyle = TextStyle(
     fontFamily = FontFamily(Font(R.font.xkcdscript)),
@@ -138,7 +140,8 @@ fun NavigationItemGroup(
                         expandedChildStates[item.id] = !isExpanded
                     }
                     else {
-                        onItemClick(item);
+                        item.onClick()
+                        onItemClick(item) //debug
                     }
                 },
                 modifier = Modifier
@@ -198,40 +201,37 @@ fun NavigationDrawer(
     val context = LocalContext.current
     val highItems = remember {
         listOf(
-            NavigationItem(
-                id =NavigationItem.genID(), title = "Home",
-                selectedIcon = Icons.Filled.Home,
-                unselectedIcon = Icons.Filled.Home
-            ),
             NavigationItemDropdown(
-                itemId = NavigationItem.genID(), itemTitle = "Product Categories",
+                children = productCategories, itemId = NavigationItem.genID(),
+                itemTitle = "Product Categories",
                 itemSelectedIcon = Icons.Filled.ShoppingCart,
                 itemUnselectedIcon = Icons.Filled.ShoppingCart,
-                children = productCategories
+                onClick = {}
             ),
-            NavigationItem(
-                id =NavigationItem.genID(), title = "Profile",
-                selectedIcon = Icons.Filled.Person,
-                unselectedIcon = Icons.Filled.Person,
-            ),
-            NavigationItem(
-                id =NavigationItem.genID(), title = "About Us",
-                selectedIcon = Icons.Filled.Favorite,
-                unselectedIcon = Icons.Filled.Favorite
-            )
         )
     }
     val lowItems = remember {
         listOf(
             NavigationItem(
+                id =NavigationItem.genID(), title = "About Us",
+                selectedIcon = Icons.Filled.Favorite,
+                unselectedIcon = Icons.Filled.Favorite,
+                onClick = {
+                    val intent = Intent(context, AboutUsActivity::class.java)
+                    context.startActivity(intent)
+                }
+            ),
+            NavigationItem(
                 id =NavigationItem.genID(), title = "Settings",
                 selectedIcon = Icons.Filled.Settings,
-                unselectedIcon = Icons.Filled.Settings
+                unselectedIcon = Icons.Filled.Settings,
+                onClick = {}
             ),
             NavigationItem(
                 id =NavigationItem.genID(), title = "Logout",
                 selectedIcon = Icons.Filled.PowerSettingsNew,
-                unselectedIcon = Icons.Filled.PowerSettingsNew
+                unselectedIcon = Icons.Filled.PowerSettingsNew,
+                onClick = {}
             )
         )
     }
@@ -250,7 +250,7 @@ fun NavigationDrawer(
                 .padding(16.dp),
             itemTextStyle = xkcdTextStyle,
             onItemClick = { //TODO
-                Toast.makeText(context, "Clicked on ${it.title}", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "Clicked on ${it.title}", Toast.LENGTH_SHORT).show();
             }
         )
     }

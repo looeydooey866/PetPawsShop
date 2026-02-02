@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
@@ -20,37 +21,83 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.petpawsdemo.model.Product
 import com.example.petpawsdemo.ProductDatabase
 import com.example.petpawsdemo.view.ui.theme.Grey_Separator
 
-
 @Composable
-fun CategorySeparator(type: String, subtype: String){
-    Column(
-        modifier = Modifier.fillMaxWidth(1.0f).padding(top = 25.dp, bottom = 10.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+fun ProductContainer(
+    products: Map<String, Map<String, List<Product>>>,
+    innerPadding: PaddingValues,
+    onClick: (Int) -> Unit
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        modifier = Modifier
+            .padding(innerPadding)
+            .fillMaxWidth(),
+        contentPadding = PaddingValues(10.dp),
+        verticalArrangement = Arrangement.spacedBy(7.dp),
+        horizontalArrangement = Arrangement.spacedBy(15.dp)
     ) {
-        Text(
-            modifier = Modifier,
-            fontSize = 25.sp,
-            text = "${type.replaceFirstChar{it.uppercase()}} ${subtype.replaceFirstChar{it.uppercase()}}"
-        )
-        val separate = false
-        if (separate) {
-            Row(
-                modifier = Modifier.fillMaxWidth(1.0f).height(5.dp).clip(RoundedCornerShape(2.dp))
-                    .background(Grey_Separator)
-            ) {
+        products.forEach { (type, subMap) ->
+            //type header
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                CategorySeparator(type, "Items", true)
+            }
 
+            subMap.forEach { (subtype, productList) ->
+                //subtype header
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    CategorySeparator(type, subtype, false)
+                }
+
+                productList.forEach { product ->
+                    item {
+                        ProductCard(product) {
+                            onClick(ProductDatabase.getID(product)!!)
+                        }
+                    }
+                }
             }
         }
     }
 }
 
+@Composable
+fun CategorySeparator(type: String, subtype: String, isTypeHeader: Boolean) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = if (isTypeHeader) 16.dp else 8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Text(
+            text =
+                if (isTypeHeader) type.replaceFirstChar { it.uppercase() }
+                else subtype.replaceFirstChar { it.uppercase() },
+            fontSize = if (isTypeHeader) 30.sp else 24.sp,
+            fontWeight = if (isTypeHeader) FontWeight.ExtraBold else FontWeight.Bold,
+            color = if (isTypeHeader) Color.Black else Color.DarkGray
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(if (isTypeHeader) 4.dp else 0.dp)
+                .clip(RoundedCornerShape(2.dp))
+                .background(if (isTypeHeader) Color.DarkGray else Grey_Separator)
+        ) {}
+    }
+}
+
+
+
+/*
 @Composable
 fun ProductContainer(products: List<Product>, innerPadding: PaddingValues, onClick: (Int) -> Unit){
     val context = LocalContext.current
@@ -150,3 +197,4 @@ fun ProductContainer(products: Map<String, Map<String,List<Product>>>, innerPadd
         }
     }
 }
+ */

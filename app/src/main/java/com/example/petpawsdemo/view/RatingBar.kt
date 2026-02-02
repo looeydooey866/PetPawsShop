@@ -48,13 +48,13 @@ fun RatingBar(
             }
         }
 
-        //cyan stars
+        //yellow stars
         Row {
             for (i in 1..floor(rating).toInt()) {
                 Icon (
                     imageVector = Icons.Filled.Star,
                     contentDescription = "Rating ${i}",
-                    tint = Color.Cyan,
+                    tint = Color.Yellow,
                     modifier = starSizeModifier
                 )
             }
@@ -63,7 +63,7 @@ fun RatingBar(
                 Icon (
                     imageVector = Icons.AutoMirrored.Filled.StarHalf,
                     contentDescription = "Rating 0.5 Contribution",
-                    tint = Color.Cyan,
+                    tint = Color.Yellow,
                     modifier = starSizeModifier
                 )
             }

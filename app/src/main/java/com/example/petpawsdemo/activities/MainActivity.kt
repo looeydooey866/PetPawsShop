@@ -180,19 +180,20 @@ private fun HomeScreen(
                 ) {
                     if (!everSearched) {
                         ProductContainer(
-                            ProductDatabase.getAll(),
-                            innerPadding,
-                            onClick = {id ->
-                                onViewProduct(id)
-                            }
+                            products = ProductDatabase.getAll(),
+                            innerPadding = innerPadding,
+                            onClick = { id -> onViewProduct(id) }
                         )
                     } else {
                         ProductContainer(
-                            ProductDatabase.search(currentQuery),
-                            innerPadding,
-                            onClick = {id ->
-                                onViewProduct(id)
-                            }
+                            products = ProductDatabase.search(currentQuery)
+                                .groupBy { it.productCategory.type }
+                                .mapValues { (_, list) ->
+                                    list.groupBy {
+                                        it.productCategory.subtype
+                                    } },
+                            innerPadding = innerPadding,
+                            onClick = { id -> onViewProduct(id) }
                         )
                     }
                 }

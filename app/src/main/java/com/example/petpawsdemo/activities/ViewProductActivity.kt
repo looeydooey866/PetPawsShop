@@ -89,6 +89,7 @@ class ViewProductActivity : ComponentActivity() {
                         topBar = {
                             TopAppBar (
                                 title = {
+                                    product.name
                                 },
                                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                                     containerColor = MaterialTheme.colorScheme.primary,

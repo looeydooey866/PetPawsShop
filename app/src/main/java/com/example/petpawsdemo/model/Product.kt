@@ -20,4 +20,8 @@ data class Product(
     val producer: String,
     val description: String,
     val discount: Double = 0.0
-)
+) {
+    init {
+        require(name.length <= 50) {"The name of the product cannot be more than 100 characters."}
+    }
+}

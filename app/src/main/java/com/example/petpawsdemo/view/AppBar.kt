@@ -36,8 +36,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.petpawsdemo.activities.ProfileActivity
 import com.example.petpawsdemo.R
+import com.example.petpawsdemo.activities.ProfileActivity
 import com.example.petpawsdemo.viewmodel.UserCart
 
 @OptIn(ExperimentalMaterial3Api::class)

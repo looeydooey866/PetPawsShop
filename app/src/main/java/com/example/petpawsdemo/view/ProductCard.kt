@@ -7,9 +7,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.StarHalf
@@ -48,7 +52,7 @@ fun ProductCard(product: Product, modifier: Modifier, onClick: () -> Unit){
 }
 
 @Composable
-private fun ProductImage(product: Product){
+private fun ProductImage(product: Product) {
     Row(
         modifier = Modifier.fillMaxWidth(1f)
             .aspectRatio(1f)
@@ -84,18 +88,10 @@ private fun ProductInfo(product: Product){
             text = "$${product.price / 100}.${String.format("%02d", product.price % 100)}",
             fontSize = 20.sp
         )
-        if (product.stock > 0) {
-            Text(
-                text = "${product.stock} in stock",
-                fontSize = 13.sp,
-            )
-        }
-        else{
-            Text(
-                text = "Out of stock",
-                fontSize = 13.sp,
-            )
-        }
+        Text(
+            text = "${product.stock} in stock",
+            fontSize = 13.sp,
+        )
     }
 }
 
@@ -104,23 +100,22 @@ private fun ProductInfo(product: Product){
 fun ProductRating(product: Product){
     val golden: Color = Color(0xFFDAA520)
     val iconModifier: Modifier = Modifier
-        .size(24.dp);
+        .size(25.dp);
 
     Row(
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         val rating = product.rating;
         var fullStars: Int = floor(rating).toInt()
-        if (rating - fullStars.toDouble() >= 0.75) fullStars++;
-        val hasHalfStar: Boolean = ((rating - fullStars.toDouble()) >= 0.25) && ((rating - fullStars.toDouble()) < 0.75)
+        if (rating - fullStars.toDouble() > 0.8) fullStars++;
+        val hasHalfStar: Boolean = ((rating - fullStars.toDouble()) > 0.3) && ((rating - fullStars.toDouble()) < 0.7)
         val emptyStars: Int = 5 - fullStars - (if (hasHalfStar) 1 else 0);
 
         repeat(fullStars) {
             Icon(
                 imageVector = Icons.Filled.Star,
-                contentDescription = "Filled star",
+                contentDescription = null,
                 tint = golden,
                 modifier = iconModifier
             )
@@ -130,7 +125,7 @@ fun ProductRating(product: Product){
             Box (contentAlignment = Alignment.Center) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.StarHalf,
-                    contentDescription = "Half Filled star",
+                    contentDescription = null,
                     tint = golden,
                     modifier = iconModifier
                 )
@@ -140,14 +135,46 @@ fun ProductRating(product: Product){
         repeat(emptyStars) {
             Icon(
                 imageVector = Icons.Outlined.StarOutline,
-                contentDescription = "Empty star",
+                contentDescription = null,
                 tint = golden,
                 modifier = iconModifier
             )
         }
         Text(
             text = "" + product.rating,
-            fontSize = 17.sp
+            fontSize = 20.sp
         )
+    }
+}
+
+@Composable
+private fun ImageIndicator(
+    count: Int,
+    currentPage: Int,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .background(
+                color = Color.Black.copy(alpha = 0.25f),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        repeat(count) { index ->
+            Box(
+                modifier = Modifier
+                    .size(if (index == currentPage) 8.dp else 6.dp)
+                    .clip(CircleShape)
+                    .background(
+                        if (index == currentPage)
+                            Color.DarkGray
+                        else
+                            Color.LightGray
+                    )
+            )
+        }
     }
 }

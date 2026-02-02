@@ -10,7 +10,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -546,73 +549,33 @@ class ViewProductActivity : ComponentActivity() {
     }
     @Composable
     private fun ProductGallery(product: Product, index: Int, onChangeIndex: (Int) -> Unit) {
-        Box(modifier = Modifier
-            .aspectRatio(1f)
-            .fillMaxWidth()) {
-            AsyncImage(
-                model = product.images[index],
-                contentDescription = "Image with url ${product.images[index]}",
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .fillMaxWidth(1f)
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(20.dp)
-            ) {
-                if (index != 0) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.CenterStart,
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(30.dp)
-                                .clip(RoundedCornerShape(50))
-                                .background(Color.White)
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Default.ArrowLeft,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .requiredSize(40.dp)
-                                    .clickable {
-                                        onChangeIndex(index - 1)
-                                    }
-                            )
-                        }
-                    }
-                }
-                if (index != product.images.size - 1) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.CenterEnd,
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(30.dp)
-                                .clip(RoundedCornerShape(50))
-                                .background(Color.White)
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Default.ArrowRight,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .requiredSize(40.dp)
-                                    .clickable {
-                                        onChangeIndex(index + 1)
-                                    }
-                            )
-                        }
-                    }
-                }
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    Text("...")
-                }
+        val pagerState = rememberPagerState(pageCount = { product.images.size })
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
+                .clip(RoundedCornerShape(8.dp))
+        ) {
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize()
+            ) { page ->
+                AsyncImage(
+                    model = product.images[page],
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            if (product.images.size > 1) {
+                ImageIndicator(
+                    count = product.images.size,
+                    currentPage = pagerState.currentPage,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 8.dp)
+                )
             }
         }
     }
@@ -768,6 +731,38 @@ class ViewProductActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun ImageIndicator(
+    count: Int,
+    currentPage: Int,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .background(
+                color = Color.Black.copy(alpha = 0.25f),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .padding(horizontal = 8.dp, vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        repeat(count) { index ->
+            Box(
+                modifier = Modifier
+                    .size(if (index == currentPage) 8.dp else 6.dp)
+                    .clip(CircleShape)
+                    .background(
+                        if (index == currentPage)
+                            Color.DarkGray
+                        else
+                            Color.LightGray
+                    )
+            )
         }
     }
 }

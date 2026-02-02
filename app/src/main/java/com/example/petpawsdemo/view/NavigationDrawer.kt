@@ -212,7 +212,7 @@ fun NavigationDrawer(
             NavigationItem(
                 id =NavigationItem.genID(), title = "Profile",
                 selectedIcon = Icons.Filled.Person,
-                unselectedIcon = Icons.Filled.Person
+                unselectedIcon = Icons.Filled.Person,
             ),
             NavigationItem(
                 id =NavigationItem.genID(), title = "About Us",

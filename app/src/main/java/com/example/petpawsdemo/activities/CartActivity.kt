@@ -92,7 +92,7 @@ class CartActivity : ComponentActivity() {
                                 ) {
                                     Text(
                                         text = "Items: ${UserCart.products.size}",
-                                        fontSize = 22.sp,
+                                        fontSize = 18.sp,
                                         color = MaterialTheme.colorScheme.onSecondaryContainer
                                     )
                                     Spacer(modifier = Modifier.height(6.dp))
@@ -103,7 +103,7 @@ class CartActivity : ComponentActivity() {
                                                 cost % 100
                                             )
                                         }",
-                                        fontSize = 22.sp,
+                                        fontSize = 18.sp,
                                         color = MaterialTheme.colorScheme.secondary
                                     )
                                 }
@@ -129,7 +129,7 @@ class CartActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Text(
-                            text = "My Cart",
+                            text = "My Cart (${UserCart.products.size})",
                             fontSize = 25.sp,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -157,7 +157,7 @@ class CartActivity : ComponentActivity() {
 }
 
 @Composable
-fun CartItem(cartObject: CartObject){
+private fun CartItem(cartObject: CartObject){
     val product = ProductDatabase.getProduct(cartObject.id)!!
     val context = LocalContext.current
     Row(

@@ -74,7 +74,7 @@ class ProfileActivity : ComponentActivity() {
                                 navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                             ),
                         )
-                    }
+                    },
                 ) { innerPadding ->
                     Box(
                         modifier = Modifier

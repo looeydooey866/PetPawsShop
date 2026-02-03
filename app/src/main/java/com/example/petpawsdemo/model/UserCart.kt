@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.petpawsdemo.ProductDatabase
 import com.example.petpawsdemo.model.CartObject
 
 object UserCart{
@@ -33,4 +34,6 @@ object UserCart{
     fun getCount(id: Int) = findProduct(id).quantity
 
     fun clear() = products.clear()
+
+    fun getSubtotal() = products.sumOf { ProductDatabase.getProduct(it.id)!!.price * it.quantity }
 }

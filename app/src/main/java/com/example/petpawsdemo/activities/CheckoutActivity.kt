@@ -1,41 +1,64 @@
 package com.example.petpawsdemo.activities
 
+import android.R
 import android.content.Intent
+import android.graphics.drawable.Icon
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowLeft
+import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.automirrored.filled.StarHalf
+import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.CreditCard
+import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.icons.filled.RemoveCircleOutline
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarOutline
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,27 +66,30 @@ import coil.compose.AsyncImage
 import com.example.petpawsdemo.ProductDatabase
 import com.example.petpawsdemo.model.CartObject
 import com.example.petpawsdemo.model.Product
-import com.example.petpawsdemo.model.UserProfile
+import com.example.petpawsdemo.model.Review
 import com.example.petpawsdemo.model.ViewData
-import com.example.petpawsdemo.view.AppBar
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
 import com.example.petpawsdemo.viewmodel.UserCart
-import kotlinx.coroutines.launch
 import kotlin.math.floor
+import kotlin.random.Random
 
-class CartActivity : ComponentActivity() {
+class CheckoutActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         setContent {
+            var paymentMethod by remember{mutableStateOf("Credit/Debit Card")}
+            var deliveryAddress by remember{mutableStateOf("")}
             val context = LocalContext.current
             PetPawsDemoTheme {
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text(text = "Review Purchase") },
+                            title = {
+                                Text("Checkout")
+                            },
                             navigationIcon = {
                                 IconButton( onClick = { finish() } ) {
                                     Icon(
@@ -78,76 +104,84 @@ class CartActivity : ComponentActivity() {
                                 navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                             )
                         )
-                    },
-                    bottomBar = {
-                        Row(
-                            modifier = Modifier.height(80.dp).fillMaxWidth()
-                        ){
-                            Box(
-                                modifier = Modifier.weight(1.0f).fillMaxHeight(),
-                            ){
-                                val cost = UserCart.getSubtotal()
-                                Column(
-                                    modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.secondaryContainer).padding(10.dp),
-                                ) {
-                                    Text(
-                                        text = "Items: ${UserCart.products.size}",
-                                        fontSize = 18.sp,
-                                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                                    )
-                                    Spacer(modifier = Modifier.height(6.dp))
-                                    Text(
-                                        text = "Subtotal: $${cost / 100}.${
-                                            String.format(
-                                                "%02d",
-                                                cost % 100
-                                            )
-                                        }",
-                                        fontSize = 18.sp,
-                                        color = MaterialTheme.colorScheme.secondary
-                                    )
-                                }
-                            }
-                            Box(
-                                modifier = Modifier.weight(1.0f).fillMaxHeight().clickable{
-                                    val intent = Intent(context, CheckoutActivity::class.java)
-                                    context.startActivity(intent)
-                                }.background(MaterialTheme.colorScheme.primary),
-                                contentAlignment = Alignment.Center,
-                            ){
-                                Text(
-                                    text = "Checkout",
-                                    fontSize = 24.sp,
-                                    color = MaterialTheme.colorScheme.onPrimary
-                                )
-                            }
-                        }
                     }
-                ) { innerPadding ->
+                ){innerPadding ->
                     Column(
-                        modifier = Modifier.padding(innerPadding).padding(10.dp),
+                        modifier = Modifier.fillMaxSize().padding(innerPadding).padding(10.dp).verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
+                    ){
                         Text(
-                            text = "My Cart (${UserCart.products.size})",
-                            fontSize = 25.sp,
-                            color = MaterialTheme.colorScheme.primary
+                            text = "Checkout",
+                            fontSize = 30.sp
                         )
                         Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(2.dp)
-                                .background(
-                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                            modifier = Modifier.fillMaxWidth().height(5.dp).background(Color.Gray)
+                        )
+                        UserCart.products.forEach{
+                            CartItemReadonly(it)
+                        }
+                        val cost = UserCart.getSubtotal()
+                        Text(
+                            text = "Items: ${UserCart.products.size}",
+                            fontSize = 23.sp,
+                        )
+                        Text(
+                            text = "Total: $${cost / 100}.${
+                                String.format(
+                                    "%02d",
+                                    cost % 100
                                 )
+                            }",
+                            fontSize = 25.sp,
+                        )
+                        Text(
+                            text = "Payment method",
+                            fontSize = 26.sp,
                         )
                         Column(
-                            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
-                            verticalArrangement = Arrangement.spacedBy(5.dp),
-                        ) {
-                            UserCart.products.forEach {
-                                CartItem(it)
-                            }
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(5.dp)
+                        ){
+                            PaymentOption(
+                                paymentMethod = paymentMethod,
+                                myMethod = "Credit/Debit Card",
+                                onChangeMethod = {paymentMethod = "Credit/Debit Card"},
+                                icon = Icons.Default.CreditCard,
+                                color = MaterialTheme.colorScheme.secondaryContainer
+                            )
+                            PaymentOption(
+                                paymentMethod = paymentMethod,
+                                myMethod = "Pet Paws E-Wallet",
+                                onChangeMethod = {paymentMethod = "Pet Paws E-Wallet"},
+                                icon = Icons.Default.Pets,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                        Text(
+                            text = "Delivery Address",
+                            fontSize = 26.sp,
+                        )
+                        TextField(
+                            value = deliveryAddress,
+                            onValueChange = {
+                                deliveryAddress = it
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Button(
+                            modifier = Modifier.background(MaterialTheme.colorScheme.background),
+                            onClick = {
+                                UserCart.clear()
+                                val intent = Intent(context, MainActivity::class.java).apply {
+                                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                            Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                }
+                                startActivity(intent)
+                            },
+                        ){
+                            Text(
+                                text = "Purchase!"
+                            )
                         }
                     }
                 }
@@ -157,29 +191,14 @@ class CartActivity : ComponentActivity() {
 }
 
 @Composable
-private fun CartItem(cartObject: CartObject){
+private fun CartItemReadonly(cartObject: CartObject){
     val product = ProductDatabase.getProduct(cartObject.id)!!
     val context = LocalContext.current
     Row(
-        modifier = Modifier.fillMaxWidth(1.0f).height(100.dp).clickable{
-            ViewData.viewingId = cartObject.id
-            val intent = Intent(context, ViewProductActivity::class.java)
-            context.startActivity(intent)
-        },
+        modifier = Modifier.fillMaxWidth(1.0f).height(100.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(7.dp),
     ){
-        IconButton(
-            onClick = {
-                UserCart.removeProduct(cartObject.id)
-            },
-            modifier = Modifier.size(20.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Close,
-                contentDescription = "Remove Product"
-            )
-        }
         CartImage(product)
         Column(
             modifier = Modifier.weight(1f)
@@ -288,5 +307,35 @@ private fun RatingStars(rating: Double, size: Dp){
             text = "" + rating,
             fontSize = 15.sp
         )
+    }
+}
+
+@Composable
+private fun PaymentOption(paymentMethod: String, myMethod: String, onChangeMethod: (String) -> Unit, color: Color, icon: ImageVector) {
+    Row(
+        modifier = Modifier.fillMaxWidth().selectable(
+            selected = (paymentMethod == myMethod),
+            onClick = {
+                onChangeMethod(myMethod)
+            },
+            role = Role.RadioButton
+        ).clip(RoundedCornerShape(25)).background(MaterialTheme.colorScheme.primaryContainer),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(
+            selected = (paymentMethod == myMethod),
+            onClick = null
+        )
+        Text(
+            text = myMethod,
+            fontSize = 24.sp
+        )
+        Spacer(modifier = Modifier.weight(1.0f))
+        IconButton(onClick = { }) {
+            Icon(
+                icon,
+                contentDescription = null
+            )
+        }
     }
 }

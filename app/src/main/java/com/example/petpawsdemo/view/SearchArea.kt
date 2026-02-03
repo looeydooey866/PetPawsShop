@@ -1,11 +1,13 @@
 package com.example.petpawsdemo.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -62,7 +64,8 @@ fun SearchArea(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Close,
-                        contentDescription = "Clear search"
+                        contentDescription = "Clear search",
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }

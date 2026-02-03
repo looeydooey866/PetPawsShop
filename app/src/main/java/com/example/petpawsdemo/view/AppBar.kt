@@ -115,7 +115,9 @@ fun AppBar (
                     modifier = Modifier.padding(5.dp)
                 ) {
                     IconButton(onClick = {
-                        onViewCart()
+                        if (UserCart.products.isNotEmpty()) {
+                            onViewCart()
+                        }
                     }) {
                         Icon(
                             imageVector = Icons.Default.ShoppingCart,
@@ -123,7 +125,7 @@ fun AppBar (
                             contentDescription = "Hello!"
                         )
                     }
-                    if (UserCart.products.size > 0){
+                    if (UserCart.products.isNotEmpty()){
                         Box(
                             modifier = Modifier.align(Alignment.TopEnd)
                         ) {

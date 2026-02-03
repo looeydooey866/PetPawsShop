@@ -22,6 +22,7 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -213,7 +214,7 @@ private fun HomeScreen(
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.Search,
-                                    tint = Color.White,
+                                    tint = MaterialTheme.colorScheme.onSurface,
                                     contentDescription = "Hello!"
                                 )
                             }

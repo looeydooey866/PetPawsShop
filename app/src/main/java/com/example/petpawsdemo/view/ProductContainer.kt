@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,9 +12,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -48,13 +46,13 @@ fun ProductContainer(
         products.forEach { (type, subMap) ->
             //type header
             item(span = { GridItemSpan(maxLineSpan) }) {
-                CategorySeparator(type, "Items", true)
+                CategorySeparator(type)
             }
 
             subMap.forEach { (subtype, productList) ->
                 //subtype header
                 item(span = { GridItemSpan(maxLineSpan) }) {
-                    CategorySeparator(type, subtype, false)
+                    SubCategorySeparator(type, subtype)
                 }
 
                 productList.forEach { product ->
@@ -70,34 +68,56 @@ fun ProductContainer(
 }
 
 @Composable
-fun CategorySeparator(type: String, subtype: String, isTypeHeader: Boolean) {
+fun SubCategorySeparator(type: String, subtype: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = if (isTypeHeader) 16.dp else 8.dp),
+            .padding(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Text(
-            text =
-                if (isTypeHeader) type.replaceFirstChar { it.uppercase() }
-                else subtype.replaceFirstChar { it.uppercase() },
-            fontSize = if (isTypeHeader) 30.sp else 24.sp,
-            fontWeight = if (isTypeHeader) FontWeight.ExtraBold else FontWeight.Bold,
-            color = if (isTypeHeader) Color.Black else Color.DarkGray
+            text = type.replaceFirstChar{it.uppercase()} + " " + subtype.replaceFirstChar { it.uppercase() },
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.DarkGray
+        )
+    }
+}
+
+@Composable
+fun CategorySeparator(type: String){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(11.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .weight(1.0f)
+                .height(4.dp)
+                .clip(RoundedCornerShape(2.dp))
+                .background(MaterialTheme.colorScheme.primary)
+        ) {}
+        Text(
+            text = type.replaceFirstChar{it.uppercase()} + " Items",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.ExtraBold,
+            color = MaterialTheme.colorScheme.primary
         )
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(if (isTypeHeader) 4.dp else 0.dp)
+                .weight(1.0f)
+                .height(4.dp)
                 .clip(RoundedCornerShape(2.dp))
-                .background(if (isTypeHeader) Color.DarkGray else Grey_Separator)
+                .background(MaterialTheme.colorScheme.primary)
         ) {}
     }
 }
 
 
 
-/*
 @Composable
 fun ProductContainer(products: List<Product>, innerPadding: PaddingValues, onClick: (Int) -> Unit){
     val context = LocalContext.current
@@ -121,6 +141,7 @@ fun ProductContainer(products: List<Product>, innerPadding: PaddingValues, onCli
     }
 }
 
+/*
 @Composable
 fun ProductContainer(type: String, products: Map<String, List<Product>>, innerPadding: PaddingValues, onClick: (Int) -> Unit){
     val context = LocalContext.current

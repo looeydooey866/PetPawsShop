@@ -186,12 +186,7 @@ private fun HomeScreen(
                         )
                     } else {
                         ProductContainer(
-                            products = ProductDatabase.search(currentQuery)
-                                .groupBy { it.productCategory.type }
-                                .mapValues { (_, list) ->
-                                    list.groupBy {
-                                        it.productCategory.subtype
-                                    } },
+                            products = ProductDatabase.search(currentQuery),
                             innerPadding = innerPadding,
                             onClick = { id -> onViewProduct(id) }
                         )

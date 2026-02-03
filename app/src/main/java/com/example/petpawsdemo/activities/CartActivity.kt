@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -57,6 +58,7 @@ class CartActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
+            val context = LocalContext.current
             PetPawsDemoTheme {
                 Scaffold(
                     topBar = {
@@ -76,6 +78,50 @@ class CartActivity : ComponentActivity() {
                                 navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                             )
                         )
+                    },
+                    bottomBar = {
+                        Row(
+                            modifier = Modifier.height(80.dp).fillMaxWidth()
+                        ){
+                            Box(
+                                modifier = Modifier.weight(1.0f).fillMaxHeight(),
+                            ){
+                                val cost = UserCart.getSubtotal()
+                                Column(
+                                    modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.secondaryContainer).padding(10.dp),
+                                ) {
+                                    Text(
+                                        text = "Items: ${UserCart.products.size}",
+                                        fontSize = 22.sp,
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                                    )
+                                    Spacer(modifier = Modifier.height(6.dp))
+                                    Text(
+                                        text = "Subtotal: $${cost / 100}.${
+                                            String.format(
+                                                "%02d",
+                                                cost % 100
+                                            )
+                                        }",
+                                        fontSize = 22.sp,
+                                        color = MaterialTheme.colorScheme.secondary
+                                    )
+                                }
+                            }
+                            Box(
+                                modifier = Modifier.weight(1.0f).fillMaxHeight().clickable{
+                                    val intent = Intent(context, CheckoutActivity::class.java)
+                                    context.startActivity(intent)
+                                }.background(MaterialTheme.colorScheme.primary),
+                                contentAlignment = Alignment.Center,
+                            ){
+                                Text(
+                                    text = "Checkout",
+                                    fontSize = 24.sp,
+                                    color = MaterialTheme.colorScheme.onPrimary
+                                )
+                            }
+                        }
                     }
                 ) { innerPadding ->
                     Column(

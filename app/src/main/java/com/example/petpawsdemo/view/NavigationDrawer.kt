@@ -17,6 +17,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ContactSupport
+import androidx.compose.material.icons.filled.ContactSupport
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardDoubleArrowRight
@@ -203,7 +205,35 @@ fun NavigationDrawer(
         listOf(
             NavigationItemDropdown(
                 children = productCategories, itemId = NavigationItem.genID(),
-                itemTitle = "Product Categories",
+                itemTitle = "Dog",
+                itemSelectedIcon = Icons.Filled.ShoppingCart,
+                itemUnselectedIcon = Icons.Filled.ShoppingCart,
+                onClick = {}
+            ),
+            NavigationItemDropdown(
+                children = productCategories, itemId = NavigationItem.genID(),
+                itemTitle = "Cat",
+                itemSelectedIcon = Icons.Filled.ShoppingCart,
+                itemUnselectedIcon = Icons.Filled.ShoppingCart,
+                onClick = {}
+            ),
+            NavigationItemDropdown(
+                children = productCategories, itemId = NavigationItem.genID(),
+                itemTitle = "Small Pet",
+                itemSelectedIcon = Icons.Filled.ShoppingCart,
+                itemUnselectedIcon = Icons.Filled.ShoppingCart,
+                onClick = {}
+            ),
+            NavigationItemDropdown(
+                children = productCategories, itemId = NavigationItem.genID(),
+                itemTitle = "Fish",
+                itemSelectedIcon = Icons.Filled.ShoppingCart,
+                itemUnselectedIcon = Icons.Filled.ShoppingCart,
+                onClick = {}
+            ),
+            NavigationItemDropdown(
+                children = productCategories, itemId = NavigationItem.genID(),
+                itemTitle = "Reptile",
                 itemSelectedIcon = Icons.Filled.ShoppingCart,
                 itemUnselectedIcon = Icons.Filled.ShoppingCart,
                 onClick = {}
@@ -217,6 +247,15 @@ fun NavigationDrawer(
                 selectedIcon = Icons.Filled.Favorite,
                 unselectedIcon = Icons.Filled.Favorite,
                 onClick = {
+                    val intent = Intent(context, AboutUsActivity::class.java)
+                    context.startActivity(intent)
+                }
+            ),
+            NavigationItem(
+                id =NavigationItem.genID(), title = "Contact Us",
+                selectedIcon = Icons.AutoMirrored.Filled.ContactSupport,
+                unselectedIcon = Icons.AutoMirrored.Filled.ContactSupport,
+                onClick = { //TODO onclick show email and hotline
                     val intent = Intent(context, AboutUsActivity::class.java)
                     context.startActivity(intent)
                 }

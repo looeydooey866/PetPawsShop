@@ -15,7 +15,6 @@ import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -43,10 +42,7 @@ import androidx.compose.ui.unit.sp
 import com.example.petpawsdemo.R
 import com.example.petpawsdemo.model.UserProfile
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 val xkcdTextStyle = TextStyle(
@@ -221,8 +217,7 @@ fun AboutPetPawsScreenReactive(
                 val screenHeight = listState.layoutInfo.viewportEndOffset
                 val centerOffset = screenHeight / 2
                 val distanceFromCenter =
-                    if (itemInfo != null)
-                        kotlin.math.abs(itemInfo.offset + itemInfo.size / 2 - centerOffset)
+                    if (itemInfo != null) kotlin.math.abs(itemInfo.offset + itemInfo.size / 2 - centerOffset)
                     else 0
 
                 val alpha = (1f - (distanceFromCenter.toFloat() / centerOffset.toFloat()))

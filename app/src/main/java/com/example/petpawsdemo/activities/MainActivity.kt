@@ -109,7 +109,7 @@ class MainActivity : ComponentActivity() {
 
 
                 val prefs = getSharedPreferences("pet_paws_prefs", MODE_PRIVATE)
-                //prefs.edit().putBoolean("first_use", true).apply() //TODO: debug line
+                //prefs.edit().putBoolean("first_use", true).apply()
 
                 if (prefs.getBoolean("first_use", true)) {
                     val onboardingIntent = Intent(context, OnboardingActivity::class.java)

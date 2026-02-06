@@ -59,7 +59,7 @@ class CartActivity : ComponentActivity() {
 
         setContent {
             val context = LocalContext.current
-            PetPawsDemoTheme {
+            PetPawsDemoTheme (darkTheme = UserProfile.darkmode) {
                 Scaffold(
                     topBar = {
                         TopAppBar(

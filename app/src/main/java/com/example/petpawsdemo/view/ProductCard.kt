@@ -30,6 +30,7 @@ import androidx.compose.material.icons.automirrored.filled.StarHalf
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -50,6 +51,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.petpawsdemo.model.Product
+import com.example.petpawsdemo.model.UserProfile
+import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
 import kotlin.math.floor
 
 
@@ -68,61 +71,64 @@ fun ProductCard(product: Product, modifier: Modifier = Modifier, onClick: () -> 
         )
     )
 
-    val glowColor by animateColorAsState(
-        targetValue = if (pressed) Color(0xFFFFD700).copy(alpha = 0.4f) else Color.Transparent,
-        animationSpec = tween(300)
-    )
+    PetPawsDemoTheme (darkTheme = UserProfile.darkmode) {
+        val surface = MaterialTheme.colorScheme.surface
+        val onPrimary = MaterialTheme.colorScheme.surface
+        val onSurface = MaterialTheme.colorScheme.onSurface
+        val cardBackground = Color(0xFFF5F5F5)
 
-    Column(
-        modifier = modifier
-            .width(180.dp)
-            .scale(scale)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = {
-                        pressed = true
-                        tryAwaitRelease()
-                        pressed = false
-                    },
-                    onTap = {
-                        onClick()
-                    }
+        Column(
+            modifier = modifier
+                .width(180.dp)
+                .scale(scale)
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onPress = {
+                            pressed = true
+                            tryAwaitRelease()
+                            pressed = false
+                        },
+                        onTap = {
+                            onClick()
+                        }
+                    )
+                }
+                .shadow(8.dp, RoundedCornerShape(20.dp))
+                .clip(RoundedCornerShape(20.dp))
+                ///*
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(onPrimary, onPrimary)
+                        //colors = listOf(Color.White, Color.White)
+                    )
                 )
-            }
-            .shadow(8.dp, RoundedCornerShape(20.dp))
-            .clip(RoundedCornerShape(20.dp))
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(Color.White, Color(0xFFF5F5F5))
-                )
-            )
-            .padding(12.dp)
-            .background(glowColor, RoundedCornerShape(20.dp)),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        //FLOATING OMG OMG IMAGE ABSOLUTE MINIMA
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color.LightGray.copy(alpha = 0.1f))
-                .offset(y = floatOffset.dp),
-            contentAlignment = Alignment.Center
+                //*/
+                .padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            ProductImage(product)
-        }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    //.background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.1f))
+                    .offset(y = floatOffset.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                ProductImage(product)
+            }
 
-        //height changes, max 3 lines 50 chars
-        ProductName(product)
+            //height changes, max 3 lines 50 chars
+            ProductName(product)
 
-        Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
-        //heights are fixed
-        ProductInfo(product, height = 28.dp)
-        Box(modifier = Modifier.height(28.dp)) {
-            ProductRating(product)
+            //heights are fixed
+            ProductInfo(product, height = 28.dp)
+            Box(modifier = Modifier.height(28.dp)) {
+                ProductRating(product)
+            }
         }
     }
 }
@@ -241,38 +247,5 @@ private fun ProductImage(product: Product) {
                 .aspectRatio(1f)
                 .fillMaxWidth(1f)
         )
-    }
-}
-
-
-@Composable
-private fun ImageIndicator(
-    count: Int,
-    currentPage: Int,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .background(
-                color = Color.Black.copy(alpha = 0.25f),
-                shape = RoundedCornerShape(12.dp)
-            )
-            .padding(horizontal = 8.dp, vertical = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        repeat(count) { index ->
-            Box(
-                modifier = Modifier
-                    .size(if (index == currentPage) 8.dp else 6.dp)
-                    .clip(CircleShape)
-                    .background(
-                        if (index == currentPage)
-                            Color.DarkGray
-                        else
-                            Color.LightGray
-                    )
-            )
-        }
     }
 }

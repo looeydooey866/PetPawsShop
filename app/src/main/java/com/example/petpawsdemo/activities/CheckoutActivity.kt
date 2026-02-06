@@ -67,6 +67,7 @@ import com.example.petpawsdemo.ProductDatabase
 import com.example.petpawsdemo.model.CartObject
 import com.example.petpawsdemo.model.Product
 import com.example.petpawsdemo.model.Review
+import com.example.petpawsdemo.model.UserProfile
 import com.example.petpawsdemo.model.ViewData
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
 import com.example.petpawsdemo.viewmodel.UserCart
@@ -83,7 +84,7 @@ class CheckoutActivity : ComponentActivity() {
             var paymentMethod by remember{mutableStateOf("Credit/Debit Card")}
             var deliveryAddress by remember{mutableStateOf("")}
             val context = LocalContext.current
-            PetPawsDemoTheme {
+            PetPawsDemoTheme (darkTheme = UserProfile.darkmode) {
                 Scaffold(
                     topBar = {
                         TopAppBar(

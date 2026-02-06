@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
@@ -51,6 +52,8 @@ import androidx.compose.ui.unit.sp
 import com.example.petpawsdemo.model.ProductCategory
 import com.example.petpawsdemo.R
 import com.example.petpawsdemo.activities.AboutUsActivity
+import com.example.petpawsdemo.model.UserProfile
+import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
 
 val xkcdTextStyle = TextStyle(
     fontFamily = FontFamily(Font(R.font.xkcdscript)),
@@ -100,11 +103,15 @@ fun DrawerBody(
     itemTextStyle: TextStyle = xkcdTextStyle,
     onItemClick: (NavigationItem) -> Unit //TODO
 ) {
-    val selectedStates = remember{ mutableStateMapOf<Int, Boolean>() }
-    NavigationItemGroup(highItems, selectedStates, modifier, itemTextStyle, onItemClick)
-    Spacer(modifier = Modifier.fillMaxHeight(0.2f))
-    HorizontalDivider()
-    NavigationItemGroup(lowItems, selectedStates, modifier, itemTextStyle, onItemClick)
+    PetPawsDemoTheme(darkTheme = UserProfile.darkmode) {
+        val selectedStates = remember{ mutableStateMapOf<Int, Boolean>() }
+        NavigationItemGroup(highItems, selectedStates, modifier, itemTextStyle, onItemClick)
+        Spacer(modifier = Modifier.fillMaxHeight(0.2f))
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+        )
+        NavigationItemGroup(lowItems, selectedStates, modifier, itemTextStyle, onItemClick)
+    }
 }
 
 @Composable
@@ -113,10 +120,9 @@ fun NavigationItemGroup(
     selectedStates: SnapshotStateMap<Int, Boolean>,
     modifier: Modifier,
     itemTextStyle: TextStyle,
-    onItemClick: (NavigationItem) -> Unit //TODO
+    onItemClick: (NavigationItem) -> Unit
 ) {
     val expandedChildStates = remember { mutableStateMapOf<Int, Boolean>() }
-    val MAX_RECURSION_DEPTH = 2; //TODO: 1 for types, 1 for subtypes
 
     LazyColumn(modifier) {
         items(items.toList()) {item ->
@@ -243,7 +249,7 @@ fun NavigationDrawer(
     val lowItems = remember {
         listOf(
             NavigationItem(
-                id =NavigationItem.genID(), title = "About Us",
+                id =NavigationItem.genID(), title = "About Us & Contacts",
                 selectedIcon = Icons.Filled.Favorite,
                 unselectedIcon = Icons.Filled.Favorite,
                 onClick = {
@@ -275,22 +281,24 @@ fun NavigationDrawer(
         )
     }
 
-    Column (
-        Modifier
-            .background( color = Color.White )
-            .fillMaxHeight()
-            .fillMaxWidth(0.8f)
-    ) {
-        DrawerHeader()
-        DrawerBody(
-            highItems = highItems,
-            lowItems = lowItems,
-            modifier = Modifier
-                .padding(16.dp),
-            itemTextStyle = xkcdTextStyle,
-            onItemClick = { //TODO
-                //Toast.makeText(context, "Clicked on ${it.title}", Toast.LENGTH_SHORT).show();
-            }
-        )
+    PetPawsDemoTheme (darkTheme = UserProfile.darkmode) {
+        Column (
+            Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .fillMaxHeight()
+                .fillMaxWidth(0.8f)
+        ) {
+            DrawerHeader()
+            DrawerBody(
+                highItems = highItems,
+                lowItems = lowItems,
+                modifier = Modifier
+                    .padding(16.dp),
+                itemTextStyle = xkcdTextStyle,
+                onItemClick = { //TODO
+                    //Toast.makeText(context, "Clicked on ${it.title}", Toast.LENGTH_SHORT).show();
+                }
+            )
+        }
     }
 }

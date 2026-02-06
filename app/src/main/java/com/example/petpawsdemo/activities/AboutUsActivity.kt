@@ -23,6 +23,7 @@ import androidx.compose.material3.*
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.petpawsdemo.R
+import com.example.petpawsdemo.model.ShapeState
 import com.example.petpawsdemo.model.UserProfile
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
 import kotlinx.coroutines.delay
@@ -57,11 +59,11 @@ class AboutUsActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            PetPawsDemoTheme {
+            PetPawsDemoTheme (darkTheme = UserProfile.darkmode){
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text("About Us") },
+                            title = { Text("About Us & Contact Us") },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(
@@ -83,203 +85,11 @@ class AboutUsActivity : ComponentActivity() {
                             .padding(innerPadding)
                             .fillMaxSize()
                     ) {
-                        if (UserProfile.firstTimeEntering) {
-                            UserProfile.firstTimeEntering = false
-                            AboutPetPawsScreenReactive(UserProfile.darkmode) {
-                                finish()
-                            }
-                        }
-                        else {
-                            AboutPetPawsScreen(UserProfile.darkmode) {
-                                finish()
-                            }
-                        }
+                        AboutPetPawsScreen(UserProfile.darkmode) { finish() }
                     }
                 }
             }
         }
-    }
-}
-
-//animated background stuff below yay!
-@Composable
-fun AboutPetPawsScreenReactive(
-    darkmode: Boolean,
-    onFinish: () -> Unit
-) {
-    val lines = listOf(
-        "You and your pets deserve quality products.",
-        "Pet Paws is a modern pet lifestyle brand dedicated to " +
-                "providing high-quality products for our animal companions.",
-        "From everyday essentials to beautiful accessories, we focus on comfort, safety, and style;" +
-                " all for the satisfaction of you, our customers, and your pets.",
-        "Our brand is committed to responsible pet care.",
-        "We uphold this value by providing pet owners with " +
-                "the best pet products to care for them responsibly.",
-        "May you find the perfect pet products for your pets. Happy browsing!"
-    )
-
-    val shapes = remember {
-        List(15) {
-            ShapeState(
-                x = Random.nextFloat() * 1080f,
-                y = Random.nextFloat() * 1920f,
-                size = Random.nextFloat() * 25f + 15f,
-                rotation = Random.nextFloat() * 360f,
-                alpha = Random.nextFloat() * 0.5f + 0.3f,
-                color = Color(
-                    Random.nextFloat(),
-                    Random.nextFloat(),
-                    Random.nextFloat(), 1f
-                )
-            )
-        }
-    }
-
-    //leaving link stuff
-    val listState = rememberLazyListState()
-    val lastIndex = lines.lastIndex
-    val linkAlpha = remember { Animatable(0f) }
-
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo.map { it.index } }
-            .collect { visibleIndices ->
-                if (lastIndex in visibleIndices) {
-                    delay(1000) //aft last line appear
-                    linkAlpha.animateTo(
-                        targetValue = 1f,
-                        animationSpec = tween(1500)
-                    )
-                }
-            }
-    }
-
-    //animate: shape
-    shapes.forEach { shape ->
-        LaunchedEffect(shape) {
-            while (true) {
-                shape.rotationAnim.animateTo(
-                    targetValue = shape.rotationAnim.value + 360f,
-                    animationSpec = tween(4000, easing = LinearEasing)
-                )
-                shape.alphaAnim.animateTo(
-                    targetValue = 0.3f + Random.nextFloat() * 0.5f,
-                    animationSpec = tween(4000, easing = LinearEasing)
-                )
-                shape.sizeAnim.animateTo(
-                    targetValue = 15f + Random.nextFloat() * 25f,
-                    animationSpec = tween(4000, easing = LinearEasing)
-                )
-            }
-        }
-    }
-
-    //animate: bg
-    Box(modifier = Modifier.fillMaxSize()) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            shapes.forEach { shape ->
-                val firstVisible = listState.layoutInfo.visibleItemsInfo.firstOrNull()
-                val screenCenter = size.height / 2
-                var velocity = 1f
-                if (firstVisible != null) {
-                    val itemCenter = firstVisible.offset + firstVisible.size / 2
-                    val distanceFromCenter = kotlin.math.abs(itemCenter - screenCenter)
-                    velocity += distanceFromCenter / 100f
-                }
-                shape.x += 0.5f * velocity
-                shape.y += 0.3f * velocity
-                if (shape.x > size.width) shape.x = 0f
-                if (shape.y > size.height) shape.y = 0f
-
-                rotate(
-                    shape.rotationAnim.value,
-                    pivot = Offset(shape.x, shape.y)
-                ) {
-                    drawCircle(
-                        color = shape.color.copy(alpha = shape.alphaAnim.value),
-                        radius = shape.sizeAnim.value,
-                        center = Offset(shape.x, shape.y)
-                    )
-                }
-            }
-        }
-
-        //scrolling text
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            flingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
-        ) {
-            itemsIndexed(lines) { index, line ->
-                val itemInfo = listState.layoutInfo.visibleItemsInfo
-                    .firstOrNull { it.index == index }
-                val screenHeight = listState.layoutInfo.viewportEndOffset
-                val centerOffset = screenHeight / 2
-                val distanceFromCenter =
-                    if (itemInfo != null) kotlin.math.abs(itemInfo.offset + itemInfo.size / 2 - centerOffset)
-                    else 0
-
-                val alpha = (1f - (distanceFromCenter.toFloat() / centerOffset.toFloat()))
-                    .coerceIn(0f, 1f)
-
-                Box(
-                    modifier = Modifier
-                        .fillParentMaxHeight()
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .background(Color.White.copy(alpha = 0.5f))
-                            .padding(16.dp)
-                    ) {
-                        Text(
-                            text = line,
-                            style = xkcdTextStyle.copy(fontSize = 28.sp),
-                            textAlign = TextAlign.Center,
-                            color = Color.Black.copy(alpha = alpha)
-                        )
-                    }
-                }
-            }
-
-            //return link
-            items(1) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 24.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Back to browsing",
-                        style = xkcdTextStyle.copy(
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = if (darkmode) Color.White else Color.Black
-                        ),
-                        modifier = Modifier
-                            .alpha(linkAlpha.value)
-                            .clickable { onFinish() },
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-        }
-
-        //logo absolutely minimatic
-        Image(
-            painter = painterResource(
-                id = if (darkmode) R.drawable.petpawslogodarkthemenobg
-                else R.drawable.petpawslogolightthemenobg
-            ),
-            contentDescription = null,
-            modifier = Modifier
-                .size(220.dp)
-                .align(Alignment.TopCenter)
-        )
     }
 }
 
@@ -355,25 +165,14 @@ private fun AboutPetPawsScreen(darkmode: Boolean, onFinish: () -> Unit = {}) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 24.dp),
+                .padding(horizontal = 24.dp, vertical = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(
-                    id =
-                        if (darkmode) R.drawable.petpawslogodarkthemenobg
-                        else R.drawable.petpawslogolightthemenobg
-                ),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(140.dp)
-            )
-
             //inspirational words
             Text(
                 text = "You and your pets deserve quality products.",
                 style = xkcdTextStyle.copy(
-                    fontSize = 28.sp,
+                    fontSize = 25.sp,
                     fontWeight = FontWeight.Bold,
                     color =
                         if (darkmode) Color.White
@@ -382,7 +181,7 @@ private fun AboutPetPawsScreen(darkmode: Boolean, onFinish: () -> Unit = {}) {
                 textAlign = TextAlign.Center,
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 32.dp),
                 color =
@@ -392,7 +191,9 @@ private fun AboutPetPawsScreen(darkmode: Boolean, onFinish: () -> Unit = {}) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Column (
-                modifier = Modifier.background(Color.White.copy(alpha = 0.7f))
+                modifier = Modifier
+                    .background(Color.White.copy(alpha = 0.7f)),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = "Pet Paws is a modern pet lifestyle brand dedicated to providing " +
@@ -419,6 +220,28 @@ private fun AboutPetPawsScreen(darkmode: Boolean, onFinish: () -> Unit = {}) {
                     ),
                     textAlign = TextAlign.Center,
                 )
+
+                Text(
+                    text = "\n Our Address: 61 Lengkok Bahru \n" +
+                            "Our Hotline: +65 8915 9218 \n" +
+                            "Our Email: heckerhaccersky@gmail.com \n",
+                    style = xkcdTextStyle.copy(
+                        fontSize = 19.sp,
+                        color = if (darkmode) Color.White else Color.Black
+                    ),
+                    textAlign = TextAlign.Center,
+                )
+
+
+                Image(
+                    painter = painterResource(
+                        if (darkmode) R.drawable.petpawslogodarkthemenobg
+                        else R.drawable.petpawslogolightthemenobg
+                    ),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(140.dp)
+                )
             }
         }
 
@@ -444,17 +267,4 @@ private fun AboutPetPawsScreen(darkmode: Boolean, onFinish: () -> Unit = {}) {
             )
         }
     }
-}
-
-class ShapeState(
-    var x: Float,
-    var y: Float,
-    size: Float,
-    rotation: Float,
-    alpha: Float,
-    val color: Color
-) {
-    val sizeAnim = Animatable(size)
-    val rotationAnim = Animatable(rotation)
-    val alphaAnim = Animatable(alpha)
 }

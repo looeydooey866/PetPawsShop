@@ -44,6 +44,7 @@ import androidx.compose.ui.util.fastForEachReversed
 import com.example.petpawsdemo.ProductDatabase
 import com.example.petpawsdemo.model.Product
 import com.example.petpawsdemo.model.SearchHistory
+import com.example.petpawsdemo.model.UserProfile
 import com.example.petpawsdemo.model.ViewData
 import com.example.petpawsdemo.view.ProductContainer
 import com.example.petpawsdemo.view.AppBar
@@ -58,7 +59,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            PetPawsDemoTheme {
+            PetPawsDemoTheme (darkTheme = UserProfile.darkmode) {
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
                 var currentQuery by remember{mutableStateOf("")}
@@ -71,7 +72,7 @@ class MainActivity : ComponentActivity() {
                     query = s
                 }
                 val onFocus = {f: Boolean ->
-                    if (f){
+                    if (f) {
                         query = ""
                         searching = true
                     }
@@ -106,6 +107,10 @@ class MainActivity : ComponentActivity() {
                     query = ""
                     currentQuery = ""
                 }
+
+                val onboardingIntent = Intent(context, OnboardingActivity::class.java)
+                context.startActivity(onboardingIntent)
+
                 HomeScreen(
                     drawerState,
                     query,

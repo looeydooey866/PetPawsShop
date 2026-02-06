@@ -57,6 +57,7 @@ import coil.compose.AsyncImage
 import com.example.petpawsdemo.ProductDatabase
 import com.example.petpawsdemo.model.Product
 import com.example.petpawsdemo.model.Review
+import com.example.petpawsdemo.model.UserProfile
 import com.example.petpawsdemo.model.ViewData
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
 import com.example.petpawsdemo.viewmodel.UserCart
@@ -71,7 +72,7 @@ class ViewProductActivity : ComponentActivity() {
 
         if (!UserCart.contains(ViewData.viewingId)){
             setContent {
-                PetPawsDemoTheme {
+                PetPawsDemoTheme (darkTheme = UserProfile.darkmode) {
                     val product = ProductDatabase.getProduct(ViewData.viewingId)!!
                     var index by remember { mutableIntStateOf(0) }
                     var quantity by remember{ mutableIntStateOf(1)}

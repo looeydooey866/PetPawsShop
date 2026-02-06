@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.petpawsdemo.model.Product
 import com.example.petpawsdemo.ProductDatabase
+import com.example.petpawsdemo.model.UserProfile
 import com.example.petpawsdemo.view.ui.theme.Grey_Separator
 
 @Composable
@@ -79,7 +80,7 @@ fun SubCategorySeparator(type: String, subtype: String) {
             text = type.replaceFirstChar{it.uppercase()} + " " + subtype.replaceFirstChar { it.uppercase() },
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.DarkGray
+            color = if (UserProfile.darkmode) Color.LightGray else Color.DarkGray
         )
     }
 }
@@ -120,7 +121,6 @@ fun CategorySeparator(type: String){
 
 @Composable
 fun ProductContainer(products: List<Product>, innerPadding: PaddingValues, onClick: (Int) -> Unit){
-    val context = LocalContext.current
     LazyVerticalGrid (
         columns = GridCells.Fixed(2),
         modifier = Modifier.padding(innerPadding)
@@ -140,82 +140,3 @@ fun ProductContainer(products: List<Product>, innerPadding: PaddingValues, onCli
         }
     }
 }
-
-/*
-@Composable
-fun ProductContainer(type: String, products: Map<String, List<Product>>, innerPadding: PaddingValues, onClick: (Int) -> Unit){
-    val context = LocalContext.current
-    val scroll = rememberScrollState()
-    Column(
-        modifier = Modifier.fillMaxWidth(1.0f).fillMaxHeight(1.0f).verticalScroll(scroll).padding(innerPadding),
-        horizontalAlignment = Alignment.Start,
-    ){
-        products.forEach{(subtype, products) ->
-            CategorySeparator(type, subtype)
-            products.chunked(2).forEach{chunk ->
-                if (chunk.size == 2) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(1.0f)
-                    ){
-                        ProductCard(chunk[0], Modifier.weight(1.0f)) {
-                            onClick(ProductDatabase.getID(chunk[0])!!)
-                        }
-                        ProductCard(chunk[1], Modifier.weight(1.0f)) {
-                            onClick(ProductDatabase.getID(chunk[1])!!)
-                        }
-                    }
-                }
-                else {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(0.5f)
-                    ) {
-                        ProductCard(chunk[0], Modifier) {
-                            onClick(ProductDatabase.getID(chunk[0])!!)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ProductContainer(products: Map<String, Map<String,List<Product>>>, innerPadding: PaddingValues, onClick: (Int) -> Unit){
-    val context = LocalContext.current
-    val scroll = rememberScrollState()
-    Column(
-        modifier = Modifier.fillMaxWidth(1.0f).fillMaxHeight(1.0f).verticalScroll(scroll).padding(innerPadding),
-        horizontalAlignment = Alignment.Start,
-    ){
-        products.forEach{(type, entry) ->
-            CategorySeparator(type, "items")
-            entry.forEach{(subtype, products) ->
-                CategorySeparator(type, subtype)
-                products.chunked(2).forEach{chunk ->
-                    if (chunk.size == 2) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(1.0f)
-                        ){
-                            ProductCard(chunk[0], Modifier.weight(1.0f)) {
-                                onClick(ProductDatabase.getID(chunk[0])!!)
-                            }
-                            ProductCard(chunk[1], Modifier.weight(1.0f)) {
-                                onClick(ProductDatabase.getID(chunk[1])!!)
-                            }
-                        }
-                    }
-                    else {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(0.5f)
-                        ) {
-                            ProductCard(chunk[0], Modifier) {
-                                onClick(ProductDatabase.getID(chunk[0])!!)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
- */

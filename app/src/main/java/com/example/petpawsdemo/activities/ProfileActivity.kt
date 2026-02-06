@@ -55,7 +55,7 @@ class ProfileActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            PetPawsDemoTheme {
+            PetPawsDemoTheme (darkTheme = UserProfile.darkmode) {
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -166,7 +166,7 @@ private fun ProfileScreen() {
             }
         }
 
-        //dark mode switch thingy
+        //dark mode switch thingy TODO: move to settings page
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(bottom = 24.dp)

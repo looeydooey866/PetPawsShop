@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachReversed
 import com.example.petpawsdemo.ProductDatabase
-import com.example.petpawsdemo.model.Product
 import com.example.petpawsdemo.model.SearchHistory
 import com.example.petpawsdemo.model.UserProfile
 import com.example.petpawsdemo.model.ViewData
@@ -108,9 +107,16 @@ class MainActivity : ComponentActivity() {
                     currentQuery = ""
                 }
 
-                val onboardingIntent = Intent(context, OnboardingActivity::class.java)
-                context.startActivity(onboardingIntent)
 
+                val prefs = getSharedPreferences("pet_paws_prefs", MODE_PRIVATE)
+                //prefs.edit().putBoolean("first_use", true).apply() //TODO: debug line
+
+                if (prefs.getBoolean("first_use", true)) {
+                    val onboardingIntent = Intent(context, OnboardingActivity::class.java)
+                    context.startActivity(onboardingIntent)
+
+                    prefs.edit().putBoolean("first_use", false).apply()
+                }
                 HomeScreen(
                     drawerState,
                     query,

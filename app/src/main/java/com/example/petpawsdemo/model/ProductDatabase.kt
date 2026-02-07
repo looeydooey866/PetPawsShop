@@ -129,6 +129,22 @@ class ExampleProducts {
             "me",
             "Dog Mansion To Appease Your Dogs"
         )
+
+        private val Image_CatHome_Thumbnail = "https://img.freepik.com/free-photo/open-empty-box_1101-94.jpg?semt=ais_hybrid&w=740&q=80"
+        private val Image_CatHome_Happy = "https://i.pinimg.com/236x/b6/c3/eb/b6c3eb3488d1558903bc36d1c0742ec9.jpg"
+        val PetPawsCatHome = Product(
+            "Super Duper Budget Cardboard Cat Home",
+            ProductCategory("cat", "cage"),
+            listOf("cat", "cage", "budget", "cardboard", "spacious"),
+            100,
+            100,
+            4.9,
+            1000,
+            listOf(),
+            listOf(Image_CatHome_Thumbnail, Image_CatHome_Happy),
+            "me",
+            "Dog Mansion To Appease Your Dogs"
+        )
     }
 }
 
@@ -172,6 +188,8 @@ object ProductDatabase{
         return getProductSet().filter{it.productCategory.type == type}.sortedBy{it.productCategory.subtype}.groupBy{it.productCategory.subtype}
     }
 
+    fun getCategoryMap() = getProductSet().map{it.productCategory}.groupBy{it.type}
+
     fun search(query: String): List<Product>{
         val queryWords = query.split(" ").map{it.lowercase()}
         val products = getProductSet().map{it.searchCost(queryWords) to it}
@@ -188,7 +206,8 @@ object ProductDatabase{
             ExampleProducts.PetPawsWetDogFood,
             ExampleProducts.PetPawsDogFoodPremium,
             ExampleProducts.PetPawsDogFoodBudget,
-            ExampleProducts.PetPawsDogMansion
+            ExampleProducts.PetPawsDogMansion,
+            ExampleProducts.PetPawsCatHome
         ).forEach{prod ->
             addProduct(prod)
         }

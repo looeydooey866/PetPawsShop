@@ -49,6 +49,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.petpawsdemo.ProductDatabase
 import com.example.petpawsdemo.model.ProductCategory
 import com.example.petpawsdemo.R
 import com.example.petpawsdemo.activities.AboutUsActivity
@@ -203,48 +204,19 @@ fun NavigationItemGroup(
 }
 
 @Composable
-fun NavigationDrawer(
-    productCategories: Set<ProductCategory>
-) {
+fun NavigationDrawer() {
     val context = LocalContext.current
+    val categorial = ProductDatabase.getCategoryMap()
     val highItems = remember {
-        listOf(
+        categorial.map{(type, subtypes)->
             NavigationItemDropdown(
-                children = productCategories, itemId = NavigationItem.genID(),
-                itemTitle = "Dog",
+                children = subtypes.toSet(), itemId = NavigationItem.genID(),
+                itemTitle = type.replaceFirstChar{it.uppercase()},
                 itemSelectedIcon = Icons.Filled.ShoppingCart,
                 itemUnselectedIcon = Icons.Filled.ShoppingCart,
                 onClick = {}
-            ),
-            NavigationItemDropdown(
-                children = productCategories, itemId = NavigationItem.genID(),
-                itemTitle = "Cat",
-                itemSelectedIcon = Icons.Filled.ShoppingCart,
-                itemUnselectedIcon = Icons.Filled.ShoppingCart,
-                onClick = {}
-            ),
-            NavigationItemDropdown(
-                children = productCategories, itemId = NavigationItem.genID(),
-                itemTitle = "Small Pet",
-                itemSelectedIcon = Icons.Filled.ShoppingCart,
-                itemUnselectedIcon = Icons.Filled.ShoppingCart,
-                onClick = {}
-            ),
-            NavigationItemDropdown(
-                children = productCategories, itemId = NavigationItem.genID(),
-                itemTitle = "Fish",
-                itemSelectedIcon = Icons.Filled.ShoppingCart,
-                itemUnselectedIcon = Icons.Filled.ShoppingCart,
-                onClick = {}
-            ),
-            NavigationItemDropdown(
-                children = productCategories, itemId = NavigationItem.genID(),
-                itemTitle = "Reptile",
-                itemSelectedIcon = Icons.Filled.ShoppingCart,
-                itemUnselectedIcon = Icons.Filled.ShoppingCart,
-                onClick = {}
-            ),
-        )
+            )
+        }.toList()
     }
     val lowItems = remember {
         listOf(

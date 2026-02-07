@@ -156,11 +156,7 @@ private fun HomeScreen(
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            NavigationDrawer(
-                ProductDatabase.getProductSet()
-                    .map { it.productCategory }
-                    .toSet()
-            )
+            NavigationDrawer( )
         }
     ) {
         Scaffold(

@@ -40,7 +40,7 @@ class NavigationItemDropdown(
         children.map {
             NavigationItem(
                 id = NavigationItem.genID(),
-                title = it.type.replaceFirstChar { c -> c.uppercase() },
+                title = it.subtype.replaceFirstChar { c -> c.uppercase() },
                 selectedIcon = Icons.Filled.KeyboardArrowUp,
                 unselectedIcon = Icons.Filled.KeyboardArrowUp,
                 onClick = onClick

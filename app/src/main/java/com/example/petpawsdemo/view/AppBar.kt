@@ -45,6 +45,7 @@ import com.example.petpawsdemo.viewmodel.UserCart
 fun AppBar (
     query: String,
     focus: Boolean,
+    sorting: Boolean,
     onQueryChange: (String) -> Unit,
     onSearch: () -> Unit,
     onBack: () -> Unit,
@@ -59,17 +60,19 @@ fun AppBar (
                 modifier = Modifier
                     .fillMaxWidth(1.0f)
             ) {
-                SearchArea(
-                    query = query,
-                    onQueryChange = onQueryChange,
-                    onSearch = onSearch,
-                    onFocus = onFocus,
-                    modifier = Modifier
-                        .fillMaxHeight(0.8f)
-                        .clip(RoundedCornerShape(20)),
-                    textStyle = TextStyle(fontSize = 15.sp, lineHeight = 20.sp),
-                    onResetSearch = onResetSearch
-                )
+                if (!sorting) {
+                    SearchArea(
+                        query = query,
+                        onQueryChange = onQueryChange,
+                        onSearch = onSearch,
+                        onFocus = onFocus,
+                        modifier = Modifier
+                            .fillMaxHeight(0.8f)
+                            .clip(RoundedCornerShape(20)),
+                        textStyle = TextStyle(fontSize = 15.sp, lineHeight = 20.sp),
+                        onResetSearch = onResetSearch
+                    )
+                }
             }
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(

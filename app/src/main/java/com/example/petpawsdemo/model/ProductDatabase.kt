@@ -188,6 +188,8 @@ object ProductDatabase{
         return getProductSet().filter{it.productCategory.type == type}.sortedBy{it.productCategory.subtype}.groupBy{it.productCategory.subtype}
     }
 
+    fun getSubcategory(category: ProductCategory): List<Product> = getProductSet().filter{it.productCategory.type == category.type && it.productCategory.subtype == category.subtype}
+
     fun getCategoryMap() = getProductSet().map{it.productCategory}.groupBy{it.type}
 
     fun search(query: String): List<Product>{

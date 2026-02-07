@@ -191,6 +191,7 @@ fun NavigationItemGroup(
                         selected = selectedStates[child.id] ?: false,
                         onClick = {
                             selectedStates[child.id] = true
+                            child.onClick()
                             onItemClick(child)
                         },
                         modifier = Modifier
@@ -204,7 +205,9 @@ fun NavigationItemGroup(
 }
 
 @Composable
-fun NavigationDrawer() {
+fun NavigationDrawer(
+    onSort: (ProductCategory) -> Unit
+) {
     val context = LocalContext.current
     val categorial = ProductDatabase.getCategoryMap()
     val highItems = remember {
@@ -214,7 +217,9 @@ fun NavigationDrawer() {
                 itemTitle = type.replaceFirstChar{it.uppercase()},
                 itemSelectedIcon = Icons.Filled.ShoppingCart,
                 itemUnselectedIcon = Icons.Filled.ShoppingCart,
-                onClick = {}
+                onSort = {cat ->
+                    onSort(cat)
+                }
             )
         }.toList()
     }

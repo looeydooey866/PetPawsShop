@@ -76,6 +76,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 val onSearch = {
+                    sorting = false
                     searching = false
                     currentQuery = query
                     everSearched = true
@@ -176,7 +177,6 @@ private fun HomeScreen(
                 AppBar(
                     query = query,
                     focus = searching,
-                    sorting = sorting,
                     onQueryChange = onQueryChange,
                     onFocus = onFocus,
                     onSearch = onSearch,

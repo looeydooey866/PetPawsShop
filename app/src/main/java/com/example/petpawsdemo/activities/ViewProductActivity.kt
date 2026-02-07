@@ -459,6 +459,13 @@ class ViewProductActivity : ComponentActivity() {
                        //color = Color.Gray
                    )
                }
+               with(product.size) {
+                   Text(
+                       text = "Size: $this",
+                       fontSize = 20.sp,
+                       //color = Color.Gray
+                   )
+               }
                Row(
                    modifier = Modifier.fillMaxWidth(1.0f),
                    horizontalArrangement = Arrangement.SpaceBetween,

@@ -1,18 +1,15 @@
 package com.example.petpawsdemo.view
 
 import android.content.Intent
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -45,7 +42,6 @@ import com.example.petpawsdemo.viewmodel.UserCart
 fun AppBar (
     query: String,
     focus: Boolean,
-    sorting: Boolean,
     onQueryChange: (String) -> Unit,
     onSearch: () -> Unit,
     onBack: () -> Unit,
@@ -60,19 +56,17 @@ fun AppBar (
                 modifier = Modifier
                     .fillMaxWidth(1.0f)
             ) {
-                if (!sorting) {
-                    SearchArea(
-                        query = query,
-                        onQueryChange = onQueryChange,
-                        onSearch = onSearch,
-                        onFocus = onFocus,
-                        modifier = Modifier
-                            .fillMaxHeight(0.8f)
-                            .clip(RoundedCornerShape(20)),
-                        textStyle = TextStyle(fontSize = 15.sp, lineHeight = 20.sp),
-                        onResetSearch = onResetSearch
-                    )
-                }
+                SearchArea(
+                    query = query,
+                    onQueryChange = onQueryChange,
+                    onSearch = onSearch,
+                    onFocus = onFocus,
+                    modifier = Modifier
+                        .fillMaxHeight(0.8f)
+                        .clip(RoundedCornerShape(20)),
+                    textStyle = TextStyle(fontSize = 15.sp, lineHeight = 20.sp),
+                    onResetSearch = onResetSearch
+                )
             }
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(

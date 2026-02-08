@@ -38,9 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachReversed
 import com.example.petpawsdemo.ProductDatabase
-import com.example.petpawsdemo.model.ProductCategory
 import com.example.petpawsdemo.model.SearchHistory
-import com.example.petpawsdemo.model.UserProfile
+import com.example.petpawsdemo.model.UserProfileObject
 import com.example.petpawsdemo.model.ViewData
 import com.example.petpawsdemo.view.ProductContainer
 import com.example.petpawsdemo.view.AppBar
@@ -48,14 +47,28 @@ import com.example.petpawsdemo.view.NavigationDrawer
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import androidx.core.content.edit
+import androidx.lifecycle.lifecycleScope
+import com.example.petpawsdemo.model.GUEST_USERNAME
+import com.example.petpawsdemo.model.UserProfile
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        lifecycleScope.launch {
+            val currentUser = UserProfileObject.loadCurrentUser(this@MainActivity)
+            if (currentUser != null && currentUser != GUEST_USERNAME) {
+                UserProfileObject.loadUserProfile(this@MainActivity, currentUser)
+                UserProfile.loggedIn = true
+            } else {
+                UserProfile.loggedIn = false
+            }
+        }
+
         setContent {
-            PetPawsDemoTheme (darkTheme = UserProfile.darkmode) {
+            PetPawsDemoTheme (darkTheme = UserProfileObject.darkmode) {
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
                 var currentQuery by remember{mutableStateOf("")}
@@ -64,8 +77,6 @@ class MainActivity : ComponentActivity() {
                 var everSearched by remember{mutableStateOf(false)}
                 val focusManager = LocalFocusManager.current
                 val context = LocalContext.current
-                var sorting by remember{mutableStateOf(false)}
-                var category by remember{mutableStateOf(ProductCategory("",""))}
                 val onQueryChange = {s: String ->
                     query = s
                 }
@@ -76,7 +87,6 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 val onSearch = {
-                    sorting = false
                     searching = false
                     currentQuery = query
                     everSearched = true
@@ -107,14 +117,6 @@ class MainActivity : ComponentActivity() {
                     currentQuery = ""
                 }
 
-                val onSort = {cat: ProductCategory ->
-                    sorting = true
-                    category = cat
-                    println(sorting)
-                    println(category)
-                }
-
-
                 val prefs = getSharedPreferences("pet_paws_prefs", MODE_PRIVATE)
                 //prefs.edit().putBoolean("first_use", true).apply()
 
@@ -122,14 +124,22 @@ class MainActivity : ComponentActivity() {
                     val onboardingIntent = Intent(context, OnboardingActivity::class.java)
                     context.startActivity(onboardingIntent)
 
-                    prefs.edit().putBoolean("first_use", false).apply()
+                    prefs.edit { putBoolean("first_use", false) }
+                }
+
+                lifecycleScope.launch {
+                    val savedUser = UserProfileObject.loadCurrentUser(this@MainActivity)
+
+                    if (savedUser != null) {
+                        UserProfileObject.loadUserProfile(this@MainActivity, savedUser)
+                    } else {
+                        UserProfileObject.loadUserProfile(this@MainActivity, GUEST_USERNAME)
+                    }
                 }
                 HomeScreen(
                     drawerState,
                     query,
                     searching,
-                    sorting,
-                    category,
                     onQueryChange,
                     onFocus,
                     onSearch,
@@ -139,8 +149,7 @@ class MainActivity : ComponentActivity() {
                     currentQuery,
                     onViewProduct,
                     onResetSearch,
-                    onViewCart,
-                    onSort
+                    onViewCart
                 )
             }
         }
@@ -152,8 +161,6 @@ private fun HomeScreen(
     drawerState: DrawerState,
     query: String,
     searching: Boolean,
-    sorting: Boolean,
-    category: ProductCategory,
     onQueryChange: (String) -> Unit,
     onFocus: (Boolean) -> Unit,
     onSearch: () -> Unit,
@@ -164,12 +171,15 @@ private fun HomeScreen(
     onViewProduct: (Int) -> Unit,
     onResetSearch: () -> Unit,
     onViewCart: () -> Unit,
-    onSort: (ProductCategory) -> Unit,
 ) {
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            NavigationDrawer( onSort = onSort)
+            NavigationDrawer(
+                ProductDatabase.getProductSet()
+                    .map { it.productCategory }
+                    .toSet()
+            )
         }
     ) {
         Scaffold(
@@ -192,79 +202,59 @@ private fun HomeScreen(
             },
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
-            when{
-                searching -> {
-                    Column(
-                        modifier = Modifier
-                            .padding(innerPadding).padding(6.7.dp)
-                            .fillMaxSize(1.0f)
-                    ) {
-                        SearchHistory.history.fastForEachReversed{
-                            Row(
-                                modifier = Modifier.clickable{
-                                    onQueryChange(it)
-                                    onSearch()
-                                }.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
-                                verticalAlignment = Alignment.CenterVertically
-                            ){
-                                IconButton(onClick = {
-                                    onQueryChange(it)
-                                    onSearch()
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Search,
-                                        tint = MaterialTheme.colorScheme.onSurface,
-                                        contentDescription = "Hello!"
-                                    )
-                                }
-                                Text(
-                                    text = it,
-                                    fontSize = 18.sp
-                                )
-                            }
-                        }
-                    }
-                }
-                sorting -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth(1.0f)
-                            .fillMaxHeight(1.0f)
-                            .padding(start = 10.dp, end = 10.dp)
-                    ) {
+            if (!searching) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(1.0f)
+                        .fillMaxHeight(1.0f)
+                        .padding(start = 10.dp, end = 10.dp)
+                ) {
+                    if (!everSearched) {
                         ProductContainer(
-                            products = ProductDatabase.getSubcategory(category),
+                            products = ProductDatabase.getAll(),
+                            innerPadding = innerPadding,
+                            onClick = { id -> onViewProduct(id) }
+                        )
+                    } else {
+                        ProductContainer(
+                            products = ProductDatabase.search(currentQuery),
                             innerPadding = innerPadding,
                             onClick = { id -> onViewProduct(id) }
                         )
                     }
                 }
-                else -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth(1.0f)
-                            .fillMaxHeight(1.0f)
-                            .padding(start = 10.dp, end = 10.dp)
-                    ) {
-                        if (!everSearched) {
-                            ProductContainer(
-                                products = ProductDatabase.getAll(),
-                                innerPadding = innerPadding,
-                                onClick = { id -> onViewProduct(id) }
-                            )
-                        } else {
-                            ProductContainer(
-                                products = ProductDatabase.search(currentQuery),
-                                innerPadding = innerPadding,
-                                onClick = { id -> onViewProduct(id) }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .padding(innerPadding).padding(6.7.dp)
+                        .fillMaxSize(1.0f)
+                ) {
+                    SearchHistory.history.fastForEachReversed{
+                        Row(
+                            modifier = Modifier.clickable{
+                                onQueryChange(it)
+                                onSearch()
+                            }.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            IconButton(onClick = {
+                                onQueryChange(it)
+                                onSearch()
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    tint = MaterialTheme.colorScheme.onSurface,
+                                    contentDescription = "Hello!"
+                                )
+                            }
+                            Text(
+                                text = it,
+                                fontSize = 18.sp
                             )
                         }
                     }
                 }
-            }
-            if (!searching) {
-            } else {
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.example.petpawsdemo.activities
 
-import android.R
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -18,8 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowLeft
-import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.automirrored.filled.StarHalf
 import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.RemoveCircleOutline
@@ -57,12 +54,11 @@ import coil.compose.AsyncImage
 import com.example.petpawsdemo.ProductDatabase
 import com.example.petpawsdemo.model.Product
 import com.example.petpawsdemo.model.Review
-import com.example.petpawsdemo.model.UserProfile
+import com.example.petpawsdemo.model.UserProfileObject
 import com.example.petpawsdemo.model.ViewData
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
-import com.example.petpawsdemo.viewmodel.UserCart
+import com.example.petpawsdemo.viewmodel.UserCartObject
 import kotlin.math.floor
-import kotlin.random.Random
 
 class ViewProductActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -70,9 +66,9 @@ class ViewProductActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        if (!UserCart.contains(ViewData.viewingId)){
+        if (!UserCartObject.contains(ViewData.viewingId)){
             setContent {
-                PetPawsDemoTheme (darkTheme = UserProfile.darkmode) {
+                PetPawsDemoTheme (darkTheme = UserProfileObject.darkmode) {
                     val product = ProductDatabase.getProduct(ViewData.viewingId)!!
                     var index by remember { mutableIntStateOf(0) }
                     var quantity by remember{ mutableIntStateOf(1)}
@@ -137,7 +133,7 @@ class ViewProductActivity : ComponentActivity() {
                                                 .fillMaxWidth()
                                                 .background(MaterialTheme.colorScheme.primary)
                                                 .clickable{
-                                                    UserCart.addProduct(ViewData.viewingId, quantity)
+                                                    UserCartObject.addProduct(ViewData.viewingId, quantity)
                                                     finish()
                                                     Toast.makeText(context, "Added to cart.", Toast.LENGTH_SHORT).show()
                                                 },
@@ -294,7 +290,7 @@ class ViewProductActivity : ComponentActivity() {
                         },
 
                         bottomBar = {
-                            if (UserCart.contains(ViewData.viewingId)){
+                            if (UserCartObject.contains(ViewData.viewingId)){
                                 BottomAppBar(
                                     modifier = Modifier.height(100.dp)
                                 ){
@@ -321,7 +317,7 @@ class ViewProductActivity : ComponentActivity() {
                                                 .background(Color.Red)
                                                 .clickable{
                                                     finish()
-                                                    UserCart.removeProduct(ViewData.viewingId)
+                                                    UserCartObject.removeProduct(ViewData.viewingId)
                                                     Toast.makeText(context, "Removed from cart", Toast.LENGTH_SHORT).show()
                                                 },
                                             verticalAlignment = Alignment.CenterVertically,
@@ -334,9 +330,9 @@ class ViewProductActivity : ComponentActivity() {
                             }
                         }
                     ) { innerPadding ->
-                        if (UserCart.contains(ViewData.viewingId)) {
+                        if (UserCartObject.contains(ViewData.viewingId)) {
                             if (!editingQuantity) {
-                                ProductContent(innerPadding, product, UserCart.getCount(ViewData.viewingId), index) {
+                                ProductContent(innerPadding, product, UserCartObject.getCount(ViewData.viewingId), index) {
                                     index = it
                                 }
                             }
@@ -345,7 +341,7 @@ class ViewProductActivity : ComponentActivity() {
                                     modifier = Modifier.fillMaxSize(),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    ProductContent(innerPadding, product, UserCart.getCount(ViewData.viewingId), index) {
+                                    ProductContent(innerPadding, product, UserCartObject.getCount(ViewData.viewingId), index) {
                                         index = it
                                     }
                                     Box(
@@ -354,8 +350,8 @@ class ViewProductActivity : ComponentActivity() {
                                     Column(
                                         modifier = Modifier.fillMaxWidth(.5f).clip(RoundedCornerShape(10)).background(MaterialTheme.colorScheme.secondaryContainer).padding(10.dp)
                                     ){
-                                        var newQuantity by remember{mutableIntStateOf(UserCart.getCount(ViewData.viewingId))}
-                                        var stringQuantity by remember{mutableStateOf(UserCart.getCount(ViewData.viewingId).toString())}
+                                        var newQuantity by remember{mutableIntStateOf(UserCartObject.getCount(ViewData.viewingId))}
+                                        var stringQuantity by remember{mutableStateOf(UserCartObject.getCount(ViewData.viewingId).toString())}
                                         Text(
                                             text = "Edit quantity",
                                             fontSize = 24.sp
@@ -409,10 +405,10 @@ class ViewProductActivity : ComponentActivity() {
                                             Button(onClick = {
                                                 editingQuantity = false
                                                 if (stringQuantity.isNotEmpty() && stringQuantity.all{it.isDigit()}){
-                                                    UserCart.changeCount(ViewData.viewingId, stringQuantity.toInt())
+                                                    UserCartObject.changeCount(ViewData.viewingId, stringQuantity.toInt())
                                                 }
                                                 else{
-                                                    UserCart.changeCount(ViewData.viewingId, newQuantity)
+                                                    UserCartObject.changeCount(ViewData.viewingId, newQuantity)
                                                 }
                                             },
                                                 content = {
@@ -452,16 +448,9 @@ class ViewProductActivity : ComponentActivity() {
                    product,
                    quantity
                )
-               with(product.producer) {
+               with(product.brand) {
                    Text(
                        text = "Brand: $this",
-                       fontSize = 20.sp,
-                       //color = Color.Gray
-                   )
-               }
-               with(product.size) {
-                   Text(
-                       text = "Size: $this",
                        fontSize = 20.sp,
                        //color = Color.Gray
                    )

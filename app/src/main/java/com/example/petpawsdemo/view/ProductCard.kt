@@ -1,6 +1,5 @@
 package com.example.petpawsdemo.view
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -23,7 +22,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.StarHalf
@@ -51,7 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.petpawsdemo.model.Product
-import com.example.petpawsdemo.model.UserProfile
+import com.example.petpawsdemo.model.UserProfileObject
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
 import kotlin.math.floor
 
@@ -71,7 +69,7 @@ fun ProductCard(product: Product, modifier: Modifier = Modifier, onClick: () -> 
         )
     )
 
-    PetPawsDemoTheme (darkTheme = UserProfile.darkmode) {
+    PetPawsDemoTheme (darkTheme = UserProfileObject.darkmode) {
         val surface = MaterialTheme.colorScheme.surface
         val onPrimary = MaterialTheme.colorScheme.surface
         val onSurface = MaterialTheme.colorScheme.onSurface

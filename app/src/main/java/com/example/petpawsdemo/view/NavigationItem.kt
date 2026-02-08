@@ -2,7 +2,6 @@ package com.example.petpawsdemo.view
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.petpawsdemo.model.ProductCategory
 
@@ -28,25 +27,23 @@ class NavigationItemDropdown(
     itemSelectedIcon: ImageVector,
     itemUnselectedIcon: ImageVector,
     itemBadgeCount: Int? = null,
-    onSort: (ProductCategory) -> Unit
+    onClick: () -> Unit
 ) : NavigationItem(
     id = itemId,
     title = itemTitle,
     selectedIcon = itemSelectedIcon,
     unselectedIcon = itemUnselectedIcon,
     badgeCount = itemBadgeCount,
-    onClick = {}
+    onClick = onClick
 ) {
     val navigationItemChildren: List<NavigationItem> =
         children.map {
             NavigationItem(
                 id = NavigationItem.genID(),
-                title = it.subtype.replaceFirstChar { c -> c.uppercase() },
+                title = it.type.replaceFirstChar { c -> c.uppercase() },
                 selectedIcon = Icons.Filled.KeyboardArrowUp,
                 unselectedIcon = Icons.Filled.KeyboardArrowUp,
-                onClick = {
-                    onSort(it)
-                }
+                onClick = onClick
             )
         }
 }

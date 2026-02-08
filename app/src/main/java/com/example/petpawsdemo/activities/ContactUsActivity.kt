@@ -1,5 +1,6 @@
 package com.example.petpawsdemo.activities
 
+import androidx.room.util.copy
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -41,12 +42,7 @@ import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 
-val xkcdTextStyle = TextStyle(
-    fontFamily = FontFamily(Font(R.font.xkcdscript)),
-    fontSize = 18.sp
-)
-
-class AboutUsActivity : ComponentActivity() {
+class ContactUsActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +53,7 @@ class AboutUsActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text("About Us") },
+                            title = { Text("Contact Us") },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(
@@ -164,7 +160,7 @@ private fun AboutPetPawsScreen(darkmode: Boolean, onFinish: () -> Unit = {}) {
         ) {
             //inspirational words
             Text(
-                text = "You and your pets deserve quality products.",
+                text = "Feel free to voice your concerns or queries. We are here for you 24/7.",
                 style = xkcdTextStyle.copy(
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold,
@@ -190,32 +186,15 @@ private fun AboutPetPawsScreen(darkmode: Boolean, onFinish: () -> Unit = {}) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Pet Paws is a modern pet lifestyle brand dedicated to providing " +
-                            "high-quality products for our animal companions. " +
-                            "From everyday essentials to beautiful accessories, we focus " +
-                            "on comfort, safety, and style; all for the satisfaction " +
-                            "of you, our customers, and your pets.",
-                    style = xkcdTextStyle.copy(
-                        fontSize = 19.sp,
-                        color = if (darkmode) Color.White else Color.Black
-                    ),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
-                )
-
-                Text(
-                    text = "Our brand is committed to responsible pet care. We uphold this " +
-                            "value by providing pet owners with the best " +
-                            "pet products to care for them responsibly.",
+                    text = "\n Our Address: 61 Lengkok Bahru \n" +
+                            "Our Hotline: +65 8915 9218 \n" +
+                            "Our Email: heckerhaccersky@gmail.com \n",
                     style = xkcdTextStyle.copy(
                         fontSize = 19.sp,
                         color = if (darkmode) Color.White else Color.Black
                     ),
                     textAlign = TextAlign.Center,
                 )
-
-
 
                 Image(
                     painter = painterResource(

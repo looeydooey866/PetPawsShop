@@ -17,8 +17,8 @@ data class Product(
     val rates: Int,
     val reviews: List<Review>,
     val images: List<String>,
-    val producer: String,
-    val size: String,
+    val brand: String,
+    val size: Float,
     val description: String,
     val discount: Double = 0.0
 ) {

@@ -20,14 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.petpawsdemo.model.Product
 import com.example.petpawsdemo.ProductDatabase
-import com.example.petpawsdemo.model.UserProfile
-import com.example.petpawsdemo.view.ui.theme.Grey_Separator
+import com.example.petpawsdemo.model.UserProfileObject
 
 @Composable
 fun ProductContainer(
@@ -80,7 +78,7 @@ fun SubCategorySeparator(type: String, subtype: String) {
             text = type.replaceFirstChar{it.uppercase()} + " " + subtype.replaceFirstChar { it.uppercase() },
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = if (UserProfile.darkmode) Color.LightGray else Color.DarkGray
+            color = if (UserProfileObject.darkmode) Color.LightGray else Color.DarkGray
         )
     }
 }

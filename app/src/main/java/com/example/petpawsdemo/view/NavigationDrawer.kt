@@ -1,7 +1,6 @@
 package com.example.petpawsdemo.view
 
 import android.content.Intent
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,11 +17,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ContactSupport
-import androidx.compose.material.icons.filled.ContactSupport
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardDoubleArrowRight
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PowerSettingsNew
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -49,11 +45,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.petpawsdemo.ProductDatabase
 import com.example.petpawsdemo.model.ProductCategory
 import com.example.petpawsdemo.R
 import com.example.petpawsdemo.activities.AboutUsActivity
-import com.example.petpawsdemo.model.UserProfile
+import com.example.petpawsdemo.activities.ContactUsActivity
+import com.example.petpawsdemo.model.UserProfileObject
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
 
 val xkcdTextStyle = TextStyle(
@@ -104,10 +100,9 @@ fun DrawerBody(
     itemTextStyle: TextStyle = xkcdTextStyle,
     onItemClick: (NavigationItem) -> Unit //TODO
 ) {
-    PetPawsDemoTheme(darkTheme = UserProfile.darkmode) {
+    PetPawsDemoTheme(darkTheme = UserProfileObject.darkmode) {
         val selectedStates = remember{ mutableStateMapOf<Int, Boolean>() }
         NavigationItemGroup(highItems, selectedStates, modifier, itemTextStyle, onItemClick)
-        Spacer(modifier = Modifier.fillMaxHeight(0.2f))
         HorizontalDivider(
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
         )
@@ -163,17 +158,6 @@ fun NavigationItemGroup(
             )
 
             if (item is NavigationItemDropdown && isExpanded) {
-                /*
-                NavigationItemGroup(
-                    items = item.navigationItemChildren,
-                    selectedStates = remember{ mutableStateMapOf<Int, Boolean>() },
-                    modifier = Modifier,
-                    itemTextStyle = itemTextStyle,
-                    onItemClick = onItemClick //TODO
-                )
-                */
-                //TODO: implement recursive categorisation up to 2 recursions
-
                 item.navigationItemChildren.forEach { child ->
                     NavigationDrawerItem(
                         label = {
@@ -191,7 +175,6 @@ fun NavigationItemGroup(
                         selected = selectedStates[child.id] ?: false,
                         onClick = {
                             selectedStates[child.id] = true
-                            child.onClick()
                             onItemClick(child)
                         },
                         modifier = Modifier
@@ -206,27 +189,61 @@ fun NavigationItemGroup(
 
 @Composable
 fun NavigationDrawer(
-    onSort: (ProductCategory) -> Unit
+    productCategories: Set<ProductCategory>
 ) {
     val context = LocalContext.current
-    val categorial = ProductDatabase.getCategoryMap()
     val highItems = remember {
-        categorial.map{(type, subtypes)->
+        listOf(
             NavigationItemDropdown(
-                children = subtypes.toSet(), itemId = NavigationItem.genID(),
-                itemTitle = type.replaceFirstChar{it.uppercase()},
+                children = productCategories, itemId = NavigationItem.genID(),
+                itemTitle = "Dog",
                 itemSelectedIcon = Icons.Filled.ShoppingCart,
                 itemUnselectedIcon = Icons.Filled.ShoppingCart,
-                onSort = {cat ->
-                    onSort(cat)
-                }
-            )
-        }.toList()
+                onClick = {}
+            ),
+            NavigationItemDropdown(
+                children = productCategories, itemId = NavigationItem.genID(),
+                itemTitle = "Cat",
+                itemSelectedIcon = Icons.Filled.ShoppingCart,
+                itemUnselectedIcon = Icons.Filled.ShoppingCart,
+                onClick = {}
+            ),
+            NavigationItemDropdown(
+                children = productCategories, itemId = NavigationItem.genID(),
+                itemTitle = "Small Pet",
+                itemSelectedIcon = Icons.Filled.ShoppingCart,
+                itemUnselectedIcon = Icons.Filled.ShoppingCart,
+                onClick = {}
+            ),
+            NavigationItemDropdown(
+                children = productCategories, itemId = NavigationItem.genID(),
+                itemTitle = "Fish",
+                itemSelectedIcon = Icons.Filled.ShoppingCart,
+                itemUnselectedIcon = Icons.Filled.ShoppingCart,
+                onClick = {}
+            ),
+            NavigationItemDropdown(
+                children = productCategories, itemId = NavigationItem.genID(),
+                itemTitle = "Reptile",
+                itemSelectedIcon = Icons.Filled.ShoppingCart,
+                itemUnselectedIcon = Icons.Filled.ShoppingCart,
+                onClick = {}
+            ),
+        )
     }
     val lowItems = remember {
         listOf(
             NavigationItem(
-                id =NavigationItem.genID(), title = "About Us & Contacts",
+                id =NavigationItem.genID(), title = "Contact Us",
+                selectedIcon = Icons.AutoMirrored.Filled.ContactSupport,
+                unselectedIcon = Icons.AutoMirrored.Filled.ContactSupport,
+                onClick = {
+                    val intent = Intent(context, ContactUsActivity::class.java)
+                    context.startActivity(intent)
+                }
+            ),
+            NavigationItem(
+                id =NavigationItem.genID(), title = "About Us",
                 selectedIcon = Icons.Filled.Favorite,
                 unselectedIcon = Icons.Filled.Favorite,
                 onClick = {
@@ -234,31 +251,10 @@ fun NavigationDrawer(
                     context.startActivity(intent)
                 }
             ),
-            NavigationItem(
-                id =NavigationItem.genID(), title = "Contact Us",
-                selectedIcon = Icons.AutoMirrored.Filled.ContactSupport,
-                unselectedIcon = Icons.AutoMirrored.Filled.ContactSupport,
-                onClick = { //TODO onclick show email and hotline
-                    val intent = Intent(context, AboutUsActivity::class.java)
-                    context.startActivity(intent)
-                }
-            ),
-            NavigationItem(
-                id =NavigationItem.genID(), title = "Settings",
-                selectedIcon = Icons.Filled.Settings,
-                unselectedIcon = Icons.Filled.Settings,
-                onClick = {}
-            ),
-            NavigationItem(
-                id =NavigationItem.genID(), title = "Logout",
-                selectedIcon = Icons.Filled.PowerSettingsNew,
-                unselectedIcon = Icons.Filled.PowerSettingsNew,
-                onClick = {}
-            )
         )
     }
 
-    PetPawsDemoTheme (darkTheme = UserProfile.darkmode) {
+    PetPawsDemoTheme (darkTheme = UserProfileObject.darkmode) {
         Column (
             Modifier
                 .background(MaterialTheme.colorScheme.surface)

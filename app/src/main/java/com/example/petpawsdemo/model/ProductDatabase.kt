@@ -22,7 +22,7 @@ class ExampleProducts {
             listOf(),
             listOf(Image_PetPawsDogFood_Thumbnail),
             "me",
-            "10x20x10m",
+            0.2f,
             "Dog Food to appease your dogs"
         )
 
@@ -39,7 +39,7 @@ class ExampleProducts {
             listOf(),
             listOf(Image_PetPawsDogFood_Premium_Thumbnail),
             "me",
-            "10x20x10m",
+            0.2f,
             "High-protein premium dry food for adult dogs"
         )
 
@@ -56,7 +56,7 @@ class ExampleProducts {
             listOf(),
             listOf(Image_PetPawsDogTreats_Thumbnail),
             "me",
-            "10x20x10m",
+            0.2f,
             "Affordable dog treats"
         )
 
@@ -73,7 +73,7 @@ class ExampleProducts {
             listOf(),
             listOf(Image_PetPawsWetDogFood_Thumbnail),
             "me",
-            "10x20x10m",
+            0.2f,
             "Moist and flavorful wet food with real chicken"
         )
         private val Image_PetPawsDogCage_Thumbnail =
@@ -102,7 +102,7 @@ class ExampleProducts {
             ),
             listOf(Image_PetPawsDogCage_Thumbnail,Image_PetPawsDogTreats_Thumbnail,Image_PetPawsWetDogFood_Thumbnail),
             "me",
-            "10x20x10m",
+            0.2f,
             "Give your furry companion a safe and comfortable home with our premium dog cage, designed for both function and style. Crafted with a high-quality, heavily glazed exterior, this cage offers a sleek, polished look that will complement any room while ensuring durability and long-lasting protection. The glossy finish is easy to clean and resistant to scratches, keeping your pet's space looking fresh and modern. With sturdy construction and ample ventilation, this cage provides a secure and cozy environment for your dog, whether you're at home or on the go. It's the perfect blend of safety, convenience, and aesthetic appeal—because your pet deserves a home that’s as stylish as it is functional."
         )
         private val Image_PetPawsDogToys_Thumbnail = "https://www.nocciolatoys.com/cdn/shop/files/1_284bbc55-05bb-44b0-b898-d17f05b86aa2.jpg?v=1745916563"
@@ -117,7 +117,7 @@ class ExampleProducts {
             listOf(),
             listOf(Image_PetPawsDogToys_Thumbnail),
             "me",
-            "10x20x10m",
+            0.2f,
             "Dog Toys to appease your dogs"
         )
 
@@ -132,25 +132,8 @@ class ExampleProducts {
             67,
             listOf(),
             listOf(Image_DogMansion_Thumbnail),
-            "me",
-            "10x20x10m",
-            "Dog Mansion To Appease Your Dogs"
-        )
-
-        private val Image_CatHome_Thumbnail = "https://img.freepik.com/free-photo/open-empty-box_1101-94.jpg?semt=ais_hybrid&w=740&q=80"
-        private val Image_CatHome_Happy = "https://i.pinimg.com/236x/b6/c3/eb/b6c3eb3488d1558903bc36d1c0742ec9.jpg"
-        val PetPawsCatHome = Product(
-            "Super Duper Budget Cardboard Cat Home",
-            ProductCategory("cat", "cage"),
-            listOf("cat", "cage", "budget", "cardboard", "spacious"),
-            100,
-            100,
-            4.9,
-            1000,
-            listOf(),
-            listOf(Image_CatHome_Thumbnail, Image_CatHome_Happy),
-            "me",
-            "10x20x10m",
+            "Best Paw Supplies",
+            0.05f,
             "Dog Mansion To Appease Your Dogs"
         )
     }
@@ -196,10 +179,6 @@ object ProductDatabase{
         return getProductSet().filter{it.productCategory.type == type}.sortedBy{it.productCategory.subtype}.groupBy{it.productCategory.subtype}
     }
 
-    fun getSubcategory(category: ProductCategory): List<Product> = getProductSet().filter{it.productCategory.type == category.type && it.productCategory.subtype == category.subtype}
-
-    fun getCategoryMap() = getProductSet().map{it.productCategory}.groupBy{it.type}
-
     fun search(query: String): List<Product>{
         val queryWords = query.split(" ").map{it.lowercase()}
         val products = getProductSet().map{it.searchCost(queryWords) to it}
@@ -216,8 +195,7 @@ object ProductDatabase{
             ExampleProducts.PetPawsWetDogFood,
             ExampleProducts.PetPawsDogFoodPremium,
             ExampleProducts.PetPawsDogFoodBudget,
-            ExampleProducts.PetPawsDogMansion,
-            ExampleProducts.PetPawsCatHome
+            ExampleProducts.PetPawsDogMansion
         ).forEach{prod ->
             addProduct(prod)
         }

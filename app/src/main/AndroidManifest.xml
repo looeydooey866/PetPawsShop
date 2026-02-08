@@ -43,6 +43,16 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activities.ContactUsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.PetPawsDemo">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".activities.ViewProductActivity"
             android:exported="true"
             android:theme="@style/Theme.PetPawsDemo">
@@ -74,6 +84,16 @@
         </activity>
         <activity
             android:name=".activities.OnboardingActivity"
+            android:exported="true"
+            android:theme="@style/Theme.PetPawsDemo">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.PetPawsDemo">
             <intent-filter>

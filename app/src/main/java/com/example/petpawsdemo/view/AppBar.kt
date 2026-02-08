@@ -34,8 +34,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.petpawsdemo.R
+import com.example.petpawsdemo.activities.LoginActivity
 import com.example.petpawsdemo.activities.ProfileActivity
-import com.example.petpawsdemo.viewmodel.UserCart
+import com.example.petpawsdemo.model.UserProfile
+import com.example.petpawsdemo.model.UserProfileObject
+import com.example.petpawsdemo.viewmodel.UserCartObject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -112,7 +115,7 @@ fun AppBar (
                     modifier = Modifier.padding(5.dp)
                 ) {
                     IconButton(onClick = {
-                        if (UserCart.products.isNotEmpty()) {
+                        if (UserCartObject.products.isNotEmpty()) {
                             onViewCart()
                         }
                     }) {
@@ -122,7 +125,7 @@ fun AppBar (
                             contentDescription = "Hello!"
                         )
                     }
-                    if (UserCart.products.isNotEmpty()){
+                    if (UserCartObject.products.isNotEmpty()){
                         Box(
                             modifier = Modifier.align(Alignment.TopEnd)
                         ) {
@@ -133,7 +136,7 @@ fun AppBar (
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    "${UserCart.products.size}",
+                                    "${UserCartObject.products.size}",
                                     color = Color.White,
                                     fontSize = 15.sp
                                 )
@@ -146,14 +149,28 @@ fun AppBar (
             val context = LocalContext.current;
             IconButton(
                 onClick = {
-                    val intent = Intent(context, ProfileActivity::class.java)
-                    context.startActivity(intent)
+                    if (UserProfile.loggedIn) {
+                        val intent = Intent(context, ProfileActivity::class.java)
+                        context.startActivity(intent)
+                    }
+                    else {
+                        val intent = Intent(context, LoginActivity::class.java)
+                        context.startActivity(intent)
+                    }
                 }
             ) {
-                Image(
-                    painter = painterResource(R.drawable.pfp),
-                    contentDescription = "Profile picture"
-                ) //switch to pfp activity
+                if (UserProfile.loggedIn) {
+                    Image(
+                        painter = painterResource(UserProfileObject.userPfpReference ?: R.drawable.defaultpfp),
+                        contentDescription = null
+                    )
+                }
+                else {
+                    Image(
+                        painter = painterResource( R.drawable.defaultpfp),
+                        contentDescription = null
+                    )
+                }
             }
         }
     )

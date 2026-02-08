@@ -5,14 +5,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -29,13 +26,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,12 +37,10 @@ import coil.compose.AsyncImage
 import com.example.petpawsdemo.ProductDatabase
 import com.example.petpawsdemo.model.CartObject
 import com.example.petpawsdemo.model.Product
-import com.example.petpawsdemo.model.UserProfile
+import com.example.petpawsdemo.model.UserProfileObject
 import com.example.petpawsdemo.model.ViewData
-import com.example.petpawsdemo.view.AppBar
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
-import com.example.petpawsdemo.viewmodel.UserCart
-import kotlinx.coroutines.launch
+import com.example.petpawsdemo.viewmodel.UserCartObject
 import kotlin.math.floor
 
 class CartActivity : ComponentActivity() {
@@ -59,7 +51,7 @@ class CartActivity : ComponentActivity() {
 
         setContent {
             val context = LocalContext.current
-            PetPawsDemoTheme (darkTheme = UserProfile.darkmode) {
+            PetPawsDemoTheme (darkTheme = UserProfileObject.darkmode) {
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -86,12 +78,12 @@ class CartActivity : ComponentActivity() {
                             Box(
                                 modifier = Modifier.weight(1.0f).fillMaxHeight(),
                             ){
-                                val cost = UserCart.getSubtotal()
+                                val cost = UserCartObject.getSubtotal()
                                 Column(
                                     modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.secondaryContainer).padding(10.dp),
                                 ) {
                                     Text(
-                                        text = "Items: ${UserCart.products.size}",
+                                        text = "Items: ${UserCartObject.products.size}",
                                         fontSize = 18.sp,
                                         color = MaterialTheme.colorScheme.onSecondaryContainer
                                     )
@@ -129,7 +121,7 @@ class CartActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Text(
-                            text = "My Cart (${UserCart.products.size})",
+                            text = "My Cart (${UserCartObject.products.size})",
                             fontSize = 25.sp,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -145,7 +137,7 @@ class CartActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
                             verticalArrangement = Arrangement.spacedBy(5.dp),
                         ) {
-                            UserCart.products.forEach {
+                            UserCartObject.products.forEach {
                                 CartItem(it)
                             }
                         }
@@ -171,7 +163,7 @@ private fun CartItem(cartObject: CartObject){
     ){
         IconButton(
             onClick = {
-                UserCart.removeProduct(cartObject.id)
+                UserCartObject.removeProduct(cartObject.id)
             },
             modifier = Modifier.size(20.dp)
         ) {

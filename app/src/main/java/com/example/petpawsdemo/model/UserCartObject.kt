@@ -25,7 +25,7 @@ object UserCartObject{
 
     fun getCount(id: Int) = findProduct(id).quantity
 
-    fun clear() = products.clear()
+    fun clearCart() = products.clear()
 
     fun getSubtotal() = products.sumOf { ProductDatabase.getProduct(it.id)!!.price * it.quantity }
 }

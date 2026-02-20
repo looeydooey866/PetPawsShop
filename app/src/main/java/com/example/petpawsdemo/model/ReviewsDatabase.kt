@@ -1,6 +1,8 @@
 package com.example.petpawsdemo.model
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 
 class ExampleReviews {
     companion object {
@@ -20,24 +22,24 @@ class ExampleReviews {
 }
 
 object ReviewsDatabase{
-    //private val reviews: MutableMap<Int, MutableList<Review>> = mutableMapOf()
-    private val reviews = mutableStateMapOf<Int, MutableList<Review>>()
+    private val reviews = mutableStateMapOf<Int, SnapshotStateList<Review>>()
 
-    fun getReviewsByProductId(id: Int) = reviews[id]
+    fun getReviewsByProductId(id: Int): List<Review>? = reviews[id]
 
     fun getRatingForProduct(id: Int): Double {
-        if (!reviews.containsKey(id)) {
+        val productReviews = reviews[id]
+        if (productReviews.isNullOrEmpty()) {
             return 0.0
         }
 
         var sum = 0.0
-        for (i in reviews[id]!!) sum += i.rating
-        return (sum / reviews[id]!!.size)
+        for (i in productReviews) sum += i.rating
+        return sum / productReviews.size
     }
 
     fun addReview(id: Int, review: Review) {
         if (!reviews.containsKey(id)) {
-            reviews[id] = mutableListOf()
+            reviews[id] = mutableStateListOf()
         }
         reviews[id]!!.add(review)
     }
@@ -53,7 +55,7 @@ object ReviewsDatabase{
         )
 
         for ((id, review) in exampleData) {
-            addReview(id!!, review)
+            id?.let { addReview(it, review) }
         }
     }
 }

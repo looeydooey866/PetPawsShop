@@ -36,8 +36,8 @@ data class Product(
         get() {
             val id = ProductDatabase.getID(this) ?: return baseRating
             val reviews = ReviewsDatabase.getReviewsByProductId(id)
-            if (reviews?.isEmpty() ?: false) return baseRating
-            val avg = reviews?.map { it.rating }?.average()
-            return round(avg?.times(10) ?: 0.0) / 10.0
+            if (reviews.isNullOrEmpty()) return baseRating
+            val avg = reviews.map { it.rating }.average()
+            return round(avg * 10) / 10.0
         }
 }

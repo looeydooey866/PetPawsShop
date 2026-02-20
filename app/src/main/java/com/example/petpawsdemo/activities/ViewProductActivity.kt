@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -46,6 +47,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -59,17 +61,15 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.petpawsdemo.model.GUEST_USERNAME
 import com.example.petpawsdemo.model.Product
+import com.example.petpawsdemo.model.ProductDatabase
 import com.example.petpawsdemo.model.Review
+import com.example.petpawsdemo.model.ReviewsDatabase
 import com.example.petpawsdemo.model.UserProfileObject
 import com.example.petpawsdemo.model.ViewData
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
 import com.example.petpawsdemo.viewmodel.UserCartObject
 import kotlinx.coroutines.launch
 import kotlin.math.floor
-import androidx.compose.ui.Alignment
-import com.example.petpawsdemo.model.ReviewsDatabase
-import androidx.activity.result.ActivityResultLauncher
-import com.example.petpawsdemo.model.ProductDatabase
 
 
 class ViewProductActivity : ComponentActivity() {
@@ -108,10 +108,10 @@ class ViewProductActivity : ComponentActivity() {
                     var editingQuantity by remember{mutableStateOf(false)}
                     Scaffold(
                         modifier = Modifier.fillMaxSize().pointerInput(Unit){
-                            detectTapGestures{offset ->
+                            detectTapGestures(onTap = {
                                 focusManager.clearFocus(true)
                                 keyboardController?.hide()
-                            }
+                            })
                         },
                         topBar = {
                             TopAppBar (
@@ -149,12 +149,11 @@ class ViewProductActivity : ComponentActivity() {
                                             .background(MaterialTheme.colorScheme.secondaryContainer)
                                             .clickable{
                                                 editingQuantity = true
-                                                //quantity = Random.nextInt(100)
                                             },
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.Center
                                     ){
-                                        Text("Change Quantity", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
+                                        Text("Change Quantity", fontSize = 20.sp, color = Color.White)
                                     }
                                     if (product.stock > 0){
                                         Row(
@@ -170,7 +169,7 @@ class ViewProductActivity : ComponentActivity() {
                                             verticalAlignment = Alignment.CenterVertically,
                                             horizontalArrangement = Arrangement.Center
                                         ){
-                                            Text("Add $quantity To Cart", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
+                                            Text("Add $quantity To Cart", fontSize = 20.sp, color = Color.White)
                                         }
                                     }
                                     else{
@@ -182,7 +181,7 @@ class ViewProductActivity : ComponentActivity() {
                                             verticalAlignment = Alignment.CenterVertically,
                                             horizontalArrangement = Arrangement.Center
                                         ){
-                                            Text("Out of stock", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
+                                            Text("Out of stock", fontSize = 20.sp, color = Color.White)
                                         }
                                     }
                                 }
@@ -291,10 +290,10 @@ class ViewProductActivity : ComponentActivity() {
                     val keyboardController = LocalSoftwareKeyboardController.current
                     Scaffold(
                         modifier = Modifier.fillMaxSize().pointerInput(Unit){
-                            detectTapGestures{offset ->
+                            detectTapGestures(onTap = {
                                 focusManager.clearFocus(true)
                                 keyboardController?.hide()
-                            }
+                            })
                         },
                         topBar = {
                             TopAppBar (
@@ -337,7 +336,7 @@ class ViewProductActivity : ComponentActivity() {
                                             verticalAlignment = Alignment.CenterVertically,
                                             horizontalArrangement = Arrangement.Center
                                         ){
-                                            Text("Change Quantity", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
+                                            Text("Change Quantity", fontSize = 20.sp, color = Color.White)
                                         }
                                         Row(
                                             modifier = Modifier
@@ -352,7 +351,7 @@ class ViewProductActivity : ComponentActivity() {
                                             verticalAlignment = Alignment.CenterVertically,
                                             horizontalArrangement = Arrangement.Center
                                         ){
-                                            Text("Remove from cart", fontSize = 20.sp, color = Color.White/*, fontWeight =  FontWeight.SemiBold*/)
+                                            Text("Remove from cart", fontSize = 20.sp, color = Color.White)
                                         }
                                     }
                                 }
@@ -485,7 +484,6 @@ private fun ProductContent(
                 Text(
                     text = "Brand: $this",
                     fontSize = 20.sp,
-                    //color = Color.Gray
                 )
             }
             Row(
@@ -507,15 +505,6 @@ private fun ProductContent(
                     )
                 }
             }
-            /*
-        Spacer(
-            modifier = Modifier.height(10.dp)
-        )
-        Box(
-            modifier = Modifier.fillMaxWidth().height(3.dp).background(Color(0xffd3d3d3))
-        )
-
-         */
             Spacer(
                 modifier = Modifier.height(20.dp)
             )
@@ -642,7 +631,6 @@ private fun ProductDescription(product: Product) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            //.padding(horizontal = 12.dp, vertical = 8.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.background)
     ) {
@@ -771,7 +759,6 @@ private fun ImageIndicator(
 }
 
 @Composable
-//private fun ProductReviews(product: Product){
 private fun ProductReviews(
     product: Product,
     ratingLauncher: ActivityResultLauncher<Intent>
@@ -779,27 +766,19 @@ private fun ProductReviews(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val purchasedItems = UserProfileObject.getPurchasedItems()
-    var ratingButtonEnabled by remember {
-        mutableStateOf(UserProfileObject.userName != GUEST_USERNAME
-                && purchasedItems.any { it.name == product.name })
-    }
+    val ratingButtonEnabled = UserProfileObject.userName != GUEST_USERNAME
+                && purchasedItems.any { it.name == product.name }
+    
     val snackbarHostState = remember { SnackbarHostState() }
 
-    var reviews by remember {
-        mutableStateOf(
-            ProductDatabase.getID(product)?.let { id ->
-                ReviewsDatabase.getReviewsByProductId(id)
-            } ?: mutableListOf()
-        )
-    }
+    val productId = ProductDatabase.getID(product)
+    val reviews = productId?.let { ReviewsDatabase.getReviewsByProductId(it) } ?: emptyList()
 
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-            //.padding(horizontal = 12.dp, vertical = 8.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
             Row {
                 Text(
@@ -834,9 +813,8 @@ private fun ProductReviews(
                     onDelete = if (canDelete) {
                         {
                             scope.launch {
-                                ProductDatabase.getID(product)?.let { id ->
-                                    ReviewsDatabase.getReviewsByProductId(id)
-                                        ?.let { reviews = it.toMutableList() }
+                                productId?.let { id ->
+                                    ReviewsDatabase.removeReview(id, review)
                                 }
                                 Toast.makeText(context, "Review deleted", Toast.LENGTH_SHORT).show()
                             }
@@ -850,7 +828,7 @@ private fun ProductReviews(
             Button(
                 onClick = {
                     if (ratingButtonEnabled) {
-                        ProductDatabase.getID(product)?.let { id ->
+                        productId?.let { id ->
                             val intent = Intent(context, RatingActivity::class.java)
                                 .putExtra("productId", id)
                             ratingLauncher.launch(intent)
@@ -877,7 +855,6 @@ private fun ProductReviews(
                     containerColor = MaterialTheme.colorScheme.error,
                     contentColor = MaterialTheme.colorScheme.onError
                 ),
-                //enabled = buttonEnabled
             ) {
                 Text("Add Rating")
             }

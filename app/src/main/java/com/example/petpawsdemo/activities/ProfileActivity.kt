@@ -52,10 +52,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.petpawsdemo.R
+import com.example.petpawsdemo.model.CartObject
 import com.example.petpawsdemo.model.GUEST_USERNAME
 import com.example.petpawsdemo.model.UserProfile
 import com.example.petpawsdemo.model.UserProfileObject
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
+import com.example.petpawsdemo.viewmodel.UserCartObject
 import kotlinx.coroutines.launch
 
 class ProfileActivity : ComponentActivity() {
@@ -213,6 +215,7 @@ private fun ProfileScreen() {
 
                     UserProfileObject.userName = GUEST_USERNAME
                     UserProfileObject.saveCurrentUser(context)
+                    UserCartObject.clearCart() //TODO
                 }
 
                 val intent = Intent(context, MainActivity::class.java).apply {

@@ -160,7 +160,7 @@ class CheckoutActivity : ComponentActivity() {
                                     flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or
                                             Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 }
-                                UserCartObject.clear()
+                                UserCartObject.clearCart()
 
                                 startActivity(intent)
                                 Toast.makeText(context, "Purchase Successful", Toast.LENGTH_LONG).show()

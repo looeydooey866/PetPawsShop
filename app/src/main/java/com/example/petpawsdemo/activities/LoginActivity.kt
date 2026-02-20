@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.VisualTransformation
+import com.example.petpawsdemo.model.DEFAULT_PFP
 import com.example.petpawsdemo.model.GUEST_USERNAME
 import com.example.petpawsdemo.model.UserProfile
 import kotlinx.coroutines.Dispatchers
@@ -237,8 +238,10 @@ fun LoginScreen(activity: ComponentActivity) {
                                 return@launch
                             }
 
+                            // Explicitly set ALL fields for the new user profile
                             UserProfileObject.userName = username
                             UserProfileObject.password = password
+                            UserProfileObject.userPfpReference = DEFAULT_PFP
                             UserProfileObject.darkmode = false
 
                             UserProfileObject.saveUserProfile(context)

@@ -1,7 +1,6 @@
 package com.example.petpawsdemo.model
 
 import android.content.Context
-import com.example.petpawsdemo.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
@@ -9,11 +8,12 @@ import java.io.File
 
 const val GUEST_USERNAME = "Guest"
 const val GUEST_PASSWORD = "=LNVQ4RfWnhK~V*TA!28K=P^YJ8.jfhcUuU~=gcr^KNUhCg*4+NF~0T+k%aeu]45oz+9jpRERWjE]K_o57GiCxtRB>jfUGqrv^*B"
+const val DEFAULT_PFP = "https://imgur.com/a/gjPAUwF"
 
 object UserProfileObject {
     private val userProfile = UserProfile(
         userName = GUEST_USERNAME,
-        userPfpReference = R.drawable.defaultpfp,
+        userPfpReference = DEFAULT_PFP,
         password = GUEST_PASSWORD,
         darkmode = false,
     )
@@ -26,7 +26,7 @@ object UserProfileObject {
         get() = userProfile.password
         set(value) { userProfile.password = value }
 
-    var userPfpReference: Int?
+    var userPfpReference: String
         get() = userProfile.userPfpReference
         set(value) { userProfile.userPfpReference = value }
 
@@ -40,6 +40,38 @@ object UserProfileObject {
 
     fun getPurchasedItems(): List<Product> =
         userProfile.getPurchasedItems()
+
+    /*
+    suspend fun addReviewToProduct(context: Context, product: Product, rating: Double, reviewText: String) {
+        val newReview = Review(
+            username = userName,
+            profilePicture = userPfpReference,
+            rating = rating,
+            review = reviewText
+        )
+        
+        product.reviews.add(newReview)
+        product.updateRating(rating)
+
+        ProductDatabase.updateProduct(product)
+        
+        // No longer saving to JSON as reviews are transient
+        // userProfile.updatePurchasedProduct(product)
+        // saveUserProfile(context)
+    }
+     */
+
+    /*
+    suspend fun removeReviewFromProduct(context: Context, product: Product, review: Review) {
+        product.reviews.remove(review)
+
+        ProductDatabase.updateProduct(product)
+
+        // No longer saving to JSON as reviews are transient
+        // userProfile.updatePurchasedProduct(product)
+        // saveUserProfile(context)
+    }
+     */
 
     suspend fun loadUserProfile(context: Context, username: String): Boolean {
         val success = userProfile.loadUserProfile(context, username)
@@ -68,8 +100,19 @@ object UserProfileObject {
             val file = File(context.filesDir, "app_session.json")
             if (!file.exists()) return@withContext null
 
-            val session = json.decodeFromString<AppSession>(file.readText())
-            session.currentUser.ifBlank{ GUEST_USERNAME }
+            val text = file.readText()
+            if (text.isBlank()) return@withContext null
+
+            try {
+                val session = json.decodeFromString<AppSession>(text)
+                if (session.currentUser.isBlank()) {
+                    GUEST_USERNAME
+                } else {
+                    session.currentUser
+                }
+            } catch (e: Exception) {
+                null
+            }
         }
     }
 }

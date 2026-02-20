@@ -48,7 +48,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.petpawsdemo.model.ProductDatabase
 import com.example.petpawsdemo.model.Product
+import com.example.petpawsdemo.model.ReviewsDatabase
 import com.example.petpawsdemo.model.UserProfileObject
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
 import kotlin.math.floor
@@ -124,9 +126,11 @@ fun ProductCard(product: Product, modifier: Modifier = Modifier, onClick: () -> 
 
             //heights are fixed
             ProductInfo(product, height = 28.dp)
+            ///* TODO synchronise productrating with the database (i STRONGLY advise against trying)
             Box(modifier = Modifier.height(28.dp)) {
                 ProductRating(product)
             }
+             //*/
         }
     }
 }
@@ -167,14 +171,21 @@ private fun ProductInfo(product: Product, height: Dp) {
 @Composable
 fun ProductRating(product: Product) {
     val golden = Color(0xFFFFC107)
-    val rating = product.rating
+
+    val productId = ProductDatabase.getID(product)
+
+    val rating: Double = if (productId != null) {
+        ReviewsDatabase.getRatingForProduct(productId)
+    } else {
+        0.0
+    }
 
     val fullStars = floor(rating).toInt()
     val fraction = rating - fullStars
     val hasHalfStar = fraction >= 0.25 && fraction < 0.75
     val extraFullStar = fraction >= 0.75
     val starsShown = fullStars + if (extraFullStar) 1 else 0
-    val emptyStars = 5 - starsShown - if (hasHalfStar) 1 else 0
+    val emptyStars = (5 - starsShown - if (hasHalfStar) 1 else 0).coerceAtLeast(0)
 
     val infiniteTransition = rememberInfiniteTransition()
 
@@ -192,7 +203,7 @@ fun ProductRating(product: Product) {
                         easing = LinearOutSlowInEasing
                     ),
                     repeatMode = RepeatMode.Reverse
-                )
+                ), label = ""
             )
             Icon(
                 imageVector = Icons.Filled.Star,
@@ -209,8 +220,7 @@ fun ProductRating(product: Product) {
                 imageVector = Icons.AutoMirrored.Filled.StarHalf,
                 contentDescription = null,
                 tint = golden,
-                modifier = Modifier
-                    .size(20.dp)
+                modifier = Modifier.size(20.dp)
             )
         }
 
@@ -219,8 +229,7 @@ fun ProductRating(product: Product) {
                 imageVector = Icons.Outlined.StarOutline,
                 contentDescription = null,
                 tint = golden,
-                modifier = Modifier
-                    .size(20.dp)
+                modifier = Modifier.size(20.dp)
             )
         }
         Spacer(modifier = Modifier.width(6.dp))

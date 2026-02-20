@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.petpawsdemo.ProductDatabase
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.coroutines.Dispatchers
@@ -25,17 +24,17 @@ data class AppSession(
 @Serializable
 data class UserProfileData(
     val userName: String,
-    val userPfpReference: Int? = null,
+    val userPfpReference: String = "",
     val password: String,
     val darkmode: Boolean = false,
     val firstTimeEntering: Boolean = true,
-    val purchasedItemIds: List<Int> = emptyList()
+    val purchasedItems: List<Product> = emptyList()
 )
 
 class UserProfile(
     var userName: String,
     var password: String,
-    var userPfpReference: Int?,
+    var userPfpReference: String,
     darkmode: Boolean = true,
 ) {
     companion object {
@@ -45,10 +44,14 @@ class UserProfile(
             val file = File(context.filesDir, "user_profiles.json")
             if (!file.exists()) return false
 
-            val profiles = json.decodeFromString(
-                ListSerializer(UserProfileData.serializer()),
-                file.readText()
-            )
+            val profiles = try {
+                json.decodeFromString(
+                    ListSerializer(UserProfileData.serializer()),
+                    file.readText()
+                )
+            } catch (e: Exception) {
+                emptyList<UserProfileData>()
+            }
 
             return profiles.any { it.userName == username }
         }
@@ -57,10 +60,14 @@ class UserProfile(
             val file = File(context.filesDir, "user_profiles.json")
             if (!file.exists()) return false
 
-            val profiles = json.decodeFromString(
-                ListSerializer(UserProfileData.serializer()),
-                file.readText()
-            )
+            val profiles = try {
+                json.decodeFromString(
+                    ListSerializer(UserProfileData.serializer()),
+                    file.readText()
+                )
+            } catch (e: Exception) {
+                emptyList<UserProfileData>()
+            }
 
             val user = profiles.find { it.userName == username } ?: return false
 
@@ -68,42 +75,47 @@ class UserProfile(
         }
     }
 
-    private val purchasedItemIds = mutableListOf<Int>()
-
-    private val productToIDMap: Map<Product, Int> =
-        ProductDatabase.getProductIDMap()
-    private val idToProductMap: Map<Int, Product> =
-        productToIDMap.map{ (p, id) -> id to p }.toMap()
+    private val purchasedItems = mutableListOf<Product>()
 
     var darkmode by mutableStateOf(darkmode)
 
     fun addPurchasedItemById(id: Int) {
-        purchasedItemIds.add(id)
+        val product = ProductDatabase.getProduct(id)
+        if (product != null && !purchasedItems.any { it.name == product.name }) {
+            purchasedItems.add(product)
+        }
     }
 
-    fun addPurchasedItem(p:Product) {
-        var id: Int? = productToIDMap.get(p)
-        if (id != null) purchasedItemIds.add(id)
+    fun addPurchasedItem(p: Product) {
+        if (!purchasedItems.any { it.name == p.name }) {
+            purchasedItems.add(p)
+        }
     }
 
-    fun getPurchasedItems(): List<Product> =
-        purchasedItemIds.map{ idToProductMap[it] as Product }
+    fun getPurchasedItems(): List<Product> = purchasedItems.toList()
+
+    fun updatePurchasedProduct(updatedProduct: Product) {
+        val index = purchasedItems.indexOfFirst { it.name == updatedProduct.name }
+        if (index != -1) {
+            purchasedItems[index] = updatedProduct
+        }
+    }
 
     fun toData(): UserProfileData = UserProfileData(
         userName = userName,
         userPfpReference = userPfpReference,
         darkmode = darkmode,
-        purchasedItemIds = purchasedItemIds.toList(),
+        purchasedItems = purchasedItems.toList(),
         password = password
-        )
+    )
 
     fun applyData(data: UserProfileData) {
         userName = data.userName
         userPfpReference = data.userPfpReference
         darkmode = data.darkmode
         password = data.password
-        purchasedItemIds.clear()
-        purchasedItemIds.addAll(data.purchasedItemIds)
+        purchasedItems.clear()
+        purchasedItems.addAll(data.purchasedItems)
     }
 
     private fun getProfileFile(context: Context): File =
@@ -117,10 +129,14 @@ class UserProfile(
         val text = file.readText()
         if (text.isBlank()) return mutableListOf()
 
-        return json.decodeFromString(
-            ListSerializer(UserProfileData.serializer()),
-            text
-        ).toMutableList()
+        return try {
+            json.decodeFromString(
+                ListSerializer(UserProfileData.serializer()),
+                text
+            ).toMutableList()
+        } catch (e: Exception) {
+            mutableListOf()
+        }
     }
 
     private fun writeAllProfiles(

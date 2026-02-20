@@ -2,6 +2,7 @@ package com.example.petpawsdemo.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -45,7 +46,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.petpawsdemo.ProductDatabase
+import com.example.petpawsdemo.model.ProductDatabase
 import com.example.petpawsdemo.model.CartObject
 import com.example.petpawsdemo.model.Product
 import com.example.petpawsdemo.model.UserProfileObject
@@ -159,7 +160,10 @@ class CheckoutActivity : ComponentActivity() {
                                     flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or
                                             Intent.FLAG_ACTIVITY_SINGLE_TOP
                                 }
+                                UserCartObject.clear()
+
                                 startActivity(intent)
+                                Toast.makeText(context, "Purchase Successful", Toast.LENGTH_LONG).show()
                             },
                         ){
                             Text(
@@ -252,7 +256,6 @@ private fun RatingStars(rating: Double, size: Dp){
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val rating = rating
         var fullStars: Int = floor(rating).toInt()
         if (rating - fullStars.toDouble() > 0.75) fullStars++;
         val hasHalfStar: Boolean = ((rating - fullStars.toDouble()) > 0.25) && ((rating - fullStars.toDouble()) < 0.75)
@@ -287,7 +290,7 @@ private fun RatingStars(rating: Double, size: Dp){
             )
         }
         Text(
-            text = "" + rating,
+            text = String.format("%.1f", rating),
             fontSize = 15.sp
         )
     }

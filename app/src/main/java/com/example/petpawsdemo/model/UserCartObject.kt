@@ -1,7 +1,7 @@
 package com.example.petpawsdemo.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
-import com.example.petpawsdemo.ProductDatabase
+import com.example.petpawsdemo.model.ProductDatabase
 import com.example.petpawsdemo.model.CartObject
 
 object UserCartObject{

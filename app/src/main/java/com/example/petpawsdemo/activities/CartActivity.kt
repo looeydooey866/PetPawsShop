@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.petpawsdemo.ProductDatabase
+import com.example.petpawsdemo.model.ProductDatabase
 import com.example.petpawsdemo.model.CartObject
 import com.example.petpawsdemo.model.Product
 import com.example.petpawsdemo.model.UserProfileObject

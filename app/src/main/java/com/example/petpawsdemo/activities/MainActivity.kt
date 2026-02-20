@@ -3,8 +3,10 @@ package com.example.petpawsdemo.activities
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,7 +39,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachReversed
-import com.example.petpawsdemo.ProductDatabase
+import com.example.petpawsdemo.model.ProductDatabase
 import com.example.petpawsdemo.model.SearchHistory
 import com.example.petpawsdemo.model.UserProfileObject
 import com.example.petpawsdemo.model.ViewData
@@ -50,13 +52,18 @@ import kotlinx.coroutines.launch
 import androidx.core.content.edit
 import androidx.lifecycle.lifecycleScope
 import com.example.petpawsdemo.model.GUEST_USERNAME
+import com.example.petpawsdemo.model.Product
 import com.example.petpawsdemo.model.UserProfile
+import com.example.petpawsdemo.model.json
+
+var debugOnboardingOn = false
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        // Handle initial data loading
         lifecycleScope.launch {
             val currentUser = UserProfileObject.loadCurrentUser(this@MainActivity)
             if (currentUser != null && currentUser != GUEST_USERNAME) {
@@ -65,22 +72,50 @@ class MainActivity : ComponentActivity() {
             } else {
                 UserProfile.loggedIn = false
             }
+
+            // Show onboarding if needed
+            val prefs = getSharedPreferences("pet_paws_prefs", MODE_PRIVATE)
+            if (debugOnboardingOn) {
+                prefs.edit { putBoolean("first_use", true) }
+                debugOnboardingOn = false
+            }
+            if (prefs.getBoolean("first_use", true)) {
+                prefs.edit { putBoolean("first_use", false) }
+                val onboardingIntent = Intent(this@MainActivity, OnboardingActivity::class.java)
+                startActivity(onboardingIntent)
+            }
         }
 
         setContent {
-            PetPawsDemoTheme (darkTheme = UserProfileObject.darkmode) {
+            PetPawsDemoTheme(darkTheme = UserProfileObject.darkmode) {
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
-                var currentQuery by remember{mutableStateOf("")}
-                var query by remember{mutableStateOf("")}
-                var searching by remember{mutableStateOf(false)}
-                var everSearched by remember{mutableStateOf(false)}
+                var currentQuery by remember { mutableStateOf("") }
+                var query by remember { mutableStateOf("") }
+                var searching by remember { mutableStateOf(false) }
+                var everSearched by remember { mutableStateOf(false) }
                 val focusManager = LocalFocusManager.current
                 val context = LocalContext.current
-                val onQueryChange = {s: String ->
-                    query = s
+
+                // Activity Result Launcher to capture updates from ViewProductActivity
+                val viewProductLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.StartActivityForResult()
+                ) { result ->
+                    if (result.resultCode == RESULT_OK) {
+                        val updatedProductJson = result.data?.getStringExtra("updated_product")
+                        if (updatedProductJson != null) {
+                            try {
+                                val updatedProduct = json.decodeFromString<Product>(updatedProductJson)
+                                ProductDatabase.updateProduct(updatedProduct)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+                    }
                 }
-                val onFocus = {f: Boolean ->
+
+                val onQueryChange = { s: String -> query = s }
+                val onFocus = { f: Boolean ->
                     if (f) {
                         query = ""
                         searching = true
@@ -101,10 +136,10 @@ class MainActivity : ComponentActivity() {
                     focusManager.clearFocus()
                     query = currentQuery
                 }
-                val onViewProduct = {product: Int->
-                    ViewData.viewingId = product
+                val onViewProduct = { productId: Int ->
+                    ViewData.viewingId = productId
                     val intent = Intent(context, ViewProductActivity::class.java)
-                    context.startActivity(intent)
+                    viewProductLauncher.launch(intent)
                 }
                 val onViewCart = {
                     val intent = Intent(context, CartActivity::class.java)
@@ -117,25 +152,6 @@ class MainActivity : ComponentActivity() {
                     currentQuery = ""
                 }
 
-                val prefs = getSharedPreferences("pet_paws_prefs", MODE_PRIVATE)
-                //prefs.edit().putBoolean("first_use", true).apply()
-
-                if (prefs.getBoolean("first_use", true)) {
-                    val onboardingIntent = Intent(context, OnboardingActivity::class.java)
-                    context.startActivity(onboardingIntent)
-
-                    prefs.edit { putBoolean("first_use", false) }
-                }
-
-                lifecycleScope.launch {
-                    val savedUser = UserProfileObject.loadCurrentUser(this@MainActivity)
-
-                    if (savedUser != null) {
-                        UserProfileObject.loadUserProfile(this@MainActivity, savedUser)
-                    } else {
-                        UserProfileObject.loadUserProfile(this@MainActivity, GUEST_USERNAME)
-                    }
-                }
                 HomeScreen(
                     drawerState,
                     query,
@@ -217,10 +233,8 @@ private fun HomeScreen(
                         )
                     } else {
                         ProductContainer(
-                            products = ProductDatabase.search(currentQuery),
-                            innerPadding = innerPadding,
-                            onClick = { id -> onViewProduct(id) }
-                        )
+                            innerPadding = innerPadding
+                        ) { id -> onViewProduct(id) }
                     }
                 }
             } else {
@@ -229,15 +243,15 @@ private fun HomeScreen(
                         .padding(innerPadding).padding(6.7.dp)
                         .fillMaxSize(1.0f)
                 ) {
-                    SearchHistory.history.fastForEachReversed{
+                    SearchHistory.history.fastForEachReversed {
                         Row(
-                            modifier = Modifier.clickable{
+                            modifier = Modifier.clickable {
                                 onQueryChange(it)
                                 onSearch()
                             }.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(5.dp, Alignment.Start),
                             verticalAlignment = Alignment.CenterVertically
-                        ){
+                        ) {
                             IconButton(onClick = {
                                 onQueryChange(it)
                                 onSearch()

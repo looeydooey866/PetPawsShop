@@ -6,6 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -17,18 +21,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -183,8 +193,20 @@ fun AboutPetPawsScreenReactive(
                     if (itemInfo != null) kotlin.math.abs(itemInfo.offset + itemInfo.size / 2 - centerOffset)
                     else 0
 
+                //disappear with scroll
                 val alpha = (1f - (distanceFromCenter.toFloat() / centerOffset.toFloat()))
                     .coerceIn(0f, 1f)
+
+                //bobbing arrow thingy
+                val infiniteTransition = rememberInfiniteTransition()
+                val bobOffset by infiniteTransition.animateFloat(
+                    initialValue = 0f,
+                    targetValue = 10f, // move 10.dp up and down
+                    animationSpec = infiniteRepeatable(
+                        animation = tween(800, easing = LinearEasing),
+                        repeatMode = RepeatMode.Reverse
+                    )
+                )
 
                 Box(
                     modifier = Modifier
@@ -195,16 +217,34 @@ fun AboutPetPawsScreenReactive(
                 ) {
                     Box(
                         modifier = Modifier
-                            .background(Color.White.copy(alpha = 0.5f))
-                            .padding(16.dp)
+                            .shadow(6.dp, RoundedCornerShape(16.dp))
+                            .background(
+                                Color.White.copy(alpha = 0.9f),
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                            .padding(horizontal = 20.dp, vertical = 12.dp)
                     ) {
                         Text(
                             text = line,
-                            style = xkcdTextStyle.copy(fontSize = 28.sp),
                             textAlign = TextAlign.Center,
-                            color = Color.Black.copy(alpha = alpha)
+                            color = Color.Black.copy(alpha = alpha),
+                            style = TextStyle(
+                                fontSize = 20.sp,
+                                //fontWeight = FontWeight.SemiBold,
+                                letterSpacing = 0.3.sp
+                            )
                         )
                     }
+
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = "Scroll Down",
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 32.dp)
+                            .offset(y = bobOffset.dp),
+                        tint = Color.Black.copy(alpha = alpha)
+                    )
                 }
             }
 

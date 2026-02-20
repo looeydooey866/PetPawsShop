@@ -23,11 +23,11 @@ import kotlin.math.floor
 @Composable
 fun RatingBar(
     maxRating: Int = 5,
-    initialRating: Float = 0f,
-    onRatingChanged: (Float) -> Unit = {}
+    initialRating: Double = 0.0,
+    onRatingChanged: (Double) -> Unit = {}
 ) {
     //BEGIN data stuff
-    var rating by remember { mutableStateOf<Float>(initialRating) }
+    var rating by remember { mutableStateOf<Double>(initialRating) }
     val interactionSource = remember { MutableInteractionSource() }
 
     val starSizeModifier = Modifier
@@ -80,7 +80,7 @@ fun RatingBar(
                             interactionSource = interactionSource,
                             indication = null
                         ) {
-                            rating = i * 0.5f
+                            rating = i * 0.5
                             onRatingChanged(rating)
                         }
                     //.background( color = Color.Yellow ) //debugging

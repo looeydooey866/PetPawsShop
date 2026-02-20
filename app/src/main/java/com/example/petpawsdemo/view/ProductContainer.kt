@@ -24,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.petpawsdemo.model.Product
-import com.example.petpawsdemo.ProductDatabase
+import com.example.petpawsdemo.model.ProductDatabase
 import com.example.petpawsdemo.model.UserProfileObject
 
 @Composable
@@ -43,22 +43,57 @@ fun ProductContainer(
         horizontalArrangement = Arrangement.spacedBy(15.dp)
     ) {
         products.forEach { (type, subMap) ->
-            //type header
             item(span = { GridItemSpan(maxLineSpan) }) {
                 CategorySeparator(type)
             }
 
             subMap.forEach { (subtype, productList) ->
-                //subtype header
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     SubCategorySeparator(type, subtype)
                 }
 
-                productList.forEach { product ->
-                    item {
-                        ProductCard(product) {
-                            onClick(ProductDatabase.getID(product)!!)
+                items(productList) { p ->
+                    val id = ProductDatabase.getID(p)
+                    if (id != null) {
+                        // Retrieve the live product instance from the database
+                        //println("fuck you, ${p}, ${id}")
+                        val product = ProductDatabase.getProduct(id)
+                        if (product != null) {
+                            ProductCard(product) {
+                                onClick(id)
+                            }
                         }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ProductContainer(
+    innerPadding: PaddingValues,
+    onClick: (Int) -> Unit
+) {
+    val products: List<Product> = ProductDatabase.getProductSet().toList()
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        modifier = Modifier
+            .padding(innerPadding)
+            .fillMaxWidth(),
+        contentPadding = PaddingValues(10.dp),
+        verticalArrangement = Arrangement.spacedBy(15.dp),
+        horizontalArrangement = Arrangement.spacedBy(15.dp)
+    ) {
+        items(products) { p ->
+            val id = ProductDatabase.getID(p)
+            if (id != null) {
+                // Retrieve the live product instance from the database
+                val product = ProductDatabase.getProduct(id)
+                if (product != null) {
+                    ProductCard(product) {
+                        onClick(id)
                     }
                 }
             }
@@ -112,29 +147,5 @@ fun CategorySeparator(type: String){
                 .clip(RoundedCornerShape(2.dp))
                 .background(MaterialTheme.colorScheme.primary)
         ) {}
-    }
-}
-
-
-
-@Composable
-fun ProductContainer(products: List<Product>, innerPadding: PaddingValues, onClick: (Int) -> Unit){
-    LazyVerticalGrid (
-        columns = GridCells.Fixed(2),
-        modifier = Modifier.padding(innerPadding)
-            .fillMaxWidth(1.0f),
-        contentPadding = PaddingValues(10.dp),
-        verticalArrangement = Arrangement.spacedBy(15.dp),
-        horizontalArrangement = Arrangement.spacedBy(15.dp)
-    ){
-        val mod = Modifier
-        items(products){ product ->
-            ProductCard(
-                product = product,
-                modifier = mod
-            ) {
-                onClick(ProductDatabase.getID(product)!!)
-            }
-        }
     }
 }

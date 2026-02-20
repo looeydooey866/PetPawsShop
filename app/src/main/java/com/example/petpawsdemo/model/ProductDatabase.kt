@@ -1,9 +1,6 @@
-package com.example.petpawsdemo
+package com.example.petpawsdemo.model
 
-import com.example.petpawsdemo.model.Product
-import com.example.petpawsdemo.model.ProductCategory
 import com.example.petpawsdemo.algorithm.searchCost
-import com.example.petpawsdemo.model.Review
 import java.util.TreeSet
 import kotlin.math.min
 
@@ -14,13 +11,12 @@ class ExampleProducts {
         val PetPawsDogFood = Product(
             "Nutritious Pet Paws Dog Food",
             ProductCategory("dog", "food"),
-            listOf("nutritious", "dog", "food"),
+            mutableListOf("nutritious", "dog", "food"),
             67,
             1520,
-            3.4,
-            100,
-            listOf(),
-            listOf(Image_PetPawsDogFood_Thumbnail),
+            0.0,
+            0,
+            mutableListOf(Image_PetPawsDogFood_Thumbnail),
             "me",
             0.2f,
             "Dog Food to appease your dogs"
@@ -31,13 +27,12 @@ class ExampleProducts {
         val PetPawsDogFoodPremium = Product(
             "Pet Paws Premium Dry Dog Food",
             ProductCategory("dog", "food"),
-            listOf("dog", "food", "premium", "dry"),
+            mutableListOf("dog", "food", "premium", "dry"),
             43,
             2899,
-            4.8,
-            40,
-            listOf(),
-            listOf(Image_PetPawsDogFood_Premium_Thumbnail),
+            0.0,
+            0,
+            mutableListOf(Image_PetPawsDogFood_Premium_Thumbnail),
             "me",
             0.2f,
             "High-protein premium dry food for adult dogs"
@@ -48,13 +43,12 @@ class ExampleProducts {
         val PetPawsDogFoodBudget = Product(
             "Delicious Vegetarian Dog Treats",
             ProductCategory("dog", "food"),
-            listOf("dog", "treats", "vegetarian", "non-meat", "delicious", "food"),
+            mutableListOf("dog", "treats", "vegetarian", "non-meat", "delicious", "food"),
             10,
             999,
-            3.9,
-            120,
-            listOf(),
-            listOf(Image_PetPawsDogTreats_Thumbnail),
+            0.0,
+            0,
+            mutableListOf(Image_PetPawsDogTreats_Thumbnail),
             "me",
             0.2f,
             "Affordable dog treats"
@@ -65,13 +59,12 @@ class ExampleProducts {
         val PetPawsWetDogFood = Product(
             "Pet Paws Wet Dog Food – Chicken & Rice",
             ProductCategory("dog", "food"),
-            listOf("dog", "food", "wet", "chicken", "rice", "sus"),
+            mutableListOf("dog", "food", "wet", "chicken", "rice", "sus"),
             98,
             249,
-            4.4,
-            200,
-            listOf(),
-            listOf(Image_PetPawsWetDogFood_Thumbnail),
+            0.0,
+            0,
+            mutableListOf(Image_PetPawsWetDogFood_Thumbnail),
             "me",
             0.2f,
             "Moist and flavorful wet food with real chicken"
@@ -81,26 +74,12 @@ class ExampleProducts {
         val PetPawsDogCage = Product(
             "Dog Cage",
             ProductCategory("dog","cage"),
-            listOf("dog", "cage"),
+            mutableListOf("dog", "cage"),
             3,
             1,
-            4.5,
-            1,
-            listOf(
-                Review(
-                    "Maxied",
-                    "https://cdn.discordapp.com/avatars/1086855106764476416/287fe77c49ed23c0146c46266ce98555.webp?size=100",
-                    5.0,
-                    "I think that this dog cage is splendid! It perfectly suits my dog, and he is very happy living in it for 25 hours a day. He especially enjoys the spaciousness of it, as described under the imaginary 'product size' description. Overall, a fantastic product."
-                ),
-                Review(
-                    "Mr. Burg",
-                    "https://images.themodernproper.com/production/posts/2016/ClassicCheeseBurger_9.jpg?w=1200&h=1200&q=60&fm=jpg&fit=crop&dm=1749310239&s=463b18fc3bb51dc5d96e866c848527c4",
-                    2.3,
-                    "My dog doesn't fit inside. Why would you sell a 1x1x2cm dog cage???"
-                )
-            ),
-            listOf(Image_PetPawsDogCage_Thumbnail,Image_PetPawsDogTreats_Thumbnail,Image_PetPawsWetDogFood_Thumbnail),
+            0.0,
+            0,
+            mutableListOf(Image_PetPawsDogCage_Thumbnail,Image_PetPawsDogTreats_Thumbnail,Image_PetPawsWetDogFood_Thumbnail),
             "me",
             0.2f,
             "Give your furry companion a safe and comfortable home with our premium dog cage, designed for both function and style. Crafted with a high-quality, heavily glazed exterior, this cage offers a sleek, polished look that will complement any room while ensuring durability and long-lasting protection. The glossy finish is easy to clean and resistant to scratches, keeping your pet's space looking fresh and modern. With sturdy construction and ample ventilation, this cage provides a secure and cozy environment for your dog, whether you're at home or on the go. It's the perfect blend of safety, convenience, and aesthetic appeal—because your pet deserves a home that’s as stylish as it is functional."
@@ -109,13 +88,12 @@ class ExampleProducts {
         val PetPawsDogToys = Product(
             "Assorted Colorful Dog Toys",
             ProductCategory("dog", "toys"),
-            listOf("dog", "toys", "fun", "assorted", "colorful"),
+            mutableListOf("dog", "toys", "fun", "assorted", "colorful"),
             21364,
             2100,
-            5.0,
-            10,
-            listOf(),
-            listOf(Image_PetPawsDogToys_Thumbnail),
+            0.0,
+            0,
+            mutableListOf(Image_PetPawsDogToys_Thumbnail),
             "me",
             0.2f,
             "Dog Toys to appease your dogs"
@@ -125,13 +103,12 @@ class ExampleProducts {
         val PetPawsDogMansion = Product(
             "Super Duper Premium Dog Mansion",
             ProductCategory("dog", "cage"),
-            listOf("dog", "cage", "mansion", "premium", "super", "duper"),
+            mutableListOf("dog", "cage", "mansion", "premium", "super", "duper"),
             1,
             210000,
-            0.5,
-            67,
-            listOf(),
-            listOf(Image_DogMansion_Thumbnail),
+            0.0,
+            0,
+            mutableListOf(Image_DogMansion_Thumbnail),
             "Best Paw Supplies",
             0.05f,
             "Dog Mansion To Appease Your Dogs"
@@ -144,8 +121,11 @@ object ProductDatabase{
     private val productIDMap: MutableMap<Product, Int> = mutableMapOf()
     private val unused: TreeSet<Int> = TreeSet<Int>().apply{ add(0) }
 
+
     fun getProduct(id: Int) = products[id]
     fun getID(product: Product) = productIDMap[product]
+
+    fun getRating(id: Int) = this.products[id]?.rating
 
     fun addProduct(product: Product){
         val id = unused.pollFirst()
@@ -161,6 +141,13 @@ object ProductDatabase{
         products.remove(id)
         productIDMap.remove(product)
         unused.add(id)
+    }
+
+    fun updateProduct(product: Product) {
+        val id = getID(product)
+        if (id != null) {
+            products[id] = product
+        }
     }
 
     fun getProducts() = products as Map<Int, Product>
@@ -188,7 +175,7 @@ object ProductDatabase{
     }
 
     init{
-        listOf(
+        mutableListOf(
             ExampleProducts.PetPawsDogCage,
             ExampleProducts.PetPawsDogFood,
             ExampleProducts.PetPawsDogToys,

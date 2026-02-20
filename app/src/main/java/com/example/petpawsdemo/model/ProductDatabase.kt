@@ -121,9 +121,13 @@ object ProductDatabase{
     private val productIDMap: MutableMap<Product, Int> = mutableMapOf()
     private val unused: TreeSet<Int> = TreeSet<Int>().apply{ add(0) }
 
-
     fun getProduct(id: Int) = products[id]
-    fun getID(product: Product) = productIDMap[product]
+    fun getID(product: Product): Int? {
+        val id = productIDMap[product]
+        if (id != null) return id
+        // Fallback: search by name in case the product instance was modified (e.g. stock change)
+        return productIDMap.entries.find { it.key.name == product.name }?.value
+    }
 
     fun getRating(id: Int) = this.products[id]?.rating
 
@@ -139,7 +143,7 @@ object ProductDatabase{
     fun removeProduct(id: Int){
         val product = getProduct(id)
         products.remove(id)
-        productIDMap.remove(product)
+        if (product != null) productIDMap.remove(product)
         unused.add(id)
     }
 
@@ -147,6 +151,11 @@ object ProductDatabase{
         val id = getID(product)
         if (id != null) {
             products[id] = product
+            // Update the key in the map as well to reflect any property changes
+            productIDMap.keys.find { it.name == product.name }?.let { oldKey ->
+                productIDMap.remove(oldKey)
+            }
+            productIDMap[product] = id
         }
     }
 
@@ -170,7 +179,8 @@ object ProductDatabase{
         val queryWords = query.split(" ").map{it.lowercase()}
         val products = getProductSet().map{it.searchCost(queryWords) to it}
         val res = products.sortedBy{it.first}
-        val threshold = res.first().first + 50
+        val firstMatch = res.firstOrNull() ?: return emptyList()
+        val threshold = firstMatch.first + 50
         return res.filter{it.first <= min(threshold, 1000)}.map{it.second}
     }
 

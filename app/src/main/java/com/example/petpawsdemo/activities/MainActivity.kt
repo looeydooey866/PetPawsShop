@@ -233,8 +233,10 @@ private fun HomeScreen(
                         )
                     } else {
                         ProductContainer(
-                            innerPadding = innerPadding
-                        ) { id -> onViewProduct(id) }
+                            products = ProductDatabase.search(currentQuery),
+                            innerPadding = innerPadding,
+                            onClick = { id -> onViewProduct(id) }
+                        )
                     }
                 }
             } else {

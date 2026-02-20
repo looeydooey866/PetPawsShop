@@ -215,7 +215,7 @@ private fun ProfileScreen() {
 
                     UserProfileObject.userName = GUEST_USERNAME
                     UserProfileObject.saveCurrentUser(context)
-                    UserCartObject.clearCart() //TODO
+                    UserCartObject.clearCart()
                 }
 
                 val intent = Intent(context, MainActivity::class.java).apply {

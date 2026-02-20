@@ -162,9 +162,16 @@ class ViewProductActivity : ComponentActivity() {
                                                 .fillMaxWidth()
                                                 .background(MaterialTheme.colorScheme.primary)
                                                 .clickable{
-                                                    UserCartObject.addProduct(ViewData.viewingId, quantity)
-                                                    finish()
-                                                    Toast.makeText(context, "Added to cart.", Toast.LENGTH_SHORT).show()
+                                                    if (UserProfileObject.userName != GUEST_USERNAME){
+                                                        UserCartObject.addProduct(ViewData.viewingId, quantity)
+                                                        finish()
+                                                        Toast.makeText(context, "Added to cart.", Toast.LENGTH_SHORT).show()
+                                                    }
+                                                    else {
+                                                        val intent = Intent(context, LoginActivity::class.java)
+                                                        startActivity(intent)
+                                                        Toast.makeText(context, "You must be logged in to add to cart.", Toast.LENGTH_LONG).show()
+                                                    }
                                                 },
                                             verticalAlignment = Alignment.CenterVertically,
                                             horizontalArrangement = Arrangement.Center

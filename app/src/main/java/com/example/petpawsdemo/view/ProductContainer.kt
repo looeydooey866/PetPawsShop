@@ -55,8 +55,6 @@ fun ProductContainer(
                 items(productList) { p ->
                     val id = ProductDatabase.getID(p)
                     if (id != null) {
-                        // Retrieve the live product instance from the database
-                        //println("fuck you, ${p}, ${id}")
                         val product = ProductDatabase.getProduct(id)
                         if (product != null) {
                             ProductCard(product) {
@@ -72,11 +70,10 @@ fun ProductContainer(
 
 @Composable
 fun ProductContainer(
+    products: List<Product>,
     innerPadding: PaddingValues,
     onClick: (Int) -> Unit
 ) {
-    val products: List<Product> = ProductDatabase.getProductSet().toList()
-
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier

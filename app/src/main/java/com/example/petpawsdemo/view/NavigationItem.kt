@@ -27,23 +27,25 @@ class NavigationItemDropdown(
     itemSelectedIcon: ImageVector,
     itemUnselectedIcon: ImageVector,
     itemBadgeCount: Int? = null,
-    onClick: () -> Unit
+    onSort: (ProductCategory) -> Unit
 ) : NavigationItem(
     id = itemId,
     title = itemTitle,
     selectedIcon = itemSelectedIcon,
     unselectedIcon = itemUnselectedIcon,
     badgeCount = itemBadgeCount,
-    onClick = onClick
+    onClick = {}
 ) {
     val navigationItemChildren: List<NavigationItem> =
         children.map {
             NavigationItem(
                 id = NavigationItem.genID(),
-                title = it.type.replaceFirstChar { c -> c.uppercase() },
+                title = it.subtype.replaceFirstChar { c -> c.uppercase() },
                 selectedIcon = Icons.Filled.KeyboardArrowUp,
                 unselectedIcon = Icons.Filled.KeyboardArrowUp,
-                onClick = onClick
+                onClick = {
+                    onSort(it)
+                }
             )
         }
 }

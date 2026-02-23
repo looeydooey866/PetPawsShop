@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +50,8 @@ import com.example.petpawsdemo.model.ProductCategory
 import com.example.petpawsdemo.R
 import com.example.petpawsdemo.activities.AboutUsActivity
 import com.example.petpawsdemo.activities.ContactUsActivity
+import com.example.petpawsdemo.model.ProductDatabase
+import com.example.petpawsdemo.model.UserProfile
 import com.example.petpawsdemo.model.UserProfileObject
 import com.example.petpawsdemo.view.ui.theme.PetPawsDemoTheme
 
@@ -175,6 +178,7 @@ fun NavigationItemGroup(
                         selected = selectedStates[child.id] ?: false,
                         onClick = {
                             selectedStates[child.id] = true
+                            child.onClick()
                             onItemClick(child)
                         },
                         modifier = Modifier
@@ -186,50 +190,22 @@ fun NavigationItemGroup(
         }
     }
 }
-
 @Composable
 fun NavigationDrawer(
-    productCategories: Set<ProductCategory>
+    onSort: (ProductCategory) -> Unit
 ) {
     val context = LocalContext.current
+    val categorial = ProductDatabase.getCategoryMap()
     val highItems = remember {
-        listOf(
+        categorial.map{(type, subtypes)->
             NavigationItemDropdown(
-                children = productCategories, itemId = NavigationItem.genID(),
-                itemTitle = "Dog",
+                children = subtypes.toSet(), itemId = NavigationItem.genID(),
+                itemTitle = type.replaceFirstChar{it.uppercase()},
                 itemSelectedIcon = Icons.Filled.ShoppingCart,
                 itemUnselectedIcon = Icons.Filled.ShoppingCart,
-                onClick = {}
-            ),
-            NavigationItemDropdown(
-                children = productCategories, itemId = NavigationItem.genID(),
-                itemTitle = "Cat",
-                itemSelectedIcon = Icons.Filled.ShoppingCart,
-                itemUnselectedIcon = Icons.Filled.ShoppingCart,
-                onClick = {}
-            ),
-            NavigationItemDropdown(
-                children = productCategories, itemId = NavigationItem.genID(),
-                itemTitle = "Small Pet",
-                itemSelectedIcon = Icons.Filled.ShoppingCart,
-                itemUnselectedIcon = Icons.Filled.ShoppingCart,
-                onClick = {}
-            ),
-            NavigationItemDropdown(
-                children = productCategories, itemId = NavigationItem.genID(),
-                itemTitle = "Fish",
-                itemSelectedIcon = Icons.Filled.ShoppingCart,
-                itemUnselectedIcon = Icons.Filled.ShoppingCart,
-                onClick = {}
-            ),
-            NavigationItemDropdown(
-                children = productCategories, itemId = NavigationItem.genID(),
-                itemTitle = "Reptile",
-                itemSelectedIcon = Icons.Filled.ShoppingCart,
-                itemUnselectedIcon = Icons.Filled.ShoppingCart,
-                onClick = {}
-            ),
-        )
+                onSort = onSort
+            )
+        }.toList()
     }
     val lowItems = remember {
         listOf(
@@ -254,24 +230,22 @@ fun NavigationDrawer(
         )
     }
 
-    PetPawsDemoTheme (darkTheme = UserProfileObject.darkmode) {
-        Column (
-            Modifier
-                .background(MaterialTheme.colorScheme.surface)
-                .fillMaxHeight()
-                .fillMaxWidth(0.8f)
-        ) {
-            DrawerHeader()
-            DrawerBody(
-                highItems = highItems,
-                lowItems = lowItems,
-                modifier = Modifier
-                    .padding(16.dp),
-                itemTextStyle = xkcdTextStyle,
-                onItemClick = { //TODO
-                    //Toast.makeText(context, "Clicked on ${it.title}", Toast.LENGTH_SHORT).show();
-                }
-            )
-        }
+    Column (
+        Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .fillMaxHeight()
+            .fillMaxWidth(0.8f)
+    ) {
+        DrawerHeader()
+        DrawerBody(
+            highItems = highItems,
+            lowItems = lowItems,
+            modifier = Modifier
+                .padding(16.dp),
+            itemTextStyle = xkcdTextStyle,
+            onItemClick = { //TODO
+                //Toast.makeText(context, "Clicked on ${it.title}", Toast.LENGTH_SHORT).show();
+            }
+        )
     }
 }

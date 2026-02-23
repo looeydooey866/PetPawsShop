@@ -48,13 +48,15 @@ import com.example.petpawsdemo.viewmodel.UserCartObject
 fun AppBar (
     query: String,
     focus: Boolean,
+    sorting: Boolean,
     onQueryChange: (String) -> Unit,
     onSearch: () -> Unit,
     onBack: () -> Unit,
     onFocus: (Boolean) -> Unit,
     onNavigationItemClick: () -> Unit,
     onResetSearch: () -> Unit,
-    onViewCart: () -> Unit
+    onViewCart: () -> Unit,
+    onCancelSort: () -> Unit,
 ) {
     TopAppBar (
         title = {
@@ -81,7 +83,7 @@ fun AppBar (
             navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
         ),
         navigationIcon = {
-            if (!focus) {
+            if (!focus && !sorting) {
                 IconButton(onClick = onNavigationItemClick) {
                     Icon(
                         imageVector = Icons.Default.Menu,
@@ -91,6 +93,7 @@ fun AppBar (
             }
             else{
                 IconButton(onClick = {
+                    onCancelSort()
                     onBack()
                 }) {
                     Icon(

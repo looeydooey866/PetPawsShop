@@ -113,6 +113,21 @@ class ExampleProducts {
             0.05f,
             "Dog Mansion To Appease Your Dogs"
         )
+        private val Image_CatHome_Thumbnail = "https://img.freepik.com/free-photo/open-empty-box_1101-94.jpg?semt=ais_hybrid&w=740&q=80"
+        private val Image_CatHome_Happy = "https://i.pinimg.com/236x/b6/c3/eb/b6c3eb3488d1558903bc36d1c0742ec9.jpg"
+        val PetPawsCatHome = Product(
+            "Super Duper Budget Cardboard Cat Home",
+            ProductCategory("cat", "cage"),
+            listOf("cat", "cage", "budget", "cardboard", "spacious"),
+            100,
+            100,
+            4.9,
+            1000,
+            listOf(Image_CatHome_Thumbnail, Image_CatHome_Happy),
+            "Best Paw Supplies",
+            0.05f,
+            "Cat Home To Appease Your Cats"
+        )
     }
 }
 
@@ -184,6 +199,10 @@ object ProductDatabase{
         return res.filter{it.first <= min(threshold, 1000)}.map{it.second}
     }
 
+    fun getCategoryMap() = getProductSet().map{it.productCategory}.groupBy{it.type}
+
+    fun getSubcategory(category: ProductCategory): List<Product> = getProductSet().filter{it.productCategory.type == category.type && it.productCategory.subtype == category.subtype}
+
     init{
         mutableListOf(
             ExampleProducts.PetPawsDogCage,
@@ -192,7 +211,8 @@ object ProductDatabase{
             ExampleProducts.PetPawsWetDogFood,
             ExampleProducts.PetPawsDogFoodPremium,
             ExampleProducts.PetPawsDogFoodBudget,
-            ExampleProducts.PetPawsDogMansion
+            ExampleProducts.PetPawsDogMansion,
+            ExampleProducts.PetPawsCatHome,
         ).forEach{prod ->
             addProduct(prod)
         }

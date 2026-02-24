@@ -121,7 +121,7 @@ class ExampleProducts {
             listOf("cat", "cage", "budget", "cardboard", "spacious"),
             100,
             100,
-            4.9,
+            0.0,
             1000,
             listOf(Image_CatHome_Thumbnail, Image_CatHome_Happy),
             "Best Paw Supplies",

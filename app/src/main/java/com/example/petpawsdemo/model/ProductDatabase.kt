@@ -8,125 +8,172 @@ class ExampleProducts {
     companion object {
         private val Image_PetPawsDogFood_Thumbnail =
             "https://media.istockphoto.com/id/539071535/photo/bowl-of-dog-food.jpg?s=612x612&w=0&k=20&c=48jSoNa5Vod-1inwbhpSQWKv5eEIhnWr8YAfhKI823M="
+        private val Image_PetPawsDogFood_Premium_Thumbnail =
+            "https://www.kohepets.com.sg/cdn/shop/files/science-diet-adult-small-paws-11-dry-dog-food.jpg?v=1707196979"
+        private val Image_PetPawsDogTreats_Thumbnail =
+            "https://okonomikitchen.com/wp-content/uploads/2019/09/vegan-pumpkin-dog-treats-recipe-1-of-1-1024x683.jpg"
+        private val Image_PetPawsWetDogFood_Thumbnail =
+            "https://www.tilda.com/en-in/wp-content/uploads/sites/21/2021/05/chicken-fried-rice-low-res-2.png"
+        private val Image_PetPawsDogCage_Thumbnail =
+            "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSpWZMc_-DeArs8vPjvs_rkdHUs0VFAF-4Vgpif5BC9qYbW2fs8F6EwagFA_NvjMwJHcGN0Yza8REfPdAXW4rnepOLgyYefzm3g6498lK9YuHY5AEcqzSpc7w"
+        private val Image_PetPawsDogToys_Thumbnail = "https://www.nocciolatoys.com/cdn/shop/files/1_284bbc55-05bb-44b0-b898-d17f05b86aa2.jpg?v=1745916563"
+        private val Image_DogMansion_Thumbnail = "https://media.istockphoto.com/id/506903162/photo/luxurious-villa-with-pool.jpg?s=612x612&w=0&k=20&c=Ek2P0DQ9nHQero4m9mdDyCVMVq3TLnXigxNPcZbgX2E="
+        private val Image_CatHome_Thumbnail = "https://m.media-amazon.com/images/I/81FCzJHz3WL.jpg"
+        private val Image_CatMulti_Thumbnail = "https://m.media-amazon.com/images/I/81xJiu-NaOL._AC_UF894,1000_QL80_.jpg"
+        private val Image_CatNailClippers_Thumbnail = "https://m.media-amazon.com/images/I/71QgOhNWw1L._AC_UF1000,1000_QL80_.jpg"
+        private val Image_TurtleFood_Thumbnail = "https://www.petmart.sg/assets/product_image/368512081-ZM-51B-Aquatic-Turtle-Fd.jpeg"
         val PetPawsDogFood = Product(
             "Nutritious Pet Paws Dog Food",
             ProductCategory("dog", "food"),
             mutableListOf("nutritious", "dog", "food"),
             67,
-            1520,
+            1899,
             0.0,
             0,
             mutableListOf(Image_PetPawsDogFood_Thumbnail),
-            "me",
+            "Pet Paws",
             0.2f,
-            "Dog Food to appease your dogs"
+            "A balanced, nutrient-rich dry dog food formulated to support your dog’s overall health, energy levels, and digestive wellness. Made with quality ingredients to keep your pet active and satisfied every day."
         )
 
-        private val Image_PetPawsDogFood_Premium_Thumbnail =
-            "https://www.kohepets.com.sg/cdn/shop/files/science-diet-adult-small-paws-11-dry-dog-food.jpg?v=1707196979"
         val PetPawsDogFoodPremium = Product(
             "Pet Paws Premium Dry Dog Food",
             ProductCategory("dog", "food"),
             mutableListOf("dog", "food", "premium", "dry"),
             43,
-            2899,
+            4599,
             0.0,
             0,
             mutableListOf(Image_PetPawsDogFood_Premium_Thumbnail),
-            "me",
+            "Pet Paws",
             0.2f,
-            "High-protein premium dry food for adult dogs"
+            "High-protein premium dry dog food crafted for optimal muscle development and sustained energy. Enriched with essential vitamins and minerals to promote a healthy coat, strong bones, and overall vitality."
         )
 
-        private val Image_PetPawsDogTreats_Thumbnail =
-            "https://okonomikitchen.com/wp-content/uploads/2019/09/vegan-pumpkin-dog-treats-recipe-1-of-1-1024x683.jpg"
         val PetPawsDogFoodBudget = Product(
             "Delicious Vegetarian Dog Treats",
             ProductCategory("dog", "food"),
             mutableListOf("dog", "treats", "vegetarian", "non-meat", "delicious", "food"),
             10,
-            999,
+            799,
             0.0,
             0,
             mutableListOf(Image_PetPawsDogTreats_Thumbnail),
-            "me",
+            "Pet Paws",
             0.2f,
-            "Affordable dog treats"
+            "Tasty vegetarian dog treats made with wholesome plant-based ingredients for a guilt-free reward. Perfect for training sessions or everyday snacking without compromising on flavor."
         )
 
-        private val Image_PetPawsWetDogFood_Thumbnail =
-            "https://www.tilda.com/en-in/wp-content/uploads/sites/21/2021/05/chicken-fried-rice-low-res-2.png"
         val PetPawsWetDogFood = Product(
             "Pet Paws Wet Dog Food – Chicken & Rice",
             ProductCategory("dog", "food"),
-            mutableListOf("dog", "food", "wet", "chicken", "rice", "sus"),
+            mutableListOf("dog", "food", "wet", "chicken", "rice"),
             98,
             249,
             0.0,
             0,
             mutableListOf(Image_PetPawsWetDogFood_Thumbnail),
-            "me",
+            "Pet Paws",
             0.2f,
-            "Moist and flavorful wet food with real chicken"
+            "Tender chicken and rice in a rich, savory gravy designed for easy digestion and enhanced palatability. Ideal for picky eaters or as a nutritious complement to dry food."
         )
-        private val Image_PetPawsDogCage_Thumbnail =
-            "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSpWZMc_-DeArs8vPjvs_rkdHUs0VFAF-4Vgpif5BC9qYbW2fs8F6EwagFA_NvjMwJHcGN0Yza8REfPdAXW4rnepOLgyYefzm3g6498lK9YuHY5AEcqzSpc7w"
+
         val PetPawsDogCage = Product(
-            "Dog Cage",
+            "Pet Paws Secure Dog Crate",
             ProductCategory("dog","cage"),
-            mutableListOf("dog", "cage"),
+            mutableListOf("dog", "cage", "crate"),
             3,
-            1,
+            8999,
             0.0,
             0,
-            mutableListOf(Image_PetPawsDogCage_Thumbnail,Image_PetPawsDogTreats_Thumbnail,Image_PetPawsWetDogFood_Thumbnail),
-            "me",
+            mutableListOf(Image_PetPawsDogCage_Thumbnail, Image_PetPawsDogTreats_Thumbnail, Image_PetPawsWetDogFood_Thumbnail),
+            "Pet Paws",
             0.2f,
-            "Give your furry companion a safe and comfortable home with our premium dog cage, designed for both function and style. Crafted with a high-quality, heavily glazed exterior, this cage offers a sleek, polished look that will complement any room while ensuring durability and long-lasting protection. The glossy finish is easy to clean and resistant to scratches, keeping your pet's space looking fresh and modern. With sturdy construction and ample ventilation, this cage provides a secure and cozy environment for your dog, whether you're at home or on the go. It's the perfect blend of safety, convenience, and aesthetic appeal—because your pet deserves a home that’s as stylish as it is functional."
+            "Durable and secure dog crate designed to provide a safe, comfortable space for rest and training. Features sturdy construction and proper ventilation to ensure your pet’s safety and comfort."
         )
-        private val Image_PetPawsDogToys_Thumbnail = "https://www.nocciolatoys.com/cdn/shop/files/1_284bbc55-05bb-44b0-b898-d17f05b86aa2.jpg?v=1745916563"
+
         val PetPawsDogToys = Product(
-            "Assorted Colorful Dog Toys",
+            "Pet Paws Assorted Colorful Dog Toys",
             ProductCategory("dog", "toys"),
             mutableListOf("dog", "toys", "fun", "assorted", "colorful"),
             21364,
-            2100,
+            1999,
             0.0,
             0,
             mutableListOf(Image_PetPawsDogToys_Thumbnail),
-            "me",
+            "Pet Paws",
             0.2f,
-            "Dog Toys to appease your dogs"
+            "A vibrant assortment of durable dog toys designed to keep your pet mentally stimulated and physically active. Great for chewing, fetching, and interactive play sessions."
         )
 
-        private val Image_DogMansion_Thumbnail = "https://media.istockphoto.com/id/506903162/photo/luxurious-villa-with-pool.jpg?s=612x612&w=0&k=20&c=Ek2P0DQ9nHQero4m9mdDyCVMVq3TLnXigxNPcZbgX2E="
         val PetPawsDogMansion = Product(
-            "Super Duper Premium Dog Mansion",
+            "Pet Paws Elite Luxury Dog Mansion",
             ProductCategory("dog", "cage"),
-            mutableListOf("dog", "cage", "mansion", "premium", "super", "duper"),
+            mutableListOf("dog", "cage", "mansion", "luxury"),
             1,
-            210000,
+            249999,
             0.0,
             0,
             mutableListOf(Image_DogMansion_Thumbnail),
-            "Best Paw Supplies",
+            "Pet Paws Elite",
             0.05f,
-            "Dog Mansion To Appease Your Dogs"
+            "An ultra-premium luxury dog mansion offering exceptional space, comfort, and elegant architectural design. Built with high-end materials to provide your pet with a secure and sophisticated living environment."
         )
-        private val Image_CatHome_Thumbnail = "https://img.freepik.com/free-photo/open-empty-box_1101-94.jpg?semt=ais_hybrid&w=740&q=80"
-        private val Image_CatHome_Happy = "https://i.pinimg.com/236x/b6/c3/eb/b6c3eb3488d1558903bc36d1c0742ec9.jpg"
+
         val PetPawsCatHome = Product(
-            "Super Duper Budget Cardboard Cat Home",
+            "Pet Paws Budget Cardboard Cat Home",
             ProductCategory("cat", "cage"),
             listOf("cat", "cage", "budget", "cardboard", "spacious"),
             100,
-            100,
+            999,
             0.0,
             1000,
-            listOf(Image_CatHome_Thumbnail, Image_CatHome_Happy),
-            "Best Paw Supplies",
+            listOf(Image_CatHome_Thumbnail),
+            "Pet Paws",
             0.05f,
-            "Cat Home To Appease Your Cats"
+            "A lightweight and affordable cardboard cat home that offers a cozy retreat for lounging and play. Easy to assemble and spacious enough to keep your cat comfortable and entertained."
+        )
+
+        val PetPawsCatCage = Product(
+            "Pet Paws Multi-Storey Cat Cage",
+            ProductCategory("cat", "cage"),
+            listOf("cat", "cage", "multi", "storey"),
+            10,
+            3999,
+            0.0,
+            100,
+            listOf(Image_CatMulti_Thumbnail),
+            "Pet Paws",
+            0.05f,
+            "A premium cat cage."
+        )
+
+        val PetPawsNailClippers = Product(
+            "Pet Paws Nail Clippers",
+            ProductCategory("cat", "grooming"),
+            listOf("cat", "grooming", "clipper", "nail", "safe"),
+            100,
+            399,
+            0.0,
+            100,
+            listOf(Image_CatNailClippers_Thumbnail),
+            "Pet Paws",
+            0.15f,
+            "Durable stainless steel nail clippers designed for safe, precise trimming to keep your pet’s nails neat and healthy. Features an ergonomic non-slip handle for better control and a built-in safety guard to help prevent over-cutting."
+        )
+
+        val PetPawsTurtleFood = Product(
+            "Pet Paws Turtle Food",
+            ProductCategory("turtle", "food"),
+            listOf("turtle", "food", "delicious"),
+            100,
+            1399,
+            0.0,
+            100,
+            listOf(Image_TurtleFood_Thumbnail),
+            "ZOOMED",
+            0.15f,
+            "The #1 aquatic turtle food is available in 3 pellet sizes and protein levels (Hatchling, Growth, and Maintenance Formulas). Each has been scientifically formulated to meet the dietary requirements of aquatic turtles at each of their life stages. This Growth formula meets the dietary requirements for growing aquatic turtles. Our pellets float making it easier for aquatic turtles, who prefer eating at the water surface, to locate their food."
         )
     }
 }
@@ -213,6 +260,9 @@ object ProductDatabase{
             ExampleProducts.PetPawsDogFoodBudget,
             ExampleProducts.PetPawsDogMansion,
             ExampleProducts.PetPawsCatHome,
+            ExampleProducts.PetPawsCatCage,
+            ExampleProducts.PetPawsNailClippers,
+            ExampleProducts.PetPawsTurtleFood
         ).forEach{prod ->
             addProduct(prod)
         }

@@ -57,7 +57,8 @@ import com.example.petpawsdemo.model.ProductCategory
 import com.example.petpawsdemo.model.UserProfile
 import com.example.petpawsdemo.model.json
 
-var debugOnboardingOn = false
+
+var debugOnboardingOn = true
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
